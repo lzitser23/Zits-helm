@@ -1,0 +1,53 @@
+@namespace Zits.Ui
+@typeparam TItem
+
+@*
+    The styled data-table: a reusable, generic table over the headless
+    NaviusDataGrid brain. Wraps the grid root (which owns sort/filter/page/selection/
+    visibility state and cascades a DataGridContext<TItem>) and drops in the styled
+    shell that renders the toolbar, the bordered table, and the pagination footer.
+    The root renders no element of its own, so all markup lives in ZitsDataTableContent.
+*@
+
+<NaviusDataGrid TItem="TItem"
+                Items="Items"
+                Columns="Columns"
+                RowKey="RowKey"
+                DefaultPagination="@(new DataGridPagination(0, EnablePagination ? PageSize : 0))">
+    <ZitsDataTableContent TItem="TItem"
+                          EnableSelection="EnableSelection"
+                          EnablePagination="EnablePagination"
+                          FilterPlaceholder="@FilterPlaceholderText"
+                          @attributes="Attributes" />
+</NaviusDataGrid>
+
+@code {
+    /// <summary>The rows to display. Pass a stable reference.</summary>
+    [Parameter] public IEnumerable<TItem>? Items { get; set; }
+
+    /// <summary>Column descriptors (header, accessor, sortable/hideable, optional cell template + filter).</summary>
+    [Parameter] public IReadOnlyList<DataGridColumn<TItem>>? Columns { get; set; }
+
+    /// <summary>Row identity for selection. Defaults to the row object itself.</summary>
+    [Parameter] public Func<TItem, object>? RowKey { get; set; }
+
+    /// <summary>Render a leading select-all / per-row selection checkbox column. Default true.</summary>
+    [Parameter] public bool EnableSelection { get; set; } = true;
+
+    /// <summary>Render the pagination footer and page the rows. Default true (false shows every row).</summary>
+    [Parameter] public bool EnablePagination { get; set; } = true;
+
+    /// <summary>Rows per page when pagination is enabled. Default 10.</summary>
+    [Parameter] public int PageSize { get; set; } = 10;
+
+    /// <summary>Placeholder for the global-filter input. Falls back to "Filter ...".</summary>
+    [Parameter] public string? FilterPlaceholder { get; set; }
+
+    /// <summary>Column key whose name seeds the default filter placeholder ("Filter {key}...").</summary>
+    [Parameter] public string? FilterColumnKey { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private string FilterPlaceholderText =>
+        FilterPlaceholder ?? (FilterColumnKey is { Length: > 0 } k ? $"Filter {k}..." : "Filter...");
+}

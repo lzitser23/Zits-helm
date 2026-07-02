@@ -1,0 +1,55 @@
+@namespace Zits.Ui
+@implements IDisposable
+
+@*
+    Ghost icon button that moves to the next slide. Composes ZitsButton.
+    Positioned outside the viewport at the end edge.
+*@
+
+<ZitsButton Variant="outline" Size="icon"
+            Disabled="@(!CanScroll)"
+            OnClick="OnClick"
+            aria-label="Next slide"
+            @attributes="Cn.Merge(Attributes, BaseCss)">
+    @if (Horizontal)
+    {
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+    }
+    else
+    {
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="m6 9 6 6 6-6" /></svg>
+    }
+    <span class="sr-only">Next slide</span>
+</ZitsButton>
+
+@code {
+    [CascadingParameter] private ZitsCarousel? Root { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool Horizontal => Root?.IsHorizontal ?? true;
+    private bool CanScroll => Root?.CanScrollNext ?? false;
+
+    private string BaseCss => Cn.Class(
+        "absolute h-8 w-8 rounded-full",
+        Horizontal
+            ? "-right-12 top-1/2 -translate-y-1/2"
+            : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90");
+
+    private Task OnClick() => Root?.ScrollNext() ?? Task.CompletedTask;
+
+    // The root cascades fixed, so its StateHasChanged won't re-render us; subscribe
+    // to its Changed event to refresh the disabled state when the engine reports it.
+    protected override void OnInitialized()
+    {
+        if (Root is not null) Root.Changed += OnCarouselChanged;
+    }
+
+    private void OnCarouselChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        if (Root is not null) Root.Changed -= OnCarouselChanged;
+    }
+}

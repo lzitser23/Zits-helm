@@ -1,0 +1,114 @@
+@namespace Zits.Ui
+@typeparam TItem
+@inherits DataGridPart<TItem>
+
+@*
+    The styled shell of the data-table. Reads the cascaded DataGridContext<TItem> and
+    re-renders on its Changed event (via DataGridPart). Renders the muted toolbar
+    (global-filter input + column-visibility menu), the bordered rounded table with a
+    sortable header and selectable rows, and the pagination footer.
+*@
+
+<div @attributes="Attributes" class="@Cn.Class("w-full", Cn.UserClass(Attributes))">
+    <div class="flex items-center py-4">
+        <ZitsInput placeholder="@FilterPlaceholder"
+                   value="@Context.GlobalFilter"
+                   @oninput="OnFilterInput"
+                   class="max-w-sm" />
+        <ZitsDataTableViewOptions TItem="TItem" />
+    </div>
+
+    <div class="rounded-md border">
+        <ZitsTable>
+            <ZitsTableHeader>
+                <ZitsTableRow>
+                    @if (EnableSelection)
+                    {
+                        <ZitsTableHead class="w-12">
+                            <ZitsCheckbox CheckedState="@SelectAllState"
+                                          CheckedStateChanged="@(_ => Context.ToggleAllOnPageAsync())"
+                                          aria-label="Select all"
+                                          class="translate-y-[2px]" />
+                        </ZitsTableHead>
+                    }
+                    @foreach (var col in Context.VisibleColumns)
+                    {
+                        <ZitsTableHead>
+                            <ZitsDataTableColumnHeader TItem="TItem" ColumnKey="@col.Key" Title="@(col.Header ?? col.Key)" />
+                        </ZitsTableHead>
+                    }
+                </ZitsTableRow>
+            </ZitsTableHeader>
+            <ZitsTableBody>
+                @if (Context.PageRows.Count > 0)
+                {
+                    @foreach (var row in Context.PageRows)
+                    {
+                        var key = Context.GetRowKey(row);
+                        <ZitsTableRow data-state="@(Context.IsRowSelected(key) ? "selected" : null)">
+                            @if (EnableSelection)
+                            {
+                                <ZitsTableCell>
+                                    <ZitsCheckbox CheckedState="@((bool?)Context.IsRowSelected(key))"
+                                                  CheckedStateChanged="@(_ => Context.ToggleRowSelectedAsync(key))"
+                                                  aria-label="Select row"
+                                                  class="translate-y-[2px]" />
+                                </ZitsTableCell>
+                            }
+                            @foreach (var col in Context.VisibleColumns)
+                            {
+                                <ZitsTableCell>
+                                    @if (col.CellTemplate is not null)
+                                    {
+                                        @col.CellTemplate(row)
+                                    }
+                                    else
+                                    {
+                                        @(col.Accessor?.Invoke(row))
+                                    }
+                                </ZitsTableCell>
+                            }
+                        </ZitsTableRow>
+                    }
+                }
+                else
+                {
+                    <ZitsTableRow>
+                        <ZitsTableCell colspan="@ColumnSpan" class="h-24 text-center">No results.</ZitsTableCell>
+                    </ZitsTableRow>
+                }
+            </ZitsTableBody>
+        </ZitsTable>
+    </div>
+
+    @if (EnablePagination)
+    {
+        <ZitsDataTablePagination TItem="TItem" ShowSelectedCount="EnableSelection" class="py-4" />
+    }
+</div>
+
+@code {
+    /// <summary>Render the leading selection checkbox column (forwarded from ZitsDataTable).</summary>
+    [Parameter] public bool EnableSelection { get; set; } = true;
+
+    /// <summary>Render the pagination footer (forwarded from ZitsDataTable).</summary>
+    [Parameter] public bool EnablePagination { get; set; } = true;
+
+    /// <summary>Placeholder for the global-filter input.</summary>
+    [Parameter] public string? FilterPlaceholder { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    // all (true) / some (null = indeterminate) / none (false) selected on the page.
+    private bool? SelectAllState =>
+        Context.IsAllPageSelected ? true : Context.IsSomePageSelected ? (bool?)null : false;
+
+    private int ColumnSpan => Context.VisibleColumns.Count + (EnableSelection ? 1 : 0);
+
+    private async Task OnFilterInput(ChangeEventArgs e)
+    {
+        await Context.SetGlobalFilterAsync(e.Value?.ToString());
+        // Keep the view valid: a narrower filter can leave the current page out of range.
+        await Context.SetPageIndexAsync(0);
+    }
+}

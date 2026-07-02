@@ -1,0 +1,21 @@
+@namespace Zits.Ui
+
+@* The legend slot. Renders explicit ChildContent if given, otherwise a default
+   ZitsChartLegendContent built from the cascaded ChartConfig. *@
+@if (ChildContent is not null)
+{
+    @ChildContent
+}
+else
+{
+    <ZitsChartLegendContent VerticalAlign="@VerticalAlign" HideIcon="HideIcon" @attributes="Attributes" />
+}
+
+@code {
+    /// <summary>top | bottom — forwarded to the default legend content.</summary>
+    [Parameter] public string VerticalAlign { get; set; } = "bottom";
+
+    [Parameter] public bool HideIcon { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

@@ -1,0 +1,10 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Menubar
+@* A nested submenu. Renders no DOM; owns its own open state. *@
+<NaviusMenubarSub Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen">@ChildContent</NaviusMenubarSub>
+@code {
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

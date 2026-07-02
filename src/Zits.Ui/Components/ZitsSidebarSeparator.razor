@@ -1,0 +1,8 @@
+@namespace Zits.Ui
+@* A divider tuned to the sidebar palette, built over ZitsSeparator. *@
+<ZitsSeparator data-sidebar="separator" @attributes="Cn.Merge(Attributes, Base)" />
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "mx-2 w-auto bg-sidebar-border";
+}

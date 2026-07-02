@@ -1,0 +1,47 @@
+@namespace Zits.Ui
+
+@using Navius.Primitives.Components.ToggleGroup
+
+@*
+    A single toggle button in a group. Inherits Variant/Size from the parent
+    ZitsToggleGroup unless overridden locally. Variant/size classes
+    + data-[pressed] styling drive the active look.
+*@
+<NaviusToggleGroupItem Value="@Value" Disabled="Disabled" @attributes="Attributes" class="@Css">@ChildContent</NaviusToggleGroupItem>
+
+@code {
+    [Parameter] public string Value { get; set; } = "";
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>default | outline — overrides the group's variant when set.</summary>
+    [Parameter] public string? Variant { get; set; }
+
+    /// <summary>default | sm | lg — overrides the group's size when set.</summary>
+    [Parameter] public string? Size { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    [CascadingParameter] private ZitsToggleGroupVariant? Group { get; set; }
+
+    private const string Base =
+        "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[pressed]:bg-accent data-[pressed]:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
+
+    private string EffectiveVariant => Variant ?? Group?.Variant ?? "default";
+    private string EffectiveSize => Size ?? Group?.Size ?? "default";
+
+    private string VariantClass => EffectiveVariant switch
+    {
+        "outline" => "border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground",
+        _ => "bg-transparent",
+    };
+
+    private string SizeClass => EffectiveSize switch
+    {
+        "sm" => "h-8 px-1.5 min-w-8",
+        "lg" => "h-10 px-2.5 min-w-10",
+        _ => "h-9 px-2 min-w-9",
+    };
+
+    private string Css => Cn.Class(Base, VariantClass, SizeClass, Cn.UserClass(Attributes));
+}

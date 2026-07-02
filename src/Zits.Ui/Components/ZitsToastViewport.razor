@@ -1,0 +1,15 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Toast
+
+@* The fixed region hosting live toasts. *@
+<NaviusToastViewport @attributes="Cn.Merge(Attributes, Base)">
+    @ChildContent
+</NaviusToastViewport>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]";
+}

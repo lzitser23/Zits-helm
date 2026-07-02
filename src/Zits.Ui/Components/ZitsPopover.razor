@@ -1,0 +1,10 @@
+@namespace Zits.Ui
+@* Styled popover over the Navius Popover primitive (anchored positioning + dismissable layer). *@
+<NaviusPopover Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" Modal="Modal">@ChildContent</NaviusPopover>
+@code {
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; }
+    [Parameter] public bool Modal { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

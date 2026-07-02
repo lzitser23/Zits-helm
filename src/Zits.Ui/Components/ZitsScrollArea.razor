@@ -1,0 +1,45 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.ScrollArea
+
+@*
+    Styled scroll area over the Navius ScrollArea primitive.
+    The root composes Root + Viewport in one component: ChildContent
+    goes inside the viewport, a vertical ZitsScrollBar and the Corner render
+    alongside it. Pass extra scrollbars (e.g. horizontal) via the optional
+    Scrollbars fragment.
+*@
+
+<NaviusScrollArea Type="@Type" Dir="@Dir" ScrollHideDelay="ScrollHideDelay"
+                  @attributes="Attributes"
+                  class="@Cn.Class(Root, Cn.UserClass(Attributes))">
+    <NaviusScrollAreaViewport class="@Viewport">
+        @ChildContent
+    </NaviusScrollAreaViewport>
+    @if (Scrollbars is null)
+    {
+        <ZitsScrollBar />
+    }
+    else
+    {
+        @Scrollbars
+    }
+    <NaviusScrollAreaCorner />
+</NaviusScrollArea>
+
+@code {
+    private const string Root = "relative overflow-hidden";
+    private const string Viewport = "h-full w-full rounded-[inherit]";
+
+    /// <summary>Scrollbar visibility: <c>auto</c> | <c>always</c> | <c>hover</c> | <c>scroll</c>.</summary>
+    [Parameter] public string Type { get; set; } = "hover";
+    [Parameter] public int ScrollHideDelay { get; set; } = 600;
+    [Parameter] public string? Dir { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Override the default vertical scrollbar (e.g. to add a horizontal one).</summary>
+    [Parameter] public RenderFragment? Scrollbars { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+}

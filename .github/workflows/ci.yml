@@ -1,0 +1,32 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # The brain is a sibling path reference (see src/Zits.Ui/Zits.Ui.csproj):
+      # both repos must be checked out side by side.
+      - uses: actions/checkout@v4
+        with:
+          path: zits-helm
+
+      - uses: actions/checkout@v4
+        with:
+          repository: lzitser23/navius
+          path: navius
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build helm (Zits.Ui)
+        run: dotnet build zits-helm/src/Zits.Ui/Zits.Ui.csproj -c Debug
+
+      - name: Build navius CLI
+        run: dotnet build zits-helm/tools/Navius.Cli/Navius.Cli.csproj -c Debug

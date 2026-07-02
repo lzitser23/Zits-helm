@@ -1,0 +1,17 @@
+@namespace Zits.Ui
+
+@* Form-field wrapper: groups a label, a control, a description, and an error.
+   Vertical orientation. *@
+<div role="group" data-slot="field" @attributes="Attributes" class="@Css">@ChildContent</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "group/field flex w-full flex-col gap-1.5 data-[invalid=true]:text-destructive";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

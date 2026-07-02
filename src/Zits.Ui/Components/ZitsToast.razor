@@ -1,0 +1,57 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Toast
+
+@*
+    A single toast over the unified Navius Toast.Root (manager- or manually-driven; auto-close
+    timer, swipe-to-dismiss, pause-on-hover, a11y announcer, discrete enter/exit attrs), with
+    default | destructive author variants plus manager-driven data-[type] styling.
+*@
+<NaviusToastRoot Toast="Toast"
+                 Open="Open"
+                 OpenChanged="OpenChanged"
+                 DefaultOpen="DefaultOpen"
+                 Timeout="Timeout"
+                 Priority="Priority"
+                 Type="Type"
+                 ForceMount="ForceMount"
+                 @attributes="Cn.Merge(Attributes, Css)">
+    @ChildContent
+</NaviusToastRoot>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Author-chosen visual variant: default | destructive.</summary>
+    [Parameter] public string Variant { get; set; } = "default";
+
+    /// <summary>The source toast when driven by a ToastManager.</summary>
+    [Parameter] public ToastObject? Toast { get; set; }
+
+    [Parameter] public bool Open { get; set; } = true;
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; } = true;
+
+    /// <summary>Auto-close duration in ms (renamed from Duration).</summary>
+    [Parameter] public int? Timeout { get; set; }
+
+    /// <summary>Announcement urgency: low (status/polite) | high (alert/assertive). Renamed from Type.</summary>
+    [Parameter] public string Priority { get; set; } = "low";
+
+    /// <summary>Manager-driven visual type: success | error | loading. Drives data-type.</summary>
+    [Parameter] public string? Type { get; set; }
+
+    [Parameter] public bool ForceMount { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swiping]:translate-x-[var(--toast-swipe-movement-x)] data-[swiping]:transition-none data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-80 data-[closed]:slide-out-to-right-full data-[open]:slide-in-from-top-full data-[open]:sm:slide-in-from-bottom-full data-[limited]:hidden data-[type=success]:border-green-500/40 data-[type=error]:border-destructive data-[type=loading]:opacity-90";
+
+    private string VariantClass => Variant switch
+    {
+        "destructive" => "destructive group border-destructive bg-destructive text-destructive-foreground",
+        _ => "border bg-background text-foreground",
+    };
+
+    private string Css => Cn.Class(Base, VariantClass);
+}

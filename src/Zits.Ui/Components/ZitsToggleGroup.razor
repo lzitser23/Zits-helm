@@ -1,0 +1,44 @@
+@namespace Zits.Ui
+
+@using Navius.Primitives.Components.ToggleGroup
+
+@*
+    Styled toggle group over the Navius ToggleGroup primitive (roving focus, single/multiple
+    selection). Variant/Size cascade down to each ZitsToggleGroupItem.
+*@
+<CascadingValue Value="_ctx" IsFixed="true">
+    <NaviusToggleGroup Multiple="Multiple" Value="@Value" ValueChanged="ValueChanged" DefaultValue="@DefaultValue"
+                       Disabled="Disabled" Orientation="@Orientation" RovingFocus="RovingFocus"
+                       Loop="Loop" Dir="@Dir"
+                       @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusToggleGroup>
+</CascadingValue>
+
+@code {
+    private const string Base = "flex items-center justify-center gap-1";
+
+    /// <summary>When true, multiple items can be pressed at once; default is single (radio-like).</summary>
+    [Parameter] public bool Multiple { get; set; }
+
+    [Parameter] public IReadOnlyList<string>? Value { get; set; }
+    [Parameter] public EventCallback<IReadOnlyList<string>> ValueChanged { get; set; }
+    [Parameter] public IReadOnlyList<string>? DefaultValue { get; set; }
+
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string Orientation { get; set; } = "horizontal";
+    [Parameter] public bool RovingFocus { get; set; } = true;
+    [Parameter] public bool Loop { get; set; } = true;
+    [Parameter] public string? Dir { get; set; }
+
+    /// <summary>default | outline — forwarded to every item.</summary>
+    [Parameter] public string Variant { get; set; } = "default";
+
+    /// <summary>default | sm | lg — forwarded to every item.</summary>
+    [Parameter] public string Size { get; set; } = "default";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private ZitsToggleGroupVariant _ctx = default!;
+
+    protected override void OnInitialized() => _ctx = new ZitsToggleGroupVariant(Variant, Size);
+}

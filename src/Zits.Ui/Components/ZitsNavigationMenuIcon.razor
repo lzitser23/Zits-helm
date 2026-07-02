@@ -1,0 +1,30 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.NavigationMenu
+
+@*
+    Chevron slot over the Navius primitive. Rotates 180deg while its owning item is open
+    (via the part's own data-[popup-open]). aria-hidden. Compose inside a Trigger.
+*@
+
+<NaviusNavigationMenuIcon @attributes="Cn.Merge(Attributes, Base)">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="h-3 w-3">
+            <path d="m6 9 6 6 6-6" />
+        </svg>
+    }
+</NaviusNavigationMenuIcon>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "relative top-[1px] ml-1 inline-flex transition duration-300 data-[popup-open]:rotate-180";
+}

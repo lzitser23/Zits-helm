@@ -1,0 +1,20 @@
+@namespace Zits.Ui
+
+@*
+    Spinner. Pure Tailwind (no brain needed). Renders lucide's Loader2 (loader-circle)
+    icon with `animate-spin`. role="status" + aria-label
+    for accessibility; the consumer's `class` is merged via Cn so size/color overrides win.
+*@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="status" aria-label="Loading" @attributes="Attributes" class="@Css">
+    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+</svg>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "lucide lucide-loader-circle size-4 animate-spin";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

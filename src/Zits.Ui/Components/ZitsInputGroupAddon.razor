@@ -1,0 +1,20 @@
+@namespace Zits.Ui
+
+@*
+    InputGroupAddon. A leading/trailing slot for an icon or short text. Muted by
+    default; shrink-0 so it never collapses and stays tight against the input.
+*@
+
+<div @attributes="Attributes" class="@Css">@ChildContent</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "flex shrink-0 select-none items-center gap-2 text-sm text-muted-foreground [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

@@ -1,0 +1,8 @@
+@namespace Zits.Ui
+<div class="relative w-full overflow-auto">
+    <table @attributes="Attributes" class="@Cn.Class("w-full caption-bottom text-sm", Cn.UserClass(Attributes))">@ChildContent</table>
+</div>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

@@ -1,0 +1,18 @@
+@namespace Zits.Ui
+
+@*
+    InputGroupInput. A borderless, shadowless input sized to fill the group row. The
+    group owns the border/ring/focus seam, so this strips its own chrome flat.
+*@
+
+<input @attributes="Attributes" class="@Css" />
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "flex h-full w-full flex-1 border-0 bg-transparent p-0 text-sm shadow-none outline-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

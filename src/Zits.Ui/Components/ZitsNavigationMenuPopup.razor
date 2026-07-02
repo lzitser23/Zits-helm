@@ -1,0 +1,24 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.NavigationMenu
+
+@*
+    The animated popup shell over the Navius primitive. Owns the open/close transition
+    (data-[open]/data-[closed] + the engine's data-[side]) and hosts the Arrow + Viewport.
+    The visible bordered box is the Viewport inside; this wrapper drives the fade/zoom.
+*@
+
+<NaviusNavigationMenuPopup @attributes="Cn.Merge(Attributes, Base)">
+    @ChildContent
+</NaviusNavigationMenuPopup>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "z-50 outline-none data-[open]:animate-in data-[closed]:animate-out " +
+        "data-[closed]:fade-out-0 data-[open]:fade-in-0 " +
+        "data-[closed]:zoom-out-95 data-[open]:zoom-in-90 " +
+        "data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 " +
+        "data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2";
+}

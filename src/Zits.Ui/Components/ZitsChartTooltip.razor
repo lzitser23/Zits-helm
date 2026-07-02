@@ -1,0 +1,30 @@
+@namespace Zits.Ui
+
+@* The floating tooltip layer for a chart. Positions its content (typically a
+   ZitsChartTooltipContent) at Left/Top — percentages of the plot box — and stays
+   out of pointer events so the cursor keeps hitting the chart beneath. The
+   hand-rolled charts render it on hover. *@
+@if (Visible)
+{
+    <div @attributes="Attributes"
+         class="@Cn.Class(_base, Cn.UserClass(Attributes))"
+         style="@($"left:{ChartMath.N(Left)}%;top:{ChartMath.N(Top)}%;")">
+        @ChildContent
+    </div>
+}
+
+@code {
+    private const string _base = "pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full pb-1";
+
+    /// <summary>When false the layer renders nothing.</summary>
+    [Parameter] public bool Visible { get; set; } = true;
+
+    /// <summary>Horizontal anchor, as a percent of the plot box (0–100).</summary>
+    [Parameter] public double Left { get; set; }
+
+    /// <summary>Vertical anchor, as a percent of the plot box (0–100).</summary>
+    [Parameter] public double Top { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

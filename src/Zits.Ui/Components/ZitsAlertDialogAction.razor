@@ -1,0 +1,10 @@
+@namespace Zits.Ui
+@* Confirming action — styled with the default button variant. Closes the dialog. *@
+<NaviusAlertDialogAction @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusAlertDialogAction>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2";
+}

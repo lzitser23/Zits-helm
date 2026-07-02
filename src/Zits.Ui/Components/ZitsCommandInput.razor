@@ -1,0 +1,90 @@
+@namespace Zits.Ui
+@implements IDisposable
+
+@*
+    Command search field: a borderless ZitsInput row with a leading search icon and a
+    bottom border. Typing updates the root's query; the field keeps DOM focus while arrow
+    keys move a virtual highlight (aria-activedescendant points at the active row). Enter
+    selects it, Esc clears the query.
+*@
+
+<div class="flex items-center border-b px-3" cmdk-input-wrapper="">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         class="mr-2 h-4 w-4 shrink-0 opacity-50" aria-hidden="true">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.3-4.3" />
+    </svg>
+    <input @attributes="Attributes"
+           class="@Css"
+           value="@(_command?.CurrentQuery ?? string.Empty)"
+           role="combobox"
+           aria-expanded="true"
+           aria-activedescendant="@(_command?.ActiveDescendantId)"
+           @oninput="OnInput"
+           @onkeydown="OnKeyDownAsync"
+           type="text"
+           autocomplete="off"
+           autocorrect="off"
+           spellcheck="false"
+           placeholder="@Placeholder" />
+</div>
+
+@code {
+    [CascadingParameter] private ZitsCommand? _command { get; set; }
+
+    [Parameter] public string? Placeholder { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+
+    protected override void OnInitialized() => _command?.OnFilterChanged(OnChanged);
+
+    // Re-render so aria-activedescendant follows hover-driven active changes too.
+    private void OnChanged() => InvokeAsync(StateHasChanged);
+
+    private async Task OnInput(ChangeEventArgs e)
+    {
+        if (_command is not null)
+        {
+            await _command.SetQueryAsync(e.Value?.ToString() ?? string.Empty);
+        }
+    }
+
+    private async Task OnKeyDownAsync(KeyboardEventArgs e)
+    {
+        if (_command is null)
+        {
+            return;
+        }
+
+        switch (e.Key)
+        {
+            case "ArrowDown":
+                await _command.MoveNextAsync();
+                break;
+            case "ArrowUp":
+                await _command.MovePrevAsync();
+                break;
+            case "Home":
+                await _command.MoveFirstAsync();
+                break;
+            case "End":
+                await _command.MoveLastAsync();
+                break;
+            case "Enter":
+                await _command.SelectActiveAsync();
+                break;
+            case "Escape":
+                await _command.EscapeAsync();
+                break;
+        }
+    }
+
+    public void Dispose() => _command?.OffFilterChanged(OnChanged);
+}

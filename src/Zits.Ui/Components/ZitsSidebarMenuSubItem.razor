@@ -1,0 +1,7 @@
+@namespace Zits.Ui
+@* A submenu item — the <li> wrapping a ZitsSidebarMenuSubButton. *@
+<li data-sidebar="menu-sub-item" @attributes="Attributes" class="@Cn.Class("group/menu-sub-item relative", Cn.UserClass(Attributes))">@ChildContent</li>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

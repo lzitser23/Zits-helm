@@ -1,0 +1,7 @@
+@namespace Zits.Ui
+<p data-slot="empty-description" @attributes="Attributes" class="@Cn.Class(Base, Cn.UserClass(Attributes))">@ChildContent</p>
+@code {
+    private const string Base = "text-muted-foreground [&>a:hover]:text-primary text-sm/relaxed [&>a]:underline [&>a]:underline-offset-4";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

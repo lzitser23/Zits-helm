@@ -1,0 +1,7 @@
+@namespace Zits.Ui
+@* A titled section within the sidebar content. *@
+<div data-sidebar="group" @attributes="Attributes" class="@Cn.Class("relative flex w-full min-w-0 flex-col p-2", Cn.UserClass(Attributes))">@ChildContent</div>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

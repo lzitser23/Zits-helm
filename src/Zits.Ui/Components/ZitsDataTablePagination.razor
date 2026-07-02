@@ -1,0 +1,38 @@
+@namespace Zits.Ui
+@typeparam TItem
+@inherits DataGridPart<TItem>
+
+@*
+    The data-table footer: the selected-row count, the current page indicator, and the
+    Previous / Next controls (disabled at the ends via CanPrev / CanNext). Reads the
+    cascaded DataGridContext<TItem> and re-renders on its Changed event.
+*@
+
+<div @attributes="Attributes" class="@Cn.Class("flex items-center justify-between px-2", Cn.UserClass(Attributes))">
+    <div class="flex-1 text-sm text-muted-foreground">
+        @if (ShowSelectedCount)
+        {
+            @($"{Context.SelectedCount} of {Context.FilteredCount} row(s) selected.")
+        }
+    </div>
+    <div class="flex items-center space-x-6 lg:space-x-8">
+        <div class="flex w-[100px] items-center justify-center text-sm font-medium">
+            Page @(Context.PageIndex + 1) of @(Math.Max(Context.PageCount, 1))
+        </div>
+        <div class="flex items-center space-x-2">
+            <ZitsButton Variant="outline" Size="sm" class="h-8" Disabled="@(!Context.CanPrev)" OnClick="Prev">Previous</ZitsButton>
+            <ZitsButton Variant="outline" Size="sm" class="h-8" Disabled="@(!Context.CanNext)" OnClick="Next">Next</ZitsButton>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>Show the "N of M row(s) selected." text (off when selection is disabled).</summary>
+    [Parameter] public bool ShowSelectedCount { get; set; } = true;
+
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private Task Prev() => Context.PrevPageAsync();
+
+    private Task Next() => Context.NextPageAsync();
+}

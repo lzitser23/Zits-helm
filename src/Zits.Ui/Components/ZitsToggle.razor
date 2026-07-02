@@ -1,0 +1,42 @@
+@namespace Zits.Ui
+
+@using Navius.Primitives.Components.Toggle
+
+@* Styled two-state toggle over the Navius Toggle primitive (aria-pressed, data-state). *@
+<NaviusToggle Pressed="Pressed" PressedChanged="PressedChanged" DefaultPressed="DefaultPressed"
+              Disabled="Disabled" @attributes="Cn.Merge(Attributes, Base, VariantClass, SizeClass)">
+    @ChildContent
+</NaviusToggle>
+
+@code {
+    [Parameter] public bool Pressed { get; set; }
+    [Parameter] public EventCallback<bool> PressedChanged { get; set; }
+    [Parameter] public bool DefaultPressed { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>default | outline</summary>
+    [Parameter] public string Variant { get; set; } = "default";
+
+    /// <summary>default | sm | lg</summary>
+    [Parameter] public string Size { get; set; } = "default";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[pressed]:bg-accent data-[pressed]:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
+
+    private string VariantClass => Variant switch
+    {
+        "outline" => "border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground",
+        _ => "bg-transparent",
+    };
+
+    private string SizeClass => Size switch
+    {
+        "sm" => "h-8 px-1.5 min-w-8",
+        "lg" => "h-10 px-2.5 min-w-10",
+        _ => "h-9 px-2 min-w-9",
+    };
+}

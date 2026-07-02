@@ -1,0 +1,50 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.NavigationMenu
+
+@*
+    Styled navigation menu over the Navius NavigationMenu primitive: a relative, centered
+    root that hosts the List + (by default) a shared resizing Viewport nested inside the
+    Base UI Portal > Positioner > Popup surface. Open Content panels teleport into the one
+    animated container beneath the active trigger.
+*@
+
+<NaviusNavigationMenu Value="@Value" ValueChanged="ValueChanged" DefaultValue="@DefaultValue"
+                      Orientation="@Orientation" Delay="Delay" CloseDelay="CloseDelay"
+                      OnOpenChangeComplete="OnOpenChangeComplete" @attributes="Cn.Merge(Attributes, Base)">
+    @ChildContent
+    @if (Viewport)
+    {
+        <NaviusNavigationMenuPortal>
+            <ZitsNavigationMenuPositioner>
+                <ZitsNavigationMenuPopup>
+                    <ZitsNavigationMenuArrow />
+                    <ZitsNavigationMenuViewport />
+                </ZitsNavigationMenuPopup>
+            </ZitsNavigationMenuPositioner>
+        </NaviusNavigationMenuPortal>
+    }
+</NaviusNavigationMenu>
+
+@code {
+    private const string Base = "relative z-10 flex max-w-max flex-1 items-center justify-center";
+
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    [Parameter] public string? DefaultValue { get; set; }
+    [Parameter] public string Orientation { get; set; } = "horizontal";
+
+    /// <summary>Delay (ms) before a hover opens (Base UI default 50).</summary>
+    [Parameter] public int Delay { get; set; } = 50;
+
+    /// <summary>Delay (ms) before leaving closes (Base UI default 50).</summary>
+    [Parameter] public int CloseDelay { get; set; } = 50;
+
+    /// <summary>Fires after the popup's enter/exit presence settles.</summary>
+    [Parameter] public EventCallback<bool> OnOpenChangeComplete { get; set; }
+
+    /// <summary>Render the shared resizing Viewport (default true).</summary>
+    [Parameter] public bool Viewport { get; set; } = true;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

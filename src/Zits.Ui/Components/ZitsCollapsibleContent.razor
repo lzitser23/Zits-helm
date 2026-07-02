@@ -1,0 +1,15 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Collapsible
+
+@* The collapsible panel. The primitive Panel is re-exported unstyled; the brain
+   mounts/unmounts it, drives the data-open/closed + starting/ending-style contract,
+   and publishes --collapsible-panel-height/width for height transitions. KeepMounted
+   keeps it in the DOM (hidden) while closed. (Helm keeps the familiar styled-layer name
+   "Content"; the brain part is Base UI's Panel.) *@
+<NaviusCollapsiblePanel KeepMounted="KeepMounted" @attributes="Attributes">@ChildContent</NaviusCollapsiblePanel>
+
+@code {
+    [Parameter] public bool KeepMounted { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

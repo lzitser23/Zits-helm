@@ -1,0 +1,29 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.ScrollArea
+
+@*
+    Styled scrollbar over the Navius ScrollArea Scrollbar + Thumb.
+    Orientation-driven classes set the layout; the thumb is the
+    draggable bg-border handle.
+*@
+
+<NaviusScrollAreaScrollbar Orientation="@Orientation" ForceMount="ForceMount"
+                           @attributes="Attributes"
+                           class="@Cn.Class(Bar, OrientationClass, Cn.UserClass(Attributes))">
+    <NaviusScrollAreaThumb class="@Thumb" />
+</NaviusScrollAreaScrollbar>
+
+@code {
+    private const string Bar = "flex touch-none select-none transition-colors";
+    private const string Thumb = "relative flex-1 rounded-full bg-border";
+
+    [Parameter] public string Orientation { get; set; } = "vertical";
+    [Parameter] public bool ForceMount { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private string OrientationClass => Orientation == "horizontal"
+        ? "h-2.5 flex-col border-t border-t-transparent p-[1px]"
+        : "h-full w-2.5 border-l border-l-transparent p-[1px]";
+}

@@ -1,0 +1,17 @@
+@namespace Zits.Ui
+
+@* Animates open/close off the engine-published --accordion-panel-height var; the brain
+   keeps the panel mounted through the exit animation (presence) then unmounts it. *@
+<NaviusAccordionPanel KeepMounted="KeepMounted"
+                      @attributes="Cn.Merge(Attributes, Base)">
+    <div class="pb-4 pt-0">@ChildContent</div>
+</NaviusAccordionPanel>
+
+@code {
+    [Parameter] public bool KeepMounted { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "overflow-hidden text-sm data-[closed]:animate-accordion-up data-[open]:animate-accordion-down";
+}

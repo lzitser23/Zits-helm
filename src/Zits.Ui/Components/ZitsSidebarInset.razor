@@ -1,0 +1,11 @@
+@namespace Zits.Ui
+@* The main content area beside the sidebar. With the inset variant it floats as a
+   rounded, shadowed panel (keyed off the sidebar peer's data-variant/data-state). *@
+<main @attributes="Attributes" class="@Cn.Class(Base, Cn.UserClass(Attributes))">@ChildContent</main>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "relative flex min-h-svh flex-1 flex-col bg-background peer-data-[variant=inset]:min-h-[calc(100svh-1rem)] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow";
+}

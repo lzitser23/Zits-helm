@@ -1,0 +1,76 @@
+@namespace Zits.Ui
+
+@* The styled tooltip card. Reads the cascaded ChartConfig for each payload item's
+   label, colour (via var(--color-<key>)) and optional icon, falling back to per-item
+   overrides then the raw key. *@
+<div @attributes="Attributes" class="@Cn.Class(_base, Cn.UserClass(Attributes))">
+    @if (!HideLabel && !string.IsNullOrEmpty(Label))
+    {
+        <div class="font-medium">@Label</div>
+    }
+    <div class="grid gap-1.5">
+        @foreach (var item in Payload ?? Array.Empty<ChartTooltipPayloadItem>())
+        {
+            var cfg = ConfigFor(item.Key);
+            <div class="flex w-full items-center gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground">
+                @if (cfg?.Icon is not null)
+                {
+                    @cfg.Icon
+                }
+                else if (!HideIndicator)
+                {
+                    <span class="@IndicatorCss" style="@IndicatorStyle(item)"></span>
+                }
+                <div class="flex flex-1 items-center justify-between leading-none">
+                    <span class="text-muted-foreground">@NameFor(item)</span>
+                    <span class="ml-2 font-mono font-medium tabular-nums text-foreground">@ChartMath.N(item.Value)</span>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private const string _base =
+        "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl";
+
+    /// <summary>The category label rendered as the card's title.</summary>
+    [Parameter] public string? Label { get; set; }
+
+    /// <summary>The rows to render (series key + value, with optional overrides).</summary>
+    [Parameter] public IReadOnlyList<ChartTooltipPayloadItem>? Payload { get; set; }
+
+    [Parameter] public bool HideLabel { get; set; }
+    [Parameter] public bool HideIndicator { get; set; }
+
+    /// <summary>dot | line | dashed — the colour swatch shape.</summary>
+    [Parameter] public string Indicator { get; set; } = "dot";
+
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    [CascadingParameter] private ZitsChartContainer? Chart { get; set; }
+
+    private ChartSeries? ConfigFor(string key)
+        => Chart is not null && Chart.EffectiveConfig.TryGetValue(key, out var s) ? s : null;
+
+    private string NameFor(ChartTooltipPayloadItem item)
+        => item.Label ?? ConfigFor(item.Key)?.Label ?? item.Key;
+
+    private string ColorFor(ChartTooltipPayloadItem item)
+        => item.Color ?? $"var(--color-{item.Key})";
+
+    private const string _indicatorBase = "shrink-0 rounded-[2px]";
+
+    private string IndicatorCss => Cn.Class(_indicatorBase, Indicator switch
+    {
+        "line" => "h-4 w-1",
+        "dashed" => "h-4 w-0 border-[1.5px] border-dashed bg-transparent",
+        _ => "h-2.5 w-2.5",
+    });
+
+    private string IndicatorStyle(ChartTooltipPayloadItem item)
+    {
+        var c = ColorFor(item);
+        return Indicator == "dashed" ? $"border-color:{c};" : $"background:{c};border-color:{c};";
+    }
+}

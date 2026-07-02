@@ -1,0 +1,26 @@
+@namespace Zits.Ui
+
+@*
+    Sonner — the opinionated toaster.
+    In this Blazor port Sonner and Toast share ONE underlying brain: this is a thin
+    convenience wrapper that mounts a ZitsToastProvider + ZitsToastViewport once near
+    the app root. Render your toasts as ZitsToast children, or drive them imperatively
+    through the injectable Navius ToastManager. Drop-in: place <ZitsSonner> once in your
+    layout and put your toast list inside it.
+*@
+<ZitsToastProvider Limit="Limit" Timeout="Timeout" Label="Label" SwipeDirection="SwipeDirection" SwipeThreshold="SwipeThreshold">
+    @ChildContent
+    <ZitsToastViewport @attributes="Attributes" />
+</ZitsToastProvider>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public int Limit { get; set; } = 1;
+    [Parameter] public int Timeout { get; set; } = 5000;
+    [Parameter] public string Label { get; set; } = "Notification";
+    [Parameter] public string SwipeDirection { get; set; } = "right";
+    [Parameter] public double SwipeThreshold { get; set; } = 50;
+
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

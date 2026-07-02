@@ -1,0 +1,62 @@
+@namespace Zits.Ui
+@typeparam TItem
+@inherits DataGridPart<TItem>
+
+@*
+    A sortable column header. For a sortable column it renders a ghost button that
+    cycles the column's single-column sort (asc -> desc -> none) and shows an
+    up / down / up-down icon reflecting the current direction. Non-sortable columns
+    render plain header text. Re-renders on grid state changes (via DataGridPart).
+*@
+
+@if (!Sortable)
+{
+    <div @attributes="Attributes" class="@Cn.Class("text-sm font-medium", Cn.UserClass(Attributes))">@Title</div>
+}
+else
+{
+    <div @attributes="Attributes" class="@Cn.Class("flex items-center space-x-2", Cn.UserClass(Attributes))">
+        <ZitsButton Variant="ghost" Size="sm" class="-ml-3 h-8" OnClick="Toggle">
+            <span>@Title</span>
+            @if (Direction == SortDirection.Ascending)
+            {
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 h-4 w-4">
+                    <path d="m5 12 7-7 7 7" /><path d="M12 19V5" />
+                </svg>
+            }
+            else if (Direction == SortDirection.Descending)
+            {
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 h-4 w-4">
+                    <path d="M12 5v14" /><path d="m19 12-7 7-7-7" />
+                </svg>
+            }
+            else
+            {
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 h-4 w-4">
+                    <path d="m7 15 5 5 5-5" /><path d="m7 9 5-5 5 5" />
+                </svg>
+            }
+        </ZitsButton>
+    </div>
+}
+
+@code {
+    /// <summary>The column key this header sorts.</summary>
+    [Parameter] public string ColumnKey { get; set; } = default!;
+
+    /// <summary>The header label.</summary>
+    [Parameter] public string? Title { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private DataGridColumn<TItem>? Column => Context.Columns.FirstOrDefault(c => c.Key == ColumnKey);
+
+    private bool Sortable => Column?.Sortable ?? false;
+
+    private SortDirection Direction => Context.GetSort(ColumnKey);
+
+    private Task Toggle() => Context.ToggleSortAsync(ColumnKey);
+}

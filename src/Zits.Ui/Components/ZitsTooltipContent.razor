@@ -1,0 +1,29 @@
+@namespace Zits.Ui
+@*
+    The tooltip bubble — portaled to the body and positioned by the engine against the
+    trigger (Base UI Positioner > Popup), with enter/exit + per-side slide animations
+    and a built-in arrow. Do NOT add position classes; the engine sets position +
+    data-side + the --anchor-*/--available-* vars.
+*@
+<NaviusTooltipPositioner Side="@Side" Align="@Align" SideOffset="SideOffset" AlignOffset="AlignOffset"
+                         AvoidCollisions="AvoidCollisions">
+    <NaviusTooltipPopup @attributes="Cn.Merge(Attributes, Base)">
+        @ChildContent
+        <NaviusTooltipArrow class="@ArrowClass" />
+    </NaviusTooltipPopup>
+</NaviusTooltipPositioner>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Side { get; set; } = "top";
+    [Parameter] public string Align { get; set; } = "center";
+    [Parameter] public double SideOffset { get; set; } = 0;
+    [Parameter] public double AlignOffset { get; set; }
+    [Parameter] public bool AvoidCollisions { get; set; } = true;
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "bg-primary text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit rounded-md px-3 py-1.5 text-xs text-balance";
+
+    private const string ArrowClass =
+        "bg-primary fill-primary z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]";
+}

@@ -1,0 +1,231 @@
+@namespace Zits.Ui
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+@*
+    Sidebar provider — owns the open/collapsed + mobile state and exposes it to
+    the sidebar, the trigger, the rail and the inset via a cascading context.
+    It is an IsFixed cascading value plus a Changed event the state-reactive
+    parts subscribe to.
+
+    Dependency-free behaviour:
+      - mobile detection: a one-shot viewport-width read through the engine's
+        getRect on the wrapper (matchMedia-equivalent, no new JS).
+      - persistence: localStorage get/set via direct IJSRuntime dotted-path calls.
+      - Ctrl/Cmd+B toggle: an element-scoped keydown on the wrapper (no global JS).
+*@
+
+<CascadingValue Value="this" IsFixed="true">
+    <div @ref="_wrapper"
+         data-state="@State"
+         style="--sidebar-width: @Width; --sidebar-width-icon: @WidthIcon;"
+         @onkeydown="OnKeyDownAsync"
+         @attributes="Attributes"
+         class="@Css">
+        @ChildContent
+    </div>
+</CascadingValue>
+
+@code {
+    private const string Base =
+        "group/sidebar-wrapper has-[[data-variant=inset]]:bg-sidebar flex min-h-svh w-full";
+
+    private const string StorageKey = "zits:sidebar:open";
+    private const double MobileBreakpoint = 768;
+    private const string ModulePath = "./_content/Navius.Primitives/navius-interop.js";
+
+    /// <summary>Controlled desktop open state. Two-way bindable via <c>@bind-Open</c>.</summary>
+    [Parameter] public bool Open { get; set; } = true;
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
+    /// <summary>Initial desktop open state when used uncontrolled (no <c>@bind-Open</c>).</summary>
+    [Parameter] public bool DefaultOpen { get; set; } = true;
+
+    /// <summary>Mobile sheet open state (internal; surfaced for <c>@bind-OpenMobile</c> if desired).</summary>
+    [Parameter] public EventCallback<bool> OpenMobileChanged { get; set; }
+
+    /// <summary>
+    /// Force the mobile/desktop choice. <c>null</c> (default) auto-detects from the
+    /// viewport width; set <c>true</c>/<c>false</c> to drive it explicitly.
+    /// </summary>
+    [Parameter] public bool? IsMobile { get; set; }
+
+    /// <summary>How the rail collapses: <c>offcanvas</c> | <c>icon</c> | <c>none</c>.</summary>
+    [Parameter] public string Collapsible { get; set; } = "offcanvas";
+
+    /// <summary>Expanded sidebar width (CSS length). Default <c>16rem</c>.</summary>
+    [Parameter] public string Width { get; set; } = "16rem";
+
+    /// <summary>Mobile sheet width (CSS length). Default <c>18rem</c>.</summary>
+    [Parameter] public string WidthMobile { get; set; } = "18rem";
+
+    /// <summary>Collapsed (icon) sidebar width. Default <c>3rem</c>.</summary>
+    [Parameter] public string WidthIcon { get; set; } = "3rem";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private ElementReference _wrapper;
+    private IJSObjectReference? _module;
+    private bool _openSet;          // was Open supplied this render (controlled)?
+    private bool _internalOpen;     // uncontrolled backing field
+    private bool _openMobile;
+    private bool _autoMobile;
+
+    /// <summary>The effective desktop open state (controlled value or uncontrolled backing field).</summary>
+    public bool IsOpen => _openSet ? Open : _internalOpen;
+
+    /// <summary>The effective mobile sheet open state.</summary>
+    public bool OpenMobile => _openMobile;
+
+    /// <summary>True when the mobile sheet should drive the sidebar (explicit param or auto-detected).</summary>
+    public bool IsMobileEffective => IsMobile ?? _autoMobile;
+
+    /// <summary>The active collapse mode.</summary>
+    public string CollapsibleMode => Collapsible;
+
+    /// <summary>The <c>state</c>: <c>expanded</c> when open, otherwise <c>collapsed</c>.</summary>
+    public string State => IsOpen ? "expanded" : "collapsed";
+
+    /// <summary>
+    /// Raised when the open / mobile / detection state changes. State-reactive parts
+    /// (the sidebar, the menu button) subscribe to re-render — the cascade is
+    /// <c>IsFixed</c>, so a mutated same-reference provider can't notify via the cascade.
+    /// </summary>
+    public event Action? Changed;
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        // Controlled-ness = whether Open was supplied this render (CONTEXT contract),
+        // not EventCallback.HasDelegate.
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        await base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnInitialized() => _internalOpen = DefaultOpen;
+
+    /// <summary>Flip the sidebar (mobile sheet when mobile, otherwise the desktop rail).</summary>
+    public Task ToggleAsync() =>
+        IsMobileEffective ? SetOpenMobileAsync(!_openMobile) : SetOpenAsync(!IsOpen);
+
+    /// <summary>Set the desktop open state, notify the binding, and persist it.</summary>
+    public async Task SetOpenAsync(bool open)
+    {
+        if (open == IsOpen)
+        {
+            return;
+        }
+
+        if (_openSet)
+        {
+            await OpenChanged.InvokeAsync(open);
+        }
+        else
+        {
+            _internalOpen = open;
+        }
+
+        await PersistAsync(open);
+        NotifyChanged();
+    }
+
+    /// <summary>Set the mobile sheet open state and notify the binding.</summary>
+    public async Task SetOpenMobileAsync(bool open)
+    {
+        if (open == _openMobile)
+        {
+            return;
+        }
+
+        _openMobile = open;
+        await OpenMobileChanged.InvokeAsync(open);
+        NotifyChanged();
+    }
+
+    private void NotifyChanged()
+    {
+        StateHasChanged();
+        Changed?.Invoke();
+    }
+
+    private async Task OnKeyDownAsync(KeyboardEventArgs e)
+    {
+        // Ctrl/Cmd+B toggles the sidebar.
+        if ((e.CtrlKey || e.MetaKey) && (e.Key == "b" || e.Key == "B"))
+        {
+            await ToggleAsync();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        // Auto-detect mobile from the wrapper's (≈viewport) width — matchMedia-equivalent
+        // through the existing engine, no new JS module.
+        try
+        {
+            _module ??= await JS.InvokeAsync<IJSObjectReference>("import", ModulePath);
+            var rect = await _module.InvokeAsync<Rect>("getRect", _wrapper);
+            var mobile = rect.Width > 0 && rect.Width < MobileBreakpoint;
+            if (mobile != _autoMobile)
+            {
+                _autoMobile = mobile;
+                NotifyChanged();
+            }
+        }
+        catch (JSException) { }
+        catch (JSDisconnectedException) { }
+        catch (InvalidOperationException) { }
+
+        // Rehydrate the persisted open state (uncontrolled only) — the cookie equivalent.
+        if (!_openSet)
+        {
+            try
+            {
+                var stored = await JS.InvokeAsync<string?>("localStorage.getItem", StorageKey);
+                if (stored == "true" || stored == "false")
+                {
+                    var value = stored == "true";
+                    if (value != _internalOpen)
+                    {
+                        _internalOpen = value;
+                        NotifyChanged();
+                    }
+                }
+            }
+            catch (JSException) { }
+            catch (JSDisconnectedException) { }
+            catch (InvalidOperationException) { }
+        }
+    }
+
+    private async Task PersistAsync(bool open)
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("localStorage.setItem", StorageKey, open ? "true" : "false");
+        }
+        catch (JSException) { }
+        catch (JSDisconnectedException) { }
+        catch (InvalidOperationException) { }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is not null)
+        {
+            try { await _module.DisposeAsync(); }
+            catch (JSDisconnectedException) { }
+            catch (JSException) { }
+        }
+    }
+
+    private sealed record Rect(double X, double Y, double Top, double Right,
+                               double Bottom, double Left, double Width, double Height);
+}

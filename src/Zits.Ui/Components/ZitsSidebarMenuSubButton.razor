@@ -1,0 +1,49 @@
+@namespace Zits.Ui
+@* The interactive row inside a submenu item. Renders an <a> when Href is set,
+   otherwise a <button>. *@
+@if (Href is not null)
+{
+    <a href="@Href"
+       data-sidebar="menu-sub-button"
+       data-size="@Size"
+       data-active="@(IsActive ? "true" : "false")"
+       @attributes="Attributes"
+       class="@Css">
+        @ChildContent
+    </a>
+}
+else
+{
+    <button type="@Type"
+            data-sidebar="menu-sub-button"
+            data-size="@Size"
+            data-active="@(IsActive ? "true" : "false")"
+            @onclick="OnClick"
+            @attributes="Attributes"
+            class="@Css">
+        @ChildContent
+    </button>
+}
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Render as a link to this href instead of a button.</summary>
+    [Parameter] public string? Href { get; set; }
+
+    /// <summary>Marks the current item (data-active styling).</summary>
+    [Parameter] public bool IsActive { get; set; }
+
+    /// <summary>sm | md (default)</summary>
+    [Parameter] public string Size { get; set; } = "md";
+
+    [Parameter] public string Type { get; set; } = "button";
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-none ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground group-data-[collapsible=icon]:hidden [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground";
+
+    private string SizeClass => Size == "sm" ? "text-xs" : "text-sm";
+
+    private string Css => Cn.Class(Base, SizeClass, Cn.UserClass(Attributes));
+}

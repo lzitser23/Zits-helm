@@ -1,0 +1,11 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.ContextMenu
+
+@* The right-clickable surface. Unstyled by default. *@
+<NaviusContextMenuTrigger Disabled="Disabled" @attributes="Attributes">@ChildContent</NaviusContextMenuTrigger>
+
+@code {
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

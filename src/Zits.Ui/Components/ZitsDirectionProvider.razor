@@ -1,0 +1,19 @@
+@namespace Zits.Ui
+
+@*
+    Thin pass-through over the Navius DirectionProvider primitive. Renders no
+    DOM element of its own — it only cascades the reading direction ("ltr" or
+    "rtl") to descendants, who read it and apply a `dir` attribute themselves.
+    Wrap a subtree to flip every Zits/Navius primitive inside it to RTL.
+*@
+
+<Navius.Primitives.Components.DirectionProvider.NaviusDirectionProvider Dir="@Dir">
+    @ChildContent
+</Navius.Primitives.Components.DirectionProvider.NaviusDirectionProvider>
+
+@code {
+    /// <summary>Reading direction to cascade to descendants. Either "ltr" or "rtl".</summary>
+    [Parameter] public string Dir { get; set; } = "ltr";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

@@ -1,0 +1,128 @@
+@namespace Zits.Ui
+
+@* Hand-rolled grouped bar chart — no recharts. Scales are computed in C# over a
+   fixed 0..100 viewBox (stretched with preserveAspectRatio="none" so a unit == a
+   percent), bars are filled with var(--color-<key>) from the cascaded ChartConfig,
+   and hovering a category drives the floating ZitsChartTooltip. *@
+<div class="flex h-full w-full flex-col gap-2" @onmouseleave="() => SetHover(null)">
+    <div class="relative flex-1">
+        <svg class="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            @if (ShowGrid)
+            {
+                @foreach (var gy in GridLines())
+                {
+                    <line class="grid-line" x1="0" x2="100" y1="@ChartMath.N(gy)" y2="@ChartMath.N(gy)"
+                          stroke-width="0.5" vector-effect="non-scaling-stroke" />
+                }
+            }
+            @if (_hover is int hc)
+            {
+                <rect class="muted" x="@ChartMath.N(hc * _slot)" y="@ChartMath.N(ChartMath.Top)"
+                      width="@ChartMath.N(_slot)" height="@ChartMath.N(ChartMath.Bottom - ChartMath.Top)" fill-opacity="0.35" />
+            }
+            @foreach (var b in Bars())
+            {
+                <rect x="@ChartMath.N(b.X)" y="@ChartMath.N(b.Y)" width="@ChartMath.N(b.W)" height="@ChartMath.N(b.H)"
+                      rx="0.75" fill="var(--color-@(b.Key))" />
+            }
+            @for (var i = 0; i < _count; i++)
+            {
+                var idx = i;
+                <rect x="@ChartMath.N(idx * _slot)" y="0" width="@ChartMath.N(_slot)" height="100"
+                      fill="transparent" pointer-events="all"
+                      @onmouseover="() => SetHover(idx)" @onmousemove="() => SetHover(idx)" />
+            }
+        </svg>
+        @if (ShowTooltip && _hover is int ht && ht < _count)
+        {
+            <ZitsChartTooltip Left="ChartMath.SlotCenter(ht, _count)" Top="TooltipTop(ht)">
+                <ZitsChartTooltipContent Label="@_points[ht].Label" Payload="PayloadFor(ht)" />
+            </ZitsChartTooltip>
+        }
+    </div>
+    @if (ShowXAxis && _count > 0)
+    {
+        <div class="flex">
+            @foreach (var p in _points)
+            {
+                <div class="min-w-0 flex-1 truncate text-center text-muted-foreground">@p.Label</div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>Rows of data: a category label + per-series-key values.</summary>
+    [Parameter] public IEnumerable<ChartDataPoint>? Data { get; set; }
+
+    /// <summary>Series keys to plot, in order. Defaults to the cascaded ChartConfig's keys.</summary>
+    [Parameter] public IReadOnlyList<string>? Series { get; set; }
+
+    [Parameter] public bool ShowTooltip { get; set; } = true;
+    [Parameter] public bool ShowGrid { get; set; } = true;
+    [Parameter] public bool ShowXAxis { get; set; } = true;
+
+    [CascadingParameter] private ZitsChartContainer? Chart { get; set; }
+
+    private List<ChartDataPoint> _points = new();
+    private IReadOnlyList<string> _keys = Array.Empty<string>();
+    private double _yMax = 1;
+    private int _count;
+    private double _slot = 100;
+    private int? _hover;
+
+    protected override void OnParametersSet()
+    {
+        _points = Data?.ToList() ?? new();
+        _keys = Series ?? Chart?.EffectiveConfig.Keys.ToList() ?? new List<string>();
+        _count = _points.Count;
+        _slot = _count == 0 ? 100 : 100.0 / _count;
+        _yMax = ChartMath.NiceMax(_points, _keys);
+    }
+
+    private void SetHover(int? i)
+    {
+        if (_hover != i) _hover = i;
+    }
+
+    private record BarRect(double X, double Y, double W, double H, string Key);
+
+    private IEnumerable<BarRect> Bars()
+    {
+        int m = _keys.Count;
+        if (_count == 0 || m == 0) yield break;
+
+        double group = _slot * 0.65;
+        double bw = group / m;
+        for (int i = 0; i < _count; i++)
+        {
+            double gx = (i + 0.5) * _slot - group / 2;
+            for (int j = 0; j < m; j++)
+            {
+                if (!_points[i].Values.TryGetValue(_keys[j], out var v)) continue;
+                double y = ChartMath.Y(v, _yMax);
+                double h = Math.Max(0, ChartMath.Bottom - y);
+                yield return new BarRect(gx + j * bw, y, bw * 0.9, h, _keys[j]);
+            }
+        }
+    }
+
+    private IEnumerable<double> GridLines()
+    {
+        for (int t = 0; t <= 4; t++) yield return ChartMath.Y(_yMax * t / 4, _yMax);
+    }
+
+    private double TooltipTop(int i)
+    {
+        double top = ChartMath.Bottom;
+        foreach (var k in _keys)
+            if (_points[i].Values.TryGetValue(k, out var v))
+                top = Math.Min(top, ChartMath.Y(v, _yMax));
+        return Math.Max(0, top - 2);
+    }
+
+    private IReadOnlyList<ChartTooltipPayloadItem> PayloadFor(int i)
+        => _keys.Where(k => _points[i].Values.ContainsKey(k))
+                .Select(k => new ChartTooltipPayloadItem(k, _points[i].Values[k]))
+                .ToList();
+}

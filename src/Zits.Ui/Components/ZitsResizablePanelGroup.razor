@@ -1,0 +1,96 @@
+@namespace Zits.Ui
+
+@*
+    Resizable panel group. Pure Blazor (no JS layout): the group owns the panel
+    sizes (%) and lays them out with flex-basis. Handles drag against this group's
+    geometry via pointer events and adjust the two adjacent panels' sizes in C#.
+
+    Children register here in DOM order (panels and handles share one ordered list),
+    so a handle can resolve the panel immediately before and after it.
+*@
+
+<CascadingValue Value="this" IsFixed="true">
+    <div @ref="_el"
+         data-panel-group
+         data-panel-group-direction="@Direction"
+         @attributes="Attributes"
+         class="@Css">
+        @ChildContent
+    </div>
+</CascadingValue>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>horizontal | vertical</summary>
+    [Parameter] public string Direction { get; set; } = "horizontal";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private ElementReference _el;
+    public ElementReference Element => _el;
+    public bool IsVertical => Direction == "vertical";
+
+    // One ordered list of children (panels + handles) in DOM order, so a handle can
+    // find the panel on either side of it.
+    private readonly List<object> _items = new();
+
+    internal void Register(ZitsResizablePanel panel)
+    {
+        if (!_items.Contains(panel)) _items.Add(panel);
+    }
+
+    internal void Unregister(ZitsResizablePanel panel) => _items.Remove(panel);
+
+    internal void RegisterHandle(ZitsResizableHandle handle)
+    {
+        if (!_items.Contains(handle)) _items.Add(handle);
+    }
+
+    internal void UnregisterHandle(ZitsResizableHandle handle) => _items.Remove(handle);
+
+    /// <summary>The nearest panel before and after a handle in DOM order.</summary>
+    internal (ZitsResizablePanel? before, ZitsResizablePanel? after) PairAroundHandle(ZitsResizableHandle handle)
+    {
+        var idx = _items.IndexOf(handle);
+        if (idx < 0) return (null, null);
+
+        ZitsResizablePanel? before = null, after = null;
+        for (var i = idx - 1; i >= 0; i--)
+        {
+            if (_items[i] is ZitsResizablePanel p) { before = p; break; }
+        }
+        for (var i = idx + 1; i < _items.Count; i++)
+        {
+            if (_items[i] is ZitsResizablePanel p) { after = p; break; }
+        }
+        return (before, after);
+    }
+
+    /// <summary>
+    /// Apply a signed delta (% of the group's main axis, positive toward "after")
+    /// between two adjacent panels, clamped to each panel's min/max so the pair's
+    /// total size is preserved.
+    /// </summary>
+    internal void Resize(ZitsResizablePanel before, ZitsResizablePanel after, double deltaPct)
+    {
+        var newBefore = before.Size + deltaPct;
+        var newAfter = after.Size - deltaPct;
+
+        // Re-balance against the most restrictive bound, keeping (before + after) constant.
+        if (newBefore < before.MinSize) { var c = before.MinSize - newBefore; newBefore += c; newAfter -= c; }
+        if (newAfter < after.MinSize) { var c = after.MinSize - newAfter; newAfter += c; newBefore -= c; }
+        if (newBefore > before.MaxSize) { var c = newBefore - before.MaxSize; newBefore -= c; newAfter += c; }
+        if (newAfter > after.MaxSize) { var c = newAfter - after.MaxSize; newAfter -= c; newBefore += c; }
+
+        before.SetSize(newBefore);
+        after.SetSize(newAfter);
+        StateHasChanged();
+    }
+
+    private const string Base =
+        "flex h-full w-full data-[panel-group-direction=vertical]:flex-col";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

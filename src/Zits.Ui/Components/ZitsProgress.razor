@@ -1,0 +1,42 @@
+@namespace Zits.Ui
+
+@* Styled progress bar over the Navius Progress primitive. The indicator is
+   translated left by (100 - percentage)% to reveal the filled portion, using a
+   transform-based fill. *@
+<NaviusProgress Value="Value" Max="Max" GetValueLabel="GetValueLabel"
+                @attributes="Cn.Merge(Attributes, Base)">
+    <NaviusProgressIndicator class="@Indicator"
+                             style="@($"transform: translateX(-{Remaining.ToString(System.Globalization.CultureInfo.InvariantCulture)}%)")" />
+</NaviusProgress>
+
+@code {
+    /// <summary>Current value. <c>null</c> renders an indeterminate progress bar.</summary>
+    [Parameter] public double? Value { get; set; }
+
+    /// <summary>Maximum value. Defaults to 100.</summary>
+    [Parameter] public double Max { get; set; } = 100;
+
+    /// <summary>Optional accessible value-text builder (e.g. <c>v =&gt; $"{v}%"</c>).</summary>
+    [Parameter] public Func<double?, double, string?>? GetValueLabel { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    // (100 - percentage) of an indeterminate bar reads as 100 (fully translated out / empty).
+    private double Remaining
+    {
+        get
+        {
+            if (Value is null || Max <= 0)
+                return 100;
+            var pct = Math.Clamp(Value.Value / Max, 0, 1) * 100;
+            return 100 - pct;
+        }
+    }
+
+    private const string Base =
+        "relative h-2 w-full overflow-hidden rounded-full bg-primary/20";
+
+    private const string Indicator =
+        "h-full w-full flex-1 bg-primary transition-all";
+}

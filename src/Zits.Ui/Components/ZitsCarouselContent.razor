@@ -1,0 +1,42 @@
+@namespace Zits.Ui
+
+@*
+    Carousel viewport + track. The outer div is the overflow-hidden viewport; its
+    single child is the flex track (the engine's createCarousel reads
+    viewport.firstElementChild as the track and owns its transform/transition, so
+    nothing here binds a style). On first render the viewport ElementReference is
+    handed to the root, which spins up the engine.
+*@
+
+<div @ref="_viewport"
+     @attributes="Attributes"
+     class="@Cn.Class(Base, Cn.UserClass(Attributes))">
+    <div class="@TrackClass">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] private ZitsCarousel? Root { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "overflow-hidden";
+
+    private ElementReference _viewport;
+
+    private bool Horizontal => Root?.IsHorizontal ?? true;
+
+    private string TrackClass => Cn.Class("flex", Horizontal ? "-ml-4" : "-mt-4 flex-col");
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && Root is not null)
+        {
+            await Root.AttachViewportAsync(_viewport);
+        }
+    }
+}

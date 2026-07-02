@@ -1,0 +1,104 @@
+@namespace Zits.Ui
+@implements IDisposable
+
+@*
+    The interactive nav row inside a ZitsSidebarMenuItem, with its Variant/Size.
+    Renders an <a> when Href is set, otherwise a <button>.
+    When the rail is collapsed (and not on mobile) and Tooltip is supplied, the label
+    surfaces as a native title — the brain Tooltip trigger is a <button>, so it cannot
+    wrap an <a> without nesting interactive content; the title keeps anchors valid and
+    dependency-free.
+*@
+
+@if (Href is not null)
+{
+    <a href="@Href"
+       data-sidebar="menu-button"
+       data-size="@Size"
+       data-active="@(IsActive ? "true" : "false")"
+       title="@TooltipTitle"
+       @attributes="Attributes"
+       class="@Css">
+        @ChildContent
+    </a>
+}
+else
+{
+    <button type="@Type"
+            data-sidebar="menu-button"
+            data-size="@Size"
+            data-active="@(IsActive ? "true" : "false")"
+            title="@TooltipTitle"
+            @onclick="OnClick"
+            @attributes="Attributes"
+            class="@Css">
+        @ChildContent
+    </button>
+}
+
+@code {
+    [CascadingParameter] public ZitsSidebarProvider? Provider { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Render as a link to this href instead of a button.</summary>
+    [Parameter] public string? Href { get; set; }
+
+    /// <summary>Marks the current item (data-active styling).</summary>
+    [Parameter] public bool IsActive { get; set; }
+
+    /// <summary>default | outline</summary>
+    [Parameter] public string Variant { get; set; } = "default";
+
+    /// <summary>default | sm | lg</summary>
+    [Parameter] public string Size { get; set; } = "default";
+
+    /// <summary>Label shown (as a title) when the rail is collapsed on desktop.</summary>
+    [Parameter] public string? Tooltip { get; set; }
+
+    [Parameter] public string Type { get; set; } = "button";
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (Provider is not null)
+        {
+            Provider.Changed += OnProviderChanged;
+        }
+    }
+
+    private void OnProviderChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        if (Provider is not null)
+        {
+            Provider.Changed -= OnProviderChanged;
+        }
+    }
+
+    private const string Base =
+        "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[popup-open]:hover:bg-sidebar-accent data-[popup-open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0";
+
+    private string VariantClass => Variant switch
+    {
+        "outline" => "bg-background shadow-[0_0_0_1px_var(--sidebar-border)] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_var(--sidebar-accent)]",
+        _ => "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+    };
+
+    private string SizeClass => Size switch
+    {
+        "sm" => "h-7 text-xs",
+        "lg" => "h-12 text-sm group-data-[collapsible=icon]:!p-0",
+        _ => "h-8 text-sm",
+    };
+
+    private string Css => Cn.Class(Base, VariantClass, SizeClass, Cn.UserClass(Attributes));
+
+    // Only when collapsed on desktop — the label is already visible when expanded.
+    private string? TooltipTitle =>
+        !string.IsNullOrEmpty(Tooltip) && Provider?.State == "collapsed" && Provider?.IsMobileEffective != true
+            ? Tooltip
+            : null;
+}

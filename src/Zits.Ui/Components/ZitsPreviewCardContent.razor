@@ -1,0 +1,20 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.PreviewCard
+
+@* Portals + positions the styled preview-card panel against the trigger (Base UI Positioner > Popup). Engine sets data-side for the slide animations. *@
+<NaviusPreviewCardPositioner Side="@Side" Align="@Align" SideOffset="SideOffset">
+    <NaviusPreviewCardPopup @attributes="Cn.Merge(Attributes, PopupBase)">
+        @ChildContent
+    </NaviusPreviewCardPopup>
+</NaviusPreviewCardPositioner>
+
+@code {
+    [Parameter] public string Side { get; set; } = "bottom";
+    [Parameter] public string Align { get; set; } = "center";
+    [Parameter] public double SideOffset { get; set; } = 4;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string PopupBase =
+        "z-50 w-64 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2";
+}

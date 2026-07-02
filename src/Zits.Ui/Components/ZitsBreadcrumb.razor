@@ -1,0 +1,9 @@
+@namespace Zits.Ui
+
+@* Breadcrumb. Pure Tailwind. The <nav> landmark. *@
+<nav aria-label="breadcrumb" @attributes="Attributes" class="@Cn.Class(Cn.UserClass(Attributes))">@ChildContent</nav>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

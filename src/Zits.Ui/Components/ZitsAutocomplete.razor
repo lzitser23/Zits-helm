@@ -1,0 +1,58 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Autocomplete
+@using Navius.Primitives.Portal
+
+@*
+    Styled autocomplete over the Navius Autocomplete compound (editable, virtual focus via
+    aria-activedescendant, anchored listbox, outside-dismiss). Drop-in for the former
+    ZitsCombobox: same public params (Items / Value / Placeholder / Side / Align / splat),
+    now composing the decomposed brain parts. Item state uses Base UI's data-[highlighted]
+    (was data-[active]) + data-[selected].
+*@
+
+<NaviusAutocomplete Items="Items" Value="@Value" ValueChanged="ValueChanged" TItem="string">
+    <ItemTemplate Context="item">
+        <NaviusAutocompleteItem class="@Option">@item</NaviusAutocompleteItem>
+    </ItemTemplate>
+    <ChildContent>
+        <div class="@RootClass">
+            <NaviusAutocompleteInput Placeholder="@Placeholder" class="@Input" />
+            <NaviusAutocompletePortal>
+                <NaviusAutocompletePositioner Side="@Side" Align="@Align" SideOffset="4">
+                    <NaviusAutocompletePopup class="@List">
+                        <NaviusAutocompleteList class="outline-none" />
+                        <NaviusAutocompleteEmpty class="px-2 py-1.5 text-sm text-muted-foreground">No results</NaviusAutocompleteEmpty>
+                    </NaviusAutocompletePopup>
+                </NaviusAutocompletePositioner>
+            </NaviusAutocompletePortal>
+        </div>
+    </ChildContent>
+</NaviusAutocomplete>
+
+@code {
+    [Parameter] public IReadOnlyList<string> Items { get; set; } = Array.Empty<string>();
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    [Parameter] public string? Placeholder { get; set; }
+    [Parameter] public string Side { get; set; } = "bottom";
+    [Parameter] public string Align { get; set; } = "start";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Root = "relative w-[200px]";
+
+    // CommandInput: flex-height search field with bottom border.
+    private const string Input =
+        "flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50";
+
+    // PopoverContent + CommandList: floating rounded panel, animated, scrollable.
+    private const string List =
+        "z-50 max-h-[300px] w-[200px] overflow-y-auto overflow-x-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95";
+
+    // CommandItem: selectable row with hover/highlight + selected accents.
+    private const string Option =
+        "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[selected]:font-medium";
+
+    private string RootClass => Cn.Class(Root, Cn.UserClass(Attributes));
+}

@@ -1,0 +1,6 @@
+@namespace Zits.Ui
+<ul @attributes="Attributes" class="@Cn.Class("flex flex-row items-center gap-1", Cn.UserClass(Attributes))">@ChildContent</ul>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

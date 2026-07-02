@@ -1,0 +1,23 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.NavigationMenu
+
+@*
+    Trigger over the Navius primitive. Carries the shared trigger style and composes a
+    ZitsNavigationMenuIcon chevron that rotates 180deg while the item is open (via the
+    Icon part's own data-popup-open). data-[active] is Link-only now, so it is gone here.
+*@
+
+<NaviusNavigationMenuTrigger Disabled="Disabled" @attributes="Cn.Merge(Attributes, TriggerStyle)">
+    @ChildContent
+    <ZitsNavigationMenuIcon />
+</NaviusNavigationMenuTrigger>
+
+@code {
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    /// <summary>Shared trigger style — also applied to top-level Links.</summary>
+    public const string TriggerStyle =
+        "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[popup-open]:hover:bg-accent data-[popup-open]:text-accent-foreground data-[popup-open]:focus:bg-accent data-[popup-open]:bg-accent/50";
+}

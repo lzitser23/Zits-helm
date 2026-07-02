@@ -1,0 +1,45 @@
+@namespace Zits.Ui
+@typeparam TItem
+@inherits DataGridPart<TItem>
+
+@*
+    The column-visibility menu: a "View" dropdown whose checkbox items toggle each
+    hideable (EnableHiding) column. Reads the cascaded DataGridContext<TItem> and
+    re-renders on its Changed event so each item reflects IsColumnVisible. Each item
+    prevents the default select so the menu stays open while toggling several columns.
+*@
+
+<ZitsMenu>
+    <ZitsMenuTrigger class="@TriggerClass">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-4 w-4">
+            <path d="M20 7h-9" /><path d="M14 17H5" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" />
+        </svg>
+        View
+    </ZitsMenuTrigger>
+    <ZitsMenuContent Align="end" class="w-[150px]">
+        <ZitsMenuLabel>Toggle columns</ZitsMenuLabel>
+        <ZitsMenuSeparator />
+        @foreach (var col in Context.Columns.Where(c => c.EnableHiding))
+        {
+            var key = col.Key;
+            var label = col.Header ?? col.Key;
+            <ZitsMenuCheckboxItem class="capitalize"
+                                          Checked="@Context.IsColumnVisible(key)"
+                                          CheckedChanged="@(_ => Context.ToggleColumnVisibleAsync(key))"
+                                          OnSelect="@(e => e.PreventDefault())">
+                @label
+            </ZitsMenuCheckboxItem>
+        }
+    </ZitsMenuContent>
+</ZitsMenu>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    // The "outline / sm" button surface, pushed to the right of the toolbar.
+    private const string TriggerBase =
+        "ml-auto inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3";
+
+    private string TriggerClass => Cn.Class(TriggerBase, Cn.UserClass(Attributes));
+}

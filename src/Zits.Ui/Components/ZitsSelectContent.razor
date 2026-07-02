@@ -1,0 +1,42 @@
+@namespace Zits.Ui
+
+@* Portalled listbox surface (Base UI Portal > Positioner > Popup): scroll-up button, scrollable viewport, scroll-down button. *@
+<NaviusSelectPortal>
+    <NaviusSelectPositioner Side="@Side" Align="@Align" SideOffset="SideOffset" AlignOffset="AlignOffset">
+        <NaviusSelectPopup @attributes="Cn.Merge(Attributes, Base)">
+            <NaviusSelectScrollUpButton class="@ScrollButtonClass">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m18 15-6-6-6 6" />
+                </svg>
+            </NaviusSelectScrollUpButton>
+            <NaviusSelectViewport class="@ViewportClass">
+                @ChildContent
+            </NaviusSelectViewport>
+            <NaviusSelectScrollDownButton class="@ScrollButtonClass">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6" />
+                </svg>
+            </NaviusSelectScrollDownButton>
+        </NaviusSelectPopup>
+    </NaviusSelectPositioner>
+</NaviusSelectPortal>
+
+@code {
+    [Parameter] public string Side { get; set; } = "bottom";
+    [Parameter] public string Align { get; set; } = "start";
+    [Parameter] public double SideOffset { get; set; } = 4;
+    [Parameter] public double AlignOffset { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "relative z-50 max-h-[var(--available-height)] min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2";
+
+    private const string ViewportClass =
+        "p-1 w-full min-w-[var(--anchor-width)]";
+
+    private const string ScrollButtonClass =
+        "flex cursor-default items-center justify-center py-1";
+}

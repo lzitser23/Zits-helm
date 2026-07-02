@@ -1,0 +1,101 @@
+@namespace Zits.Ui
+@typeparam TItem
+@using Navius.Primitives.Components.Combobox
+@using Navius.Primitives.Portal
+
+@*
+    Styled combobox over the Navius Combobox compound (value-selection: the input filters,
+    the committed value is the selected item(s), tracked separately from the filter text).
+    Single-select by default; set Multiple + @bind-Values for multi-select chips. Drop-in:
+    Items / Value(+ValueChanged) / Multiple / Values(+ValuesChanged) / Placeholder / Side /
+    Align / splat. Item state uses Base UI's data-[highlighted] + data-[selected] with a
+    check ItemIndicator.
+*@
+
+<NaviusCombobox Items="Items"
+                Multiple="Multiple"
+                Value="Value"
+                ValueChanged="ValueChanged"
+                Values="Values"
+                ValuesChanged="ValuesChanged"
+                ItemToString="ItemToString"
+                Placeholder="@Placeholder"
+                TItem="TItem">
+    <ItemTemplate Context="item">
+        <NaviusComboboxItem class="@Option">
+            <NaviusComboboxItemIndicator class="absolute left-2 inline-flex items-center">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </NaviusComboboxItemIndicator>
+            @Label(item)
+        </NaviusComboboxItem>
+    </ItemTemplate>
+    <ChipTemplate Context="item">
+        <NaviusComboboxChip Value="item" class="@Chip">
+            @Label(item)
+            <NaviusComboboxChipRemove aria-label="Remove" class="rounded-sm leading-none text-muted-foreground hover:text-foreground">×</NaviusComboboxChipRemove>
+        </NaviusComboboxChip>
+    </ChipTemplate>
+    <ChildContent>
+        @if (Multiple)
+        {
+            <div class="@RootClass">
+                <div class="flex flex-wrap items-center gap-1 rounded-md border border-input bg-background p-1 shadow-sm focus-within:ring-1 focus-within:ring-ring">
+                    <NaviusComboboxChips class="contents" />
+                    <NaviusComboboxInput Placeholder="@Placeholder" class="h-8 min-w-[6rem] flex-1 bg-transparent px-2 text-sm outline-none" />
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="@RootClass">
+                <NaviusComboboxInput Placeholder="@Placeholder" class="@Input" />
+            </div>
+        }
+        <NaviusComboboxPortal>
+            <NaviusComboboxPositioner Side="@Side" Align="@Align" SideOffset="4">
+                <NaviusComboboxPopup class="@List">
+                    <NaviusComboboxList class="outline-none" />
+                    <NaviusComboboxEmpty class="px-2 py-1.5 text-sm text-muted-foreground">No results</NaviusComboboxEmpty>
+                </NaviusComboboxPopup>
+            </NaviusComboboxPositioner>
+        </NaviusComboboxPortal>
+    </ChildContent>
+</NaviusCombobox>
+
+@code {
+    [Parameter] public IReadOnlyList<TItem> Items { get; set; } = Array.Empty<TItem>();
+    [Parameter] public bool Multiple { get; set; }
+    [Parameter] public TItem? Value { get; set; }
+    [Parameter] public EventCallback<TItem?> ValueChanged { get; set; }
+    [Parameter] public IReadOnlyList<TItem> Values { get; set; } = Array.Empty<TItem>();
+    [Parameter] public EventCallback<IReadOnlyList<TItem>> ValuesChanged { get; set; }
+    [Parameter] public Func<TItem, string>? ItemToString { get; set; }
+    [Parameter] public string? Placeholder { get; set; }
+    [Parameter] public string Side { get; set; } = "bottom";
+    [Parameter] public string Align { get; set; } = "start";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Root = "relative w-[240px]";
+
+    private const string Input =
+        "flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50";
+
+    // PopoverContent + CommandList: floating rounded panel, animated, scrollable.
+    private const string List =
+        "z-50 max-h-[300px] w-[240px] overflow-y-auto overflow-x-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95";
+
+    // CommandItem: selectable row with a check-indicator gutter + hover/selected accents.
+    private const string Option =
+        "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[selected]:font-medium";
+
+    private const string Chip =
+        "inline-flex items-center gap-1 rounded bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground";
+
+    private string RootClass => Cn.Class(Root, Cn.UserClass(Attributes));
+
+    private string Label(TItem item) => ItemToString is not null ? ItemToString(item) : item?.ToString() ?? "";
+}

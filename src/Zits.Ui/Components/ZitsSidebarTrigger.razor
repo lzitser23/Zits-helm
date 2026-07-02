@@ -1,0 +1,43 @@
+@namespace Zits.Ui
+
+@*
+    Toggles the sidebar. Composes ZitsButton (ghost/icon) and calls the
+    provider's ToggleAsync to flip the rail.
+*@
+
+<ZitsButton Variant="ghost" Size="icon" OnClick="OnClickAsync"
+            aria-label="Toggle Sidebar" @attributes="Cn.Merge(Attributes, Base)">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true">
+            <rect width="18" height="18" x="3" y="3" rx="2" />
+            <path d="M9 3v18" />
+        </svg>
+        <span class="sr-only">Toggle Sidebar</span>
+    }
+</ZitsButton>
+
+@code {
+    private const string Base = "h-7 w-7";
+
+    [CascadingParameter] public ZitsSidebarProvider? Provider { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private async Task OnClickAsync(MouseEventArgs e)
+    {
+        if (Provider is not null)
+        {
+            await Provider.ToggleAsync();
+        }
+        await OnClick.InvokeAsync(e);
+    }
+}

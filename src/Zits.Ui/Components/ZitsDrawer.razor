@@ -1,0 +1,17 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Drawer
+@* Styled drawer (Vaul-pattern sliding sheet) over the Navius Drawer primitive (focus trap, scroll lock, portal, native drag-to-dismiss). *@
+<NaviusDrawer Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" Modal="Modal" Side="@Direction">
+    @ChildContent
+</NaviusDrawer>
+@code {
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; }
+    [Parameter] public bool Modal { get; set; } = true;
+
+    /// <summary>Edge the sheet docks to and is dragged toward: bottom | top | left | right. Default bottom.</summary>
+    [Parameter] public string Direction { get; set; } = "bottom";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

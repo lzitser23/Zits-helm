@@ -1,0 +1,18 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.OneTimePasswordField
+
+@* A single OTP cell: a bordered box that rounds on the group
+   edges and rings when active. The Navius primitive renders a real <input> per slot, so the
+   active state maps to :focus. *@
+<NaviusOneTimePasswordFieldInput Index="Index" @attributes="Cn.Merge(Attributes, Base)" />
+
+@code {
+    /// <summary>Zero-based slot this cell occupies within the field.</summary>
+    [Parameter] public int Index { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "relative flex h-9 w-9 items-center justify-center border-y border-r border-input bg-transparent text-center text-sm shadow-sm outline-none transition-all first:rounded-l-md first:border-l last:rounded-r-md focus:z-10 focus:ring-1 focus:ring-ring caret-foreground";
+}

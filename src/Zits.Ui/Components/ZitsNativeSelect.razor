@@ -1,0 +1,20 @@
+@namespace Zits.Ui
+
+@* A styled native <select>. Pure Tailwind (no brain needed) — the consumer's
+   <option> children render inside, and `class` merges via Cn so overrides win. *@
+
+<select @attributes="Attributes" class="@Css">
+    @ChildContent
+</select>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "border-input bg-transparent flex h-9 w-full rounded-md border px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

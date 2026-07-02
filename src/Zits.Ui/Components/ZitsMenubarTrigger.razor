@@ -1,0 +1,10 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Menubar
+<NaviusMenubarTrigger Disabled="Disabled" @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusMenubarTrigger>
+@code {
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+    private const string Base =
+        "flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[popup-open]:bg-accent data-[popup-open]:text-accent-foreground";
+}

@@ -1,0 +1,42 @@
+@namespace Zits.Ui
+
+@* The styled legend, built from the cascaded ChartConfig: one swatch + label per
+   series, colouring each swatch with the series colour (via var(--color-<key>)) or
+   its config icon. *@
+<div @attributes="Attributes" class="@Cn.Class(_base, AlignClass, Cn.UserClass(Attributes))">
+    @foreach (var (key, series) in Entries)
+    {
+        <div class="flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground">
+            @if (!HideIcon && series.Icon is not null)
+            {
+                @series.Icon
+            }
+            else
+            {
+                <div class="h-2 w-2 shrink-0 rounded-[2px]" style="@($"background:{ColorFor(key, series)}")"></div>
+            }
+            <span>@(series.Label ?? key)</span>
+        </div>
+    }
+</div>
+
+@code {
+    private const string _base = "flex flex-wrap items-center justify-center gap-4";
+
+    /// <summary>top | bottom — controls the padding side.</summary>
+    [Parameter] public string VerticalAlign { get; set; } = "bottom";
+
+    /// <summary>Render the colour swatch even when a series defines an icon.</summary>
+    [Parameter] public bool HideIcon { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    [CascadingParameter] private ZitsChartContainer? Chart { get; set; }
+
+    private IEnumerable<KeyValuePair<string, ChartSeries>> Entries
+        => Chart?.EffectiveConfig ?? Enumerable.Empty<KeyValuePair<string, ChartSeries>>();
+
+    private string AlignClass => VerticalAlign == "top" ? "pb-3" : "pt-3";
+
+    private static string ColorFor(string key, ChartSeries series) => series.Color ?? $"var(--color-{key})";
+}

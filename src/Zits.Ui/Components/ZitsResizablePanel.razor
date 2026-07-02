@@ -1,0 +1,55 @@
+@namespace Zits.Ui
+@implements IDisposable
+
+@*
+    A single resizable panel. Owns its size as a % of the group's main axis,
+    rendered via flex-basis so siblings + handles share the row/column.
+*@
+
+<div data-panel
+     @attributes="Attributes"
+     class="@Css"
+     style="@Style">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Initial size as a percentage of the group's main axis.</summary>
+    [Parameter] public double DefaultSize { get; set; } = 50;
+
+    /// <summary>Minimum size in percent.</summary>
+    [Parameter] public double MinSize { get; set; } = 10;
+
+    /// <summary>Maximum size in percent.</summary>
+    [Parameter] public double MaxSize { get; set; } = 100;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    [CascadingParameter] private ZitsResizablePanelGroup? Group { get; set; }
+
+    public double Size { get; private set; }
+
+    internal void SetSize(double pct)
+    {
+        Size = Math.Clamp(pct, 0, 100);
+        StateHasChanged(); // group mutates our size directly, so re-render ourselves
+    }
+
+    protected override void OnInitialized()
+    {
+        Size = DefaultSize;
+        Group?.Register(this);
+    }
+
+    // flex-grow:0 flex-shrink:1 with a percentage basis, matching react-resizable-panels.
+    private string Style =>
+        $"flex-basis: {Size.ToString(System.Globalization.CultureInfo.InvariantCulture)}%; flex-grow: 0; flex-shrink: 1; overflow: hidden;";
+
+    private const string Base = "";
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+
+    public void Dispose() => Group?.Unregister(this);
+}

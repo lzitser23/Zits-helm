@@ -1,0 +1,23 @@
+@namespace Zits.Ui
+
+@*
+    ButtonGroupSeparator. A thin divider between segments. A separator
+    rendered as a styled element to stay brain-free: vertical by
+    default, self-stretching, with the data-[orientation] hook driving sizing.
+*@
+
+<div data-slot="button-group-separator" role="separator" aria-orientation="@Orientation" data-orientation="@Orientation" @attributes="Attributes" class="@Css"></div>
+
+@code {
+    /// <summary>vertical | horizontal</summary>
+    [Parameter] public string Orientation { get; set; } = "vertical";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    // Separator primitive base + the ButtonGroupSeparator wrapper classes.
+    private const string Base =
+        "bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px relative m-0! self-stretch bg-input data-[orientation=vertical]:h-auto";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

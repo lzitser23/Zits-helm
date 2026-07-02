@@ -1,0 +1,18 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.NavigationMenu
+
+@*
+    Shared resizing viewport over the Navius primitive. Now lives INSIDE the animated Popup
+    (which owns the open/close transition), so this element only sizes to the active panel
+    via the brain's --navius-navigation-menu-viewport-* vars and provides the bordered box.
+*@
+
+<NaviusNavigationMenuViewport ForceMount="ForceMount" @attributes="Cn.Merge(Attributes, Base)" />
+
+@code {
+    [Parameter] public bool ForceMount { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "origin-top relative mt-1.5 h-[var(--navius-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow md:w-[var(--navius-navigation-menu-viewport-width)]";
+}

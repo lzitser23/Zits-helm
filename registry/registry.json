@@ -1,0 +1,72 @@
+{
+  "$schema": "https://navius.dev/schema/registry.json",
+  "name": "navius",
+  "homepage": "https://github.com/lzitser23/zits-helm",
+  "items": [
+    {
+      "name": "cn",
+      "type": "registry:lib",
+      "title": "cn() class-merge helper",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        { "path": "registry/lib/Cn.cs", "type": "registry:lib", "target": "Navius/Cn.cs" }
+      ]
+    },
+    {
+      "name": "core",
+      "type": "registry:lib",
+      "title": "Navius engine (JS interop)",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        { "path": "../navius/src/Navius.Primitives/wwwroot/navius-interop.js", "type": "registry:file", "target": "wwwroot/navius-interop.js" },
+        { "path": "../navius/src/Navius.Primitives/Interop/NaviusJsInterop.cs", "type": "registry:lib", "target": "Navius/Interop/NaviusJsInterop.cs" },
+        { "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayContext.cs", "type": "registry:lib", "target": "Navius/Overlays/OverlayContext.cs" },
+        { "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayPresence.cs", "type": "registry:lib", "target": "Navius/Overlays/OverlayPresence.cs" },
+        { "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayPopupBase.cs", "type": "registry:lib", "target": "Navius/Overlays/OverlayPopupBase.cs" },
+        { "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayAnchoredPopupBase.cs", "type": "registry:lib", "target": "Navius/Overlays/OverlayAnchoredPopupBase.cs" }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "dependencies": [],
+      "registryDependencies": ["core"],
+      "files": [
+        { "path": "../navius/src/Navius.Primitives/Components/Dialog/DialogContext.cs", "type": "registry:ui", "target": "Navius/Dialog/DialogContext.cs" },
+        { "path": "../navius/src/Navius.Primitives/Components/Dialog/DialogPart.cs", "type": "registry:ui", "target": "Navius/Dialog/DialogPart.cs" },
+        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialog.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialog.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogTrigger.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialogTrigger.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogBackdrop.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialogBackdrop.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogPopup.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialogPopup.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogTitle.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialogTitle.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogDescription.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialogDescription.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogClose.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialogClose.razor" }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "dependencies": [],
+      "registryDependencies": ["core"],
+      "files": [
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/PopoverContext.cs", "type": "registry:ui", "target": "Navius/Popover/PopoverContext.cs" },
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/PopoverPart.cs", "type": "registry:ui", "target": "Navius/Popover/PopoverPart.cs" },
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopover.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopover.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverTrigger.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverTrigger.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverPortal.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverPortal.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverPositioner.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverPositioner.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverPopup.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverPopup.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverBackdrop.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverBackdrop.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverArrow.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverArrow.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverAnchor.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverAnchor.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverTitle.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverTitle.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverDescription.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverDescription.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverClose.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverClose.razor" }
+      ]
+    }
+  ]
+}

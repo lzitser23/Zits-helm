@@ -1,0 +1,24 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.ContextMenu
+
+@* The item that opens a submenu, with a trailing chevron. *@
+<NaviusContextMenuSubTrigger Disabled="Disabled" TextValue="@TextValue"
+                             @attributes="Cn.Merge(Attributes, Base, Inset ? InsetClass : null)">
+    @ChildContent
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-auto h-4 w-4">
+        <path d="m9 18 6-6-6-6" />
+    </svg>
+</NaviusContextMenuSubTrigger>
+
+@code {
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool Inset { get; set; }
+    [Parameter] public string? TextValue { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[popup-open]:bg-accent data-[popup-open]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0";
+    private const string InsetClass = "pl-8";
+}

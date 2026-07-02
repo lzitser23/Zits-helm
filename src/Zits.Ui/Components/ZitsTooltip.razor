@@ -1,0 +1,18 @@
+@namespace Zits.Ui
+@*
+    Styled tooltip root over the Navius Tooltip primitive (open-state + show/hide
+    timing, portal, collision-aware positioning). The root wraps its
+    own provider with a 0ms delay so a lone <ZitsTooltip> works without an explicit
+    <ZitsTooltipProvider>.
+*@
+<NaviusTooltipProvider DelayDuration="DelayDuration">
+    <NaviusTooltip Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen"
+                   DelayDuration="DelayDuration">@ChildContent</NaviusTooltip>
+</NaviusTooltipProvider>
+@code {
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; }
+    [Parameter] public int DelayDuration { get; set; } = 0;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

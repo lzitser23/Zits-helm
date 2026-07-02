@@ -1,0 +1,19 @@
+@namespace Zits.Ui
+@* A loading placeholder for a menu row (icon + label bar). The label width is
+   randomised once (50–90%) so a list of them looks natural. *@
+<div data-sidebar="menu-skeleton" @attributes="Attributes" class="@Cn.Class("flex h-8 items-center gap-2 rounded-md px-2", Cn.UserClass(Attributes))">
+    @if (ShowIcon)
+    {
+        <ZitsSkeleton class="size-4 rounded-md" data-sidebar="menu-skeleton-icon" />
+    }
+    <ZitsSkeleton class="h-4 max-w-[--skeleton-width] flex-1" data-sidebar="menu-skeleton-text" style="@($"--skeleton-width:{_width}")" />
+</div>
+@code {
+    /// <summary>Render a leading icon placeholder.</summary>
+    [Parameter] public bool ShowIcon { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private string _width = "70%";
+
+    protected override void OnInitialized() => _width = $"{Random.Shared.Next(50, 91)}%";
+}

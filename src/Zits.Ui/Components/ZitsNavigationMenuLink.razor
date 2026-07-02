@@ -1,0 +1,19 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.NavigationMenu
+@using Navius.Primitives.Common
+
+@*
+    Link over the Navius primitive. A bare anchor — styling is applied per use site
+    (the trigger style for a top-level link, or a custom ListItem layout inside Content).
+    Consumers pass classes via `class`; data-active drives the active-page styling.
+*@
+
+<NaviusNavigationMenuLink Href="@Href" Active="Active" OnSelect="OnSelect" @attributes="Attributes">@ChildContent</NaviusNavigationMenuLink>
+
+@code {
+    [Parameter] public string? Href { get; set; }
+    [Parameter] public bool Active { get; set; }
+    [Parameter] public EventCallback<NaviusSelectEventArgs> OnSelect { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

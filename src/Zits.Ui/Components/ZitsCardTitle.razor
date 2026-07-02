@@ -1,0 +1,6 @@
+@namespace Zits.Ui
+<h3 @attributes="Attributes" class="@Cn.Class("font-semibold leading-none tracking-tight", Cn.UserClass(Attributes))">@ChildContent</h3>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

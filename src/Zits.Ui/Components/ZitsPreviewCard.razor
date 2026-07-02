@@ -1,0 +1,12 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.PreviewCard
+@* Root of the styled preview card over the Navius PreviewCard primitive (hover-intent timing, non-modal). *@
+<NaviusPreviewCard OpenDelay="OpenDelay" CloseDelay="CloseDelay" Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen">@ChildContent</NaviusPreviewCard>
+@code {
+    [Parameter] public int OpenDelay { get; set; } = 600;
+    [Parameter] public int CloseDelay { get; set; } = 300;
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

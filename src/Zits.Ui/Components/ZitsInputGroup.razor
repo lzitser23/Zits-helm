@@ -1,0 +1,21 @@
+@namespace Zits.Ui
+
+@*
+    InputGroup. A bordered flex row that visually groups addons (icon/text) with a
+    borderless input. Pure Tailwind — the border, ring, and rounding live on the
+    group; ZitsInputGroupInput drops its own border so the seam is invisible.
+*@
+
+<div @attributes="Attributes" class="@Css">@ChildContent</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "flex h-9 w-full items-center gap-2 rounded-md border border-input bg-transparent px-3 text-sm shadow-sm transition-colors focus-within:outline-none focus-within:ring-1 focus-within:ring-ring has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-50";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

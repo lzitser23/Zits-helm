@@ -1,0 +1,10 @@
+@namespace Zits.Ui
+@* Styled sheet (side-anchored dialog) over the Navius Dialog primitive (focus trap, scroll lock, portal). *@
+<NaviusDialog Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" Modal="Modal">@ChildContent</NaviusDialog>
+@code {
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; }
+    [Parameter] public bool Modal { get; set; } = true;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

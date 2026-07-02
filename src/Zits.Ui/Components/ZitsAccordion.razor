@@ -1,0 +1,19 @@
+@namespace Zits.Ui
+@* Styled disclosure group over the Navius Accordion primitive. *@
+<NaviusAccordion Type="@Type" Value="@Value" Values="@Values" ValueChanged="ValueChanged" ValuesChanged="ValuesChanged"
+                 DefaultValue="@DefaultValue" DefaultValues="@DefaultValues" Collapsible="Collapsible"
+                 Disabled="Disabled" Orientation="@Orientation" @attributes="Attributes">@ChildContent</NaviusAccordion>
+@code {
+    [Parameter] public string Type { get; set; } = "single";
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public IEnumerable<string>? Values { get; set; }
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    [Parameter] public EventCallback<IEnumerable<string>> ValuesChanged { get; set; }
+    [Parameter] public string? DefaultValue { get; set; }
+    [Parameter] public IEnumerable<string>? DefaultValues { get; set; }
+    [Parameter] public bool Collapsible { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string Orientation { get; set; } = "vertical";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

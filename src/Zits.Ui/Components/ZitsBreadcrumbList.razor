@@ -1,0 +1,7 @@
+@namespace Zits.Ui
+<ol @attributes="Attributes" class="@Cn.Class(Base, Cn.UserClass(Attributes))">@ChildContent</ol>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+    private const string Base = "flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5";
+}

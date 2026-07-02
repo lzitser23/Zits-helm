@@ -1,0 +1,36 @@
+@namespace Zits.Ui
+
+@* A selectable option: label text plus a check indicator pinned to the right. *@
+<NaviusSelectItem Value="@Value" Disabled="Disabled" TextValue="@TextValue"
+                  @attributes="Cn.Merge(Attributes, Base)">
+    <span class="@IndicatorWrapClass">
+        <NaviusSelectItemIndicator>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5" />
+            </svg>
+        </NaviusSelectItemIndicator>
+    </span>
+    @if (ChildContent is not null)
+    {
+        <NaviusSelectItemText>@ChildContent</NaviusSelectItemText>
+    }
+    else
+    {
+        <NaviusSelectItemText Text="@TextValue">@TextValue</NaviusSelectItemText>
+    }
+</NaviusSelectItem>
+
+@code {
+    [Parameter] public string Value { get; set; } = "";
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? TextValue { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
+
+    private const string IndicatorWrapClass =
+        "absolute right-2 flex h-3.5 w-3.5 items-center justify-center";
+}

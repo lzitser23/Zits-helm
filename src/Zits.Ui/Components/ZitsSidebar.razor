@@ -1,0 +1,149 @@
+@namespace Zits.Ui
+@implements IDisposable
+
+@*
+    The sidebar shell. Three shapes:
+      - collapsible="none" → a plain fixed-width flex column.
+      - mobile (provider detects a narrow viewport) → an offcanvas sheet through
+        the Navius Dialog brain (focus trap + scroll lock + portal).
+      - desktop → a width-animated gap holder plus the fixed rail that renders the
+        children, collapsing to the icon width / off-canvas via data-collapsible.
+*@
+
+@{
+    var collapsible = Collapsible ?? Provider?.CollapsibleMode ?? "offcanvas";
+    var dataCollapsible = Provider?.IsOpen == true ? "" : collapsible;
+    var state = Provider?.State ?? "expanded";
+}
+
+@if (collapsible == "none")
+{
+    <div data-slot="sidebar"
+         @attributes="Attributes"
+         class="@Cn.Class(NoneBase, Cn.UserClass(Attributes))">
+        @ChildContent
+    </div>
+}
+else if (Provider?.IsMobileEffective == true)
+{
+    <NaviusDialog Open="Provider!.OpenMobile" OpenChanged="OnMobileOpenChanged" Modal="true">
+        <NaviusDialogPortal>
+            <NaviusDialogBackdrop class="@OverlayClass" />
+            <NaviusDialogPopup data-sidebar="sidebar"
+                                 data-mobile="true"
+                                 style="@($"--sidebar-width: {Provider!.WidthMobile};")"
+                                 @attributes="Attributes"
+                                 class="@Cn.Class(MobileBase, Cn.UserClass(Attributes))">
+                <div class="flex h-full w-full flex-col">
+                    @ChildContent
+                </div>
+            </NaviusDialogPopup>
+        </NaviusDialogPortal>
+    </NaviusDialog>
+}
+else
+{
+    <div class="group peer hidden text-sidebar-foreground md:block"
+         data-state="@state"
+         data-collapsible="@dataCollapsible"
+         data-variant="@Variant"
+         data-side="@Side"
+         data-slot="sidebar">
+        @* gap holder — animates the layout width as the rail collapses *@
+        <div class="@GapCss"></div>
+        @* fixed rail *@
+        <div data-slot="sidebar-container"
+             @attributes="Attributes"
+             class="@FixedCss">
+            <div data-sidebar="sidebar" data-slot="sidebar-inner" class="@InnerClass">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [CascadingParameter] public ZitsSidebarProvider? Provider { get; set; }
+
+    /// <summary>Which edge the sidebar sits on: <c>left</c> (default) | <c>right</c>.</summary>
+    [Parameter] public string Side { get; set; } = "left";
+
+    /// <summary>Visual variant: <c>sidebar</c> (default) | <c>floating</c> | <c>inset</c>.</summary>
+    [Parameter] public string Variant { get; set; } = "sidebar";
+
+    /// <summary>Override the provider's collapse mode: <c>offcanvas</c> | <c>icon</c> | <c>none</c>.</summary>
+    [Parameter] public string? Collapsible { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (Provider is not null)
+        {
+            Provider.Changed += OnProviderChanged;
+        }
+    }
+
+    private void OnProviderChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        if (Provider is not null)
+        {
+            Provider.Changed -= OnProviderChanged;
+        }
+    }
+
+    private Task OnMobileOpenChanged(bool open) =>
+        Provider?.SetOpenMobileAsync(open) ?? Task.CompletedTask;
+
+    private bool Floats => Variant is "floating" or "inset";
+
+    private const string NoneBase =
+        "flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground";
+
+    private const string OverlayClass =
+        "fixed inset-0 z-50 bg-black/80 data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0";
+
+    private const string MobileBase =
+        "fixed inset-y-0 left-0 z-50 flex h-svh w-[--sidebar-width] flex-col gap-4 bg-sidebar p-0 text-sidebar-foreground shadow-lg transition ease-in-out data-[closed]:duration-300 data-[open]:duration-500 data-[open]:animate-in data-[closed]:animate-out data-[closed]:slide-out-to-left data-[open]:slide-in-from-left [&>button]:hidden";
+
+    private const string InnerBase =
+        "flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow";
+
+    private string InnerClass => InnerBase;
+
+    private string GapCss
+    {
+        get
+        {
+            var icon = Floats
+                ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_1rem)]"
+                : "group-data-[collapsible=icon]:w-[--sidebar-width-icon]";
+            return Cn.Class(
+                "relative w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear group-data-[collapsible=offcanvas]:w-0 group-data-[side=right]:rotate-180",
+                icon);
+        }
+    }
+
+    private string FixedCss
+    {
+        get
+        {
+            var sideClass = Side == "right"
+                ? "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]"
+                : "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]";
+
+            var variantClass = Floats
+                ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_1rem_+_2px)]"
+                : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l";
+
+            return Cn.Class(
+                "fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex",
+                sideClass,
+                variantClass,
+                Cn.UserClass(Attributes));
+        }
+    }
+}

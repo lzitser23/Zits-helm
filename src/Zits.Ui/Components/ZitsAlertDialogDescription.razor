@@ -1,0 +1,7 @@
+@namespace Zits.Ui
+<NaviusAlertDialogDescription @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusAlertDialogDescription>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+    private const string Base = "text-sm text-muted-foreground";
+}

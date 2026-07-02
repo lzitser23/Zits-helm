@@ -1,0 +1,7 @@
+@namespace Zits.Ui
+@* Records the menu's mount container (parity export; the Popup teleports itself). Renders no DOM. *@
+<NaviusMenuPortal Container="@Container">@ChildContent</NaviusMenuPortal>
+@code {
+    [Parameter] public string? Container { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

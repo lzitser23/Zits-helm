@@ -1,0 +1,53 @@
+@namespace Zits.Ui
+
+@*
+    A single day button inside ZitsCalendar. Owns its ElementReference so the
+    parent can move DOM focus (roving tabindex) during keyboard navigation
+    without any JS — ElementReference.FocusAsync is built into Blazor.
+    The parent computes every class / data-* attribute and passes them in;
+    this is a thin, focus-aware button wrapper, not a public component.
+*@
+
+<button @ref="_el"
+        type="button"
+        @attributes="ExtraAttributes"
+        class="@Class"
+        tabindex="@(IsFocusTarget ? "0" : "-1")"
+        @onclick="OnClick"
+        @onkeydown="OnKeyDown"
+        @onpointerenter="OnPointerEnter">
+    @ChildContent
+</button>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>The fully-merged class string computed by the parent.</summary>
+    [Parameter] public string? Class { get; set; }
+
+    /// <summary>data-* / aria-* state attributes, splatted onto the button.</summary>
+    [Parameter] public IDictionary<string, object>? ExtraAttributes { get; set; }
+
+    /// <summary>True for the single roving-tabindex day (tabindex 0).</summary>
+    [Parameter] public bool IsFocusTarget { get; set; }
+
+    /// <summary>One-shot: when true after a render, this day pulls DOM focus.</summary>
+    [Parameter] public bool Focus { get; set; }
+
+    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter] public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
+    [Parameter] public EventCallback OnPointerEnter { get; set; }
+
+    private ElementReference _el;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Focus is set true for exactly one render per keyboard move, so this
+        // fires once and never steals focus on first paint or mouse clicks.
+        if (Focus)
+        {
+            try { await _el.FocusAsync(); }
+            catch { /* element gone / not focusable — ignore */ }
+        }
+    }
+}

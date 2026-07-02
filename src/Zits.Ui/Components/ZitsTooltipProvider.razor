@@ -1,0 +1,10 @@
+@namespace Zits.Ui
+@* Cascades shared delay/skip-delay defaults over the Navius Tooltip provider. Wrap once near the app root. *@
+<NaviusTooltipProvider DelayDuration="DelayDuration" SkipDelayDuration="SkipDelayDuration"
+                       DisableHoverableContent="DisableHoverableContent">@ChildContent</NaviusTooltipProvider>
+@code {
+    [Parameter] public int DelayDuration { get; set; } = 0;
+    [Parameter] public int SkipDelayDuration { get; set; } = 300;
+    [Parameter] public bool DisableHoverableContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

@@ -1,0 +1,14 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.ContextMenu
+
+@* A non-interactive group label. Inset aligns it with checkbox/radio items. *@
+<NaviusContextMenuLabel @attributes="Cn.Merge(Attributes, Base, Inset ? InsetClass : null)">@ChildContent</NaviusContextMenuLabel>
+
+@code {
+    [Parameter] public bool Inset { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "px-2 py-1.5 text-sm font-semibold text-foreground";
+    private const string InsetClass = "pl-8";
+}

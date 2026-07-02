@@ -1,0 +1,208 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Interop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+@*
+    Carousel root. A real embla-like carousel on the wave-1 engine
+    (createCarousel): pointer-drag, momentum, snap, loop, multi-slide. C# owns the
+    viewport ElementReference + the engine handle, keyboard, and autoplay; the
+    engine owns the DOM (transform/transition + pointer handlers) and calls back
+    OnSelect / OnSettle / OnCanScrollChange. Composed from
+    Content + Item + Previous + Next.
+*@
+
+<CascadingValue Value="this" IsFixed="true">
+    <div @attributes="Attributes"
+         class="@Cn.Class(Base, Cn.UserClass(Attributes))"
+         role="region"
+         aria-roledescription="carousel"
+         tabindex="0"
+         @onkeydown="OnKeyDown"
+         @onpointerenter="OnPointerEnter"
+         @onpointerleave="OnPointerLeave"
+         @onfocusin="OnFocusIn"
+         @onfocusout="OnFocusOut">
+        @ChildContent
+    </div>
+</CascadingValue>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>horizontal | vertical</summary>
+    [Parameter] public string Orientation { get; set; } = "horizontal";
+
+    /// <summary>When true, Previous/Next wrap around instead of clamping.</summary>
+    [Parameter] public bool Loop { get; set; }
+
+    /// <summary>Snap alignment of the lead slide: start | center | end.</summary>
+    [Parameter] public string Align { get; set; } = "start";
+
+    /// <summary>How many slides advance per scroll (for multi-item viewports).</summary>
+    [Parameter] public int SlidesToScroll { get; set; } = 1;
+
+    /// <summary>Auto-advance the carousel on a timer (paused on hover/focus).</summary>
+    [Parameter] public bool Autoplay { get; set; }
+
+    /// <summary>Autoplay cadence in milliseconds.</summary>
+    [Parameter] public int AutoplayInterval { get; set; } = 4000;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "relative";
+
+    internal bool IsHorizontal => Orientation != "vertical";
+
+    private ElementReference _viewport;
+    private bool _attached;
+    private NaviusJsInterop? _interop;
+    private Carousel? _carousel;
+    private DotNetObjectReference<ZitsCarousel>? _selfRef;
+
+    // Seeded to the initial snap — the engine's OnSelect does not fire for it.
+    private int _selectedIndex;
+    private bool _canPrev;
+    private bool _canNext;
+
+    private System.Threading.Timer? _autoplayTimer;
+    private bool _pointerInside;
+    private bool _hasFocus;
+
+    internal int SelectedIndex => _selectedIndex;
+    internal bool CanScrollPrev => _canPrev;
+    internal bool CanScrollNext => _canNext;
+
+    // The Previous/Next parts live in the consumer's ChildContent and consume this
+    // root via a fixed cascade, so a root StateHasChanged does NOT re-render them
+    // (their parameters are unchanged). They subscribe to this event to refresh
+    // their disabled state when the engine reports a scroll-state change.
+    internal event Action? Changed;
+
+    private void NotifyChanged()
+    {
+        Changed?.Invoke();
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Called once by <see cref="ZitsCarouselContent"/> when its viewport element is
+    /// in the DOM. Creates the engine handle (it measures the track and seeds the
+    /// scroll-state callbacks) and starts autoplay.
+    /// </summary>
+    internal async Task AttachViewportAsync(ElementReference viewport)
+    {
+        if (_attached) return;
+        _attached = true;
+        _viewport = viewport;
+
+        _interop ??= new NaviusJsInterop(JS);
+        _selfRef ??= DotNetObjectReference.Create(this);
+
+        var options = new CarouselOptions(
+            Orientation: IsHorizontal ? "horizontal" : "vertical",
+            Loop: Loop,
+            Align: Align,
+            SlidesToScroll: Math.Max(1, SlidesToScroll));
+
+        try
+        {
+            _carousel = await _interop.CreateCarouselAsync(_viewport, _selfRef, options);
+        }
+        catch (JSException)
+        {
+            // createCarousel not available — buttons/keyboard stay inert rather than throw.
+            return;
+        }
+
+        StartAutoplay();
+    }
+
+    internal Task ScrollPrev() => _carousel?.ScrollPrevAsync() ?? Task.CompletedTask;
+
+    internal Task ScrollNext() => _carousel?.ScrollNextAsync() ?? Task.CompletedTask;
+
+    internal Task ScrollTo(int index) => _carousel?.ScrollToAsync(index) ?? Task.CompletedTask;
+
+    private Task OnKeyDown(KeyboardEventArgs e) => e.Key switch
+    {
+        "ArrowLeft" when IsHorizontal => ScrollPrev(),
+        "ArrowRight" when IsHorizontal => ScrollNext(),
+        "ArrowUp" when !IsHorizontal => ScrollPrev(),
+        "ArrowDown" when !IsHorizontal => ScrollNext(),
+        _ => Task.CompletedTask,
+    };
+
+    // --- Engine callbacks (the engine fires-and-swallows; see createCarousel) ---
+
+    [JSInvokable]
+    public void OnSelect(int index)
+    {
+        _selectedIndex = index;
+        NotifyChanged();
+    }
+
+    [JSInvokable]
+    public void OnSettle()
+    {
+        // The scroll animation has finished. No styled-layer work needed; present so
+        // the engine's notify('OnSettle') has a target.
+    }
+
+    [JSInvokable]
+    public void OnCanScrollChange(bool canPrev, bool canNext)
+    {
+        _canPrev = canPrev;
+        _canNext = canNext;
+        NotifyChanged();
+    }
+
+    // --- Autoplay (C#'s job — the engine intentionally omits it) ---
+
+    private void StartAutoplay()
+    {
+        if (!Autoplay || _autoplayTimer is not null) return;
+        var interval = AutoplayInterval > 0 ? AutoplayInterval : 4000;
+        _autoplayTimer = new System.Threading.Timer(_ => AutoplayTick(), null, interval, interval);
+    }
+
+    private void AutoplayTick()
+    {
+        if (_pointerInside || _hasFocus) return;
+        _ = InvokeAsync(async () =>
+        {
+            if (_carousel is not null) await _carousel.ScrollNextAsync();
+        });
+    }
+
+    private void OnPointerEnter() => _pointerInside = true;
+    private void OnPointerLeave() => _pointerInside = false;
+    private void OnFocusIn() => _hasFocus = true;
+    private void OnFocusOut() => _hasFocus = false;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_autoplayTimer is not null)
+        {
+            await _autoplayTimer.DisposeAsync();
+            _autoplayTimer = null;
+        }
+
+        if (_carousel is not null)
+        {
+            try { await _carousel.DisposeAsync(); }
+            catch (JSDisconnectedException) { }
+            catch (JSException) { }
+            _carousel = null;
+        }
+
+        if (_interop is not null)
+        {
+            try { await _interop.DisposeAsync(); }
+            catch (JSDisconnectedException) { }
+        }
+
+        _selfRef?.Dispose();
+    }
+}

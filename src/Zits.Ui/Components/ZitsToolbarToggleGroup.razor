@@ -1,0 +1,32 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Toolbar
+
+@*
+    A set of toggle buttons inside a toolbar over Navius Toolbar.ToggleGroup. Its items
+    share the toolbar's single Tab stop and roving navigation. type="single" => radio-like
+    (at most one pressed); type="multiple" => any number. Bind with @bind-Value.
+*@
+<NaviusToolbarToggleGroup Type="Type"
+                          Value="Value"
+                          ValueChanged="ValueChanged"
+                          DefaultValue="DefaultValue"
+                          Disabled="Disabled"
+                          @attributes="Cn.Merge(Attributes, Base)">
+    @ChildContent
+</NaviusToolbarToggleGroup>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>single | multiple</summary>
+    [Parameter] public string Type { get; set; } = "single";
+
+    [Parameter] public IReadOnlyList<string>? Value { get; set; }
+    [Parameter] public EventCallback<IReadOnlyList<string>> ValueChanged { get; set; }
+    [Parameter] public IReadOnlyList<string>? DefaultValue { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "flex items-center gap-0.5";
+}

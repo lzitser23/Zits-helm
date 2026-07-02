@@ -1,0 +1,12 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Toast
+
+@* The toast description (drives aria-describedby). *@
+<NaviusToastDescription @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusToastDescription>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "text-sm opacity-90";
+}

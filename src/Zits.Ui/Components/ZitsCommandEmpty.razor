@@ -1,0 +1,33 @@
+@namespace Zits.Ui
+@implements IDisposable
+
+@*
+    Empty state: shown only when the query yields no matching items. Subscribes to the
+    root's filter changes so it re-renders as the query narrows results to none.
+*@
+
+@if (_command is null || (!_command.HasMatches))
+{
+    <div @attributes="Attributes" class="@Css" role="presentation">
+        @ChildContent
+    </div>
+}
+
+@code {
+    [CascadingParameter] private ZitsCommand? _command { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "py-6 text-center text-sm";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+
+    protected override void OnInitialized() => _command?.OnFilterChanged(OnFilterChanged);
+
+    private void OnFilterChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => _command?.OffFilterChanged(OnFilterChanged);
+}

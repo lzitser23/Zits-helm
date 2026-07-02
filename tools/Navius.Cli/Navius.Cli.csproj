@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>navius</AssemblyName>
+    <RootNamespace>Navius.Cli</RootNamespace>
+    <!-- packs as `dotnet tool install -g Navius.Cli` once published -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>navius</ToolCommandName>
+  </PropertyGroup>
+
+</Project>

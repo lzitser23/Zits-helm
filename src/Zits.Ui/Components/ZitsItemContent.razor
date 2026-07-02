@@ -1,0 +1,6 @@
+@namespace Zits.Ui
+<div data-slot="item-content" @attributes="Attributes" class="@Cn.Class("flex flex-1 flex-col gap-1 [&+[data-slot=item-content]]:flex-none", Cn.UserClass(Attributes))">@ChildContent</div>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

@@ -1,0 +1,8 @@
+@namespace Zits.Ui
+@* Sidebar content — the scrollable middle region holding the menu(s).
+   Hidden overflow when collapsed to the icon rail. *@
+<div data-sidebar="content" @attributes="Attributes" class="@Cn.Class("flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden", Cn.UserClass(Attributes))">@ChildContent</div>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

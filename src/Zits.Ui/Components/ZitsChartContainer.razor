@@ -1,0 +1,54 @@
+@namespace Zits.Ui
+@using System.Text
+
+@* The chart wrapper. Injects a per-series `--color-<key>` CSS var (the
+   ChartStyle behaviour) onto a scoped `data-chart` id so descendants colour
+   themselves with `var(--color-<key>)`, keeps the aspect-video frame + SVG
+   typography resets, and cascades the ChartConfig to the tooltip/legend/plot
+   children. Pure layout + tokens — no charting runtime. *@
+<CascadingValue Value="this" IsFixed="true">
+    <div data-chart="@ChartId" @attributes="Attributes" class="@Cn.Class(_base, Cn.UserClass(Attributes))">
+        <style>@((MarkupString)StyleCss)</style>
+        @ChildContent
+    </div>
+</CascadingValue>
+
+@code {
+    private const string _base =
+        "flex aspect-video justify-center text-xs [&_.muted]:fill-muted [&_.grid-line]:stroke-border/50 " +
+        "[&_text]:fill-muted-foreground [&_line]:stroke-border";
+
+    /// <summary>Per-series Key → { Label, Color, Icon }. Drives the injected colour vars + tooltip/legend.</summary>
+    [Parameter] public ChartConfig? Config { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    /// <summary>The scoped id this container stamps on `data-chart` and targets in its injected `<style>`.</summary>
+    public string ChartId { get; private set; } = "chart";
+
+    private static readonly ChartConfig _empty = new();
+    internal ChartConfig EffectiveConfig => Config ?? _empty;
+
+    protected override void OnInitialized()
+        => ChartId = "chart-" + Guid.NewGuid().ToString("N")[..8];
+
+    // ChartStyle: a `[data-chart="id"] { --color-key: <color>; }` block scoped to this container.
+    private string StyleCss
+    {
+        get
+        {
+            if (Config is null || Config.Count == 0) return string.Empty;
+
+            var sb = new StringBuilder();
+            sb.Append("[data-chart=\"").Append(ChartId).Append("\"]{");
+            foreach (var (key, series) in Config)
+            {
+                if (!string.IsNullOrWhiteSpace(series.Color))
+                    sb.Append("--color-").Append(key).Append(':').Append(series.Color).Append(';');
+            }
+            sb.Append('}');
+            return sb.ToString();
+        }
+    }
+}

@@ -1,0 +1,238 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Interop
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+@*
+    Command menu (the cmdk pattern), pure C#. A bordered rounded surface that holds a
+    search input, a scrollable list, and items that filter by the query
+    (case-insensitive Contains). Items register with this root via a cascading context
+    so groups can hide when empty and the Empty state can show when nothing matches.
+
+    Keyboard navigation (cmdk parity): the input keeps DOM focus while a *virtual*
+    active item is tracked over the currently-MATCHING, non-disabled items.
+    ArrowDown/ArrowUp move it (wrapping), Home/End jump to the ends, Enter invokes the
+    active item's OnSelect, Esc clears the query (or no-ops when empty). The input's
+    aria-activedescendant points at the active item; the active item carries
+    data-active/data-highlighted + aria-selected and is scrolled into view.
+*@
+
+<CascadingValue Value="this" IsFixed="true">
+    <div @attributes="Attributes" class="@Css">
+        @ChildContent
+    </div>
+</CascadingValue>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Bound search query. Use @bind-Query to read/control it.</summary>
+    [Parameter] public string Query { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> QueryChanged { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "flex h-full w-full flex-col overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-md";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+
+    // Ordered so keyboard navigation walks items in DOM (registration) order.
+    private readonly List<ZitsCommandItem> _items = new();
+
+    // The virtually-active item (aria-activedescendant target). Null falls back to the
+    // first matching item so the list shows a highlight before the user interacts.
+    private ZitsCommandItem? _active;
+
+    internal string CurrentQuery => Query ?? string.Empty;
+
+    /// <summary>True when at least one registered item matches the current query.</summary>
+    internal bool HasMatches => _items.Any(i => i.Matches);
+
+    internal void Register(ZitsCommandItem item)
+    {
+        if (!_items.Contains(item))
+        {
+            _items.Add(item);
+        }
+    }
+
+    internal void Unregister(ZitsCommandItem item)
+    {
+        _items.Remove(item);
+        if (ReferenceEquals(_active, item))
+        {
+            _active = null;
+        }
+        NotifyFilterChanged();
+    }
+
+    internal async Task SetQueryAsync(string value)
+    {
+        if (value == CurrentQuery)
+        {
+            return;
+        }
+
+        Query = value;
+        _active = null; // re-highlight the first match as the list narrows (cmdk behaviour)
+        await QueryChanged.InvokeAsync(value);
+        NotifyFilterChanged();
+    }
+
+    /// <summary>Items match against this; default is case-insensitive Contains.</summary>
+    internal bool ItemMatches(string text) =>
+        string.IsNullOrEmpty(CurrentQuery) ||
+        text.Contains(CurrentQuery, StringComparison.OrdinalIgnoreCase);
+
+    // The selectable, navigable set: matching AND not disabled, in registration order.
+    private List<ZitsCommandItem> Selectable() =>
+        _items.Where(i => i.Matches && !i.Disabled).ToList();
+
+    /// <summary>The currently-active item, defaulting to the first selectable one.</summary>
+    internal ZitsCommandItem? ActiveItem
+    {
+        get
+        {
+            var selectable = Selectable();
+            if (_active is not null && selectable.Contains(_active))
+            {
+                return _active;
+            }
+            return selectable.Count > 0 ? selectable[0] : null;
+        }
+    }
+
+    internal string? ActiveDescendantId => ActiveItem?.Id;
+
+    internal bool IsActive(ZitsCommandItem item) => ReferenceEquals(ActiveItem, item);
+
+    /// <summary>Mouse hover sets the active item (no scroll — the pointer is already there).</summary>
+    internal void SetActive(ZitsCommandItem item)
+    {
+        if (!ReferenceEquals(_active, item))
+        {
+            _active = item;
+            NotifyFilterChanged();
+        }
+    }
+
+    internal Task MoveNextAsync() => MoveAsync(+1);
+    internal Task MovePrevAsync() => MoveAsync(-1);
+
+    private async Task MoveAsync(int delta)
+    {
+        var selectable = Selectable();
+        if (selectable.Count == 0)
+        {
+            return;
+        }
+
+        var current = ActiveItem is { } a ? selectable.IndexOf(a) : 0;
+        if (current < 0)
+        {
+            current = 0;
+        }
+
+        var next = (current + delta) % selectable.Count;
+        if (next < 0)
+        {
+            next += selectable.Count;
+        }
+
+        _active = selectable[next];
+        NotifyFilterChanged();
+        await ScrollActiveIntoViewAsync();
+    }
+
+    internal async Task MoveFirstAsync()
+    {
+        var selectable = Selectable();
+        if (selectable.Count == 0)
+        {
+            return;
+        }
+
+        _active = selectable[0];
+        NotifyFilterChanged();
+        await ScrollActiveIntoViewAsync();
+    }
+
+    internal async Task MoveLastAsync()
+    {
+        var selectable = Selectable();
+        if (selectable.Count == 0)
+        {
+            return;
+        }
+
+        _active = selectable[^1];
+        NotifyFilterChanged();
+        await ScrollActiveIntoViewAsync();
+    }
+
+    /// <summary>Enter: invoke the active item's OnSelect.</summary>
+    internal async Task SelectActiveAsync()
+    {
+        if (ActiveItem is { } item)
+        {
+            await item.InvokeSelectAsync();
+        }
+    }
+
+    /// <summary>Esc: clear a non-empty query; otherwise no-op (so a host dialog can close).</summary>
+    internal async Task EscapeAsync()
+    {
+        if (!string.IsNullOrEmpty(CurrentQuery))
+        {
+            await SetQueryAsync(string.Empty);
+        }
+    }
+
+    private async Task ScrollActiveIntoViewAsync()
+    {
+        var id = ActiveItem?.Id;
+        if (string.IsNullOrEmpty(id))
+        {
+            return;
+        }
+
+        // CSP-safe scroll via the engine (no eval). The id is a GUID hook we own.
+        try
+        {
+            _interop ??= new NaviusJsInterop(JS);
+            await _interop.ScrollIntoViewByIdAsync(id, "nearest");
+        }
+        catch
+        {
+            // Best-effort: prerender (no JS yet) or a disconnected circuit — ignore.
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Items register during the first render (after the input first rendered),
+            // so push one sync now: the input's aria-activedescendant adopts the
+            // default-highlighted first match.
+            NotifyFilterChanged();
+        }
+    }
+
+    private event Action? FilterChanged;
+
+    internal void OnFilterChanged(Action handler) => FilterChanged += handler;
+    internal void OffFilterChanged(Action handler) => FilterChanged -= handler;
+
+    private void NotifyFilterChanged() => FilterChanged?.Invoke();
+
+    private NaviusJsInterop? _interop;
+
+    public async ValueTask DisposeAsync()
+    {
+        FilterChanged = null;
+        if (_interop is not null) await _interop.DisposeAsync();
+    }
+}

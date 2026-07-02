@@ -1,0 +1,13 @@
+@namespace Zits.Ui
+
+@* Shown while the image is loading or has failed; optionally after a delay. *@
+<NaviusAvatarFallback DelayMs="DelayMs" @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusAvatarFallback>
+
+@code {
+    [Parameter] public int DelayMs { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "flex h-full w-full items-center justify-center rounded-full bg-muted";
+}

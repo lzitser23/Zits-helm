@@ -1,0 +1,8 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.NavigationMenu
+<NaviusNavigationMenuList @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusNavigationMenuList>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+    private const string Base = "group flex flex-1 list-none items-center justify-center gap-1";
+}

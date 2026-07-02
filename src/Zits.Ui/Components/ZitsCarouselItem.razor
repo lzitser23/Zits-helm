@@ -1,0 +1,35 @@
+@namespace Zits.Ui
+
+@*
+    A single slide. basis-full + shrink-0 so it fills the viewport by default; the
+    engine measures these slides and translates the track to bring each into view.
+    Set Basis (e.g. "md:basis-1/2") for a multi-item-per-view layout — it layers on
+    top of basis-full so smaller breakpoints still show one slide.
+*@
+
+<div @attributes="Attributes"
+     role="group"
+     aria-roledescription="slide"
+     class="@Css">
+    @ChildContent
+</div>
+
+@code {
+    [CascadingParameter] private ZitsCarousel? Root { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Optional flex-basis override for multi-slide viewports (e.g. "md:basis-1/2").</summary>
+    [Parameter] public string? Basis { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool Horizontal => Root?.IsHorizontal ?? true;
+
+    private string Css => Cn.Class(
+        "min-w-0 shrink-0 grow-0 basis-full",
+        Horizontal ? "pl-4" : "pt-4",
+        Basis,
+        Cn.UserClass(Attributes));
+}

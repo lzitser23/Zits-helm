@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>true</IsPackable>
+    <RootNamespace>Zits.Ui</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+  </ItemGroup>
+
+  <!--
+    zits/ui — the styled "helm" layer. shadcn/ui's component code, ported to Blazor
+    on top of the Navius headless "brain". Distributed copy-paste via the navius CLI
+    (these .razor files ARE the registry source); this RCL is the reference build +
+    showcase target. Depends on the brain for behaviour/accessibility.
+
+    The brain is a path reference into the sibling navius repo (check both repos out
+    side by side) until it ships on NuGet.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\navius\src\Navius.Primitives\Navius.Primitives.csproj" />
+  </ItemGroup>
+
+</Project>

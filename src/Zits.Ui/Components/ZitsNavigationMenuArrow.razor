@@ -1,0 +1,16 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.NavigationMenu
+
+@*
+    Active-trigger marker over the Navius primitive — replaces the former Indicator. The
+    engine keeps this triangle pointing at the active trigger (offset to data-[side]); it
+    is filled with the popover border colour to read as a small pointer. No data-state.
+*@
+
+<NaviusNavigationMenuArrow Width="14" Height="7" @attributes="Cn.Merge(Attributes, Base)" />
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "z-[1] fill-border drop-shadow-sm";
+}

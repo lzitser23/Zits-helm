@@ -1,0 +1,9 @@
+@namespace Zits.Ui
+@* A nested submenu owner. Renders no DOM; cascades its own open state. *@
+<NaviusMenuSub Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen">@ChildContent</NaviusMenuSub>
+@code {
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

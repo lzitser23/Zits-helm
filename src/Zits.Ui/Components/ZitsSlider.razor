@@ -1,0 +1,59 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Slider
+
+@* Styled slider over the Navius Slider primitive (value array, track/range/thumb, keyboard + drag). *@
+@* One thumb per value — a thumb is emitted for each entry in the value array. *@
+<NaviusSlider Value="Value" ValueChanged="ValueChanged" DefaultValue="DefaultValue"
+              ValueCommitted="ValueCommitted"
+              Min="Min" Max="Max" Step="Step" MinStepsBetweenThumbs="MinStepsBetweenThumbs"
+              Orientation="@Orientation" Inverted="Inverted" Dir="@Dir"
+              Disabled="Disabled" Name="@Name" Form="@Form"
+              @attributes="Cn.Merge(Attributes, Root)">
+    <NaviusSliderTrack class="@Track">
+        <NaviusSliderRange class="@Range" />
+    </NaviusSliderTrack>
+    @for (var i = 0; i < ThumbCount; i++)
+    {
+        <NaviusSliderThumb class="@Thumb" />
+    }
+</NaviusSlider>
+
+@code {
+    /// <summary>Controlled values (one per thumb). Bind with <c>@bind-Value</c>.</summary>
+    [Parameter] public IReadOnlyList<double>? Value { get; set; }
+    [Parameter] public EventCallback<IReadOnlyList<double>> ValueChanged { get; set; }
+    /// <summary>Initial values for uncontrolled use (one per thumb). Default <c>[0]</c> → one thumb.</summary>
+    [Parameter] public IReadOnlyList<double>? DefaultValue { get; set; }
+    [Parameter] public EventCallback<IReadOnlyList<double>> ValueCommitted { get; set; }
+    [Parameter] public double Min { get; set; } = 0;
+    [Parameter] public double Max { get; set; } = 100;
+    [Parameter] public double Step { get; set; } = 1;
+    [Parameter] public int MinStepsBetweenThumbs { get; set; }
+    [Parameter] public string Orientation { get; set; } = "horizontal";
+    [Parameter] public bool Inverted { get; set; }
+    [Parameter] public string? Dir { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? Name { get; set; }
+    [Parameter] public string? Form { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    // One thumb per value; falls back to a single thumb when neither Value nor DefaultValue is supplied.
+    private int ThumbCount =>
+        Value is { Count: > 0 } ? Value.Count
+        : DefaultValue is { Count: > 0 } ? DefaultValue.Count
+        : 1;
+
+    private const string Root =
+        "relative flex w-full touch-none select-none items-center data-[orientation=vertical]:h-full data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col data-[disabled]:opacity-50";
+
+    private const string Track =
+        "relative grow overflow-hidden rounded-full bg-primary/20 data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5";
+
+    private const string Range =
+        "absolute bg-primary data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full";
+
+    private const string Thumb =
+        "block h-4 w-4 -translate-x-1/2 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 data-[orientation=vertical]:-translate-x-0 data-[orientation=vertical]:translate-y-1/2";
+}

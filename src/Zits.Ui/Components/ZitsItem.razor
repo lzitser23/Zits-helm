@@ -1,0 +1,39 @@
+@namespace Zits.Ui
+
+@*
+    Item. A flex list row: media on the left, title+description in the middle,
+    actions on the right. Pure Tailwind, cva-style Variant/Size.
+*@
+
+<div @attributes="Attributes" class="@Css" data-variant="@Variant" data-size="@Size">@ChildContent</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>default | outline | muted</summary>
+    [Parameter] public string Variant { get; set; } = "default";
+
+    /// <summary>default | sm</summary>
+    [Parameter] public string Size { get; set; } = "default";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "group/item flex flex-wrap items-center rounded-md border border-transparent text-sm outline-none transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-ring [a]:hover:bg-accent/50 [a]:transition-colors";
+
+    private string VariantClass => Variant switch
+    {
+        "outline" => "border-border",
+        "muted" => "bg-muted/50",
+        _ => "",
+    };
+
+    private string SizeClass => Size switch
+    {
+        "sm" => "py-3 px-4 gap-2.5",
+        _ => "p-4 gap-4",
+    };
+
+    private string Css => Cn.Class(Base, VariantClass, SizeClass, Cn.UserClass(Attributes));
+}

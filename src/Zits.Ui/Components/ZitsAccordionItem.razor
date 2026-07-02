@@ -1,0 +1,9 @@
+@namespace Zits.Ui
+<NaviusAccordionItem Value="@Value" Disabled="Disabled" @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusAccordionItem>
+@code {
+    [Parameter] public string Value { get; set; } = "";
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+    private const string Base = "border-b";
+}

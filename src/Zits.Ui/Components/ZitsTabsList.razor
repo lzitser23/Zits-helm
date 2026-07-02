@@ -1,0 +1,9 @@
+@namespace Zits.Ui
+<NaviusTabsList Loop="Loop" @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusTabsList>
+@code {
+    [Parameter] public bool Loop { get; set; } = true;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+    private const string Base =
+        "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground";
+}

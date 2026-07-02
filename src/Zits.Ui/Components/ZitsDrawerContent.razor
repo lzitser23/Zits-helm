@@ -1,0 +1,59 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Drawer
+
+@*
+    The drawer panel. Portals + backdrops a sheet docked to Direction, with the signature
+    drag-handle bar. The Popup IS the draggable sheet — the Navius Drawer primitive engages
+    the dependency-free drag-to-dismiss (createSheetSwipe) and emits data-swiping +
+    --drawer-swipe-movement-x/y in the brain, so the helm carries only chrome.
+*@
+
+<NaviusDrawerPortal>
+    <NaviusDrawerBackdrop class="@OverlayClass" />
+    <NaviusDrawerPopup @attributes="Attributes" class="@PanelClass">
+        @if (HandleAtStart)
+        {
+            <div class="@HandleClass"></div>
+        }
+        @ChildContent
+        @if (HandleAtEnd)
+        {
+            <div class="@HandleClass"></div>
+        }
+    </NaviusDrawerPopup>
+</NaviusDrawerPortal>
+
+@code {
+    [CascadingParameter] private DrawerContext Context { get; set; } = default!;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private string Direction => Context.Side;
+
+    // --- styling -------------------------------------------------------------
+
+    private const string OverlayClass =
+        "fixed inset-0 z-50 bg-black/80 data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0";
+
+    private const string PanelBase =
+        "fixed z-50 flex flex-col bg-background transition ease-in-out data-[open]:duration-500 data-[closed]:duration-300 data-[open]:animate-in data-[closed]:animate-out";
+
+    private string PanelClass => Cn.Class(PanelBase, DirectionClass, Cn.UserClass(Attributes));
+
+    private string DirectionClass => Direction switch
+    {
+        "top" => "inset-x-0 top-0 mb-24 max-h-[80vh] rounded-b-lg border-b data-[closed]:slide-out-to-top data-[open]:slide-in-from-top",
+        "right" => "inset-y-0 right-0 h-full w-3/4 sm:max-w-sm border-l rounded-l-lg data-[closed]:slide-out-to-right data-[open]:slide-in-from-right",
+        "left" => "inset-y-0 left-0 h-full w-3/4 sm:max-w-sm border-r rounded-r-lg data-[closed]:slide-out-to-left data-[open]:slide-in-from-left",
+        _ => "inset-x-0 bottom-0 mt-24 max-h-[80vh] rounded-t-lg border-t data-[closed]:slide-out-to-bottom data-[open]:slide-in-from-bottom",
+    };
+
+    // The drag affordance sits at the grabbable edge: top of a bottom sheet, bottom of a top sheet.
+    private bool HandleAtStart => Direction == "bottom";
+    private bool HandleAtEnd => Direction == "top";
+
+    private string HandleClass => Direction == "top"
+        ? "mx-auto mb-4 h-2 w-[100px] shrink-0 rounded-full bg-muted"
+        : "mx-auto mt-4 h-2 w-[100px] shrink-0 rounded-full bg-muted";
+}

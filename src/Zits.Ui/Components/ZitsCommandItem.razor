@@ -1,0 +1,92 @@
+@namespace Zits.Ui
+@implements IDisposable
+
+@*
+    A selectable command row. It filters itself out (renders nothing) when its text does
+    not match the query, and reports its match state to the root and its group so the
+    Empty state and group heading can react. The root marks one matching row as the
+    virtual active descendant (keyboard highlight): that row carries
+    data-active/data-highlighted + aria-selected and is the Enter target. Hover also
+    makes a row active. Click selects.
+*@
+
+@if (Matches)
+{
+    var active = _command?.IsActive(this) ?? false;
+    <div @attributes="Attributes"
+         class="@Css"
+         id="@Id"
+         role="option"
+         aria-selected="@((active || Selected) ? "true" : "false")"
+         data-active="@(active ? "true" : null)"
+         data-highlighted="@(active ? "true" : null)"
+         data-selected="@(Selected ? "true" : null)"
+         data-disabled="@(Disabled ? "true" : null)"
+         @onclick="InvokeSelectAsync"
+         @onmouseenter="OnMouseEnter">
+        @ChildContent
+    </div>
+}
+
+@code {
+    [CascadingParameter] private ZitsCommand? _command { get; set; }
+    [CascadingParameter] private ZitsCommandGroup? _group { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Text used for filtering (case-insensitive Contains). Also the value passed to OnSelect.</summary>
+    [Parameter] public string Value { get; set; } = string.Empty;
+
+    [Parameter] public bool Selected { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public EventCallback<string> OnSelect { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+
+    // Stable id so the input can target this row via aria-activedescendant.
+    internal string Id { get; } = $"zits-command-item-{Guid.NewGuid():N}";
+
+    internal bool Matches =>
+        _command is null || _command.ItemMatches(Value);
+
+    protected override void OnInitialized()
+    {
+        _command?.Register(this);
+        _group?.Register(this);
+        _command?.OnFilterChanged(OnChanged);
+    }
+
+    private void OnChanged() => InvokeAsync(StateHasChanged);
+
+    private void OnMouseEnter()
+    {
+        if (!Disabled)
+        {
+            _command?.SetActive(this);
+        }
+    }
+
+    /// <summary>Fire this row's selection (click, or Enter when it is the active row).</summary>
+    internal async Task InvokeSelectAsync()
+    {
+        if (Disabled)
+        {
+            return;
+        }
+
+        await OnSelect.InvokeAsync(Value);
+    }
+
+    public void Dispose()
+    {
+        _command?.OffFilterChanged(OnChanged);
+        _group?.Unregister(this);
+        _command?.Unregister(this);
+    }
+}

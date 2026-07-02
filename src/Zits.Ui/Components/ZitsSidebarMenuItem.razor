@@ -1,0 +1,9 @@
+@namespace Zits.Ui
+@* A sidebar menu item — the <li> that wraps a ZitsSidebarMenuButton (+ optional
+   ZitsSidebarMenuAction / ZitsSidebarMenuBadge / ZitsSidebarMenuSub). The
+   `group/menu-item` hook drives the action's hover reveal. *@
+<li data-sidebar="menu-item" @attributes="Attributes" class="@Cn.Class("group/menu-item relative", Cn.UserClass(Attributes))">@ChildContent</li>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

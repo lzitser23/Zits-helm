@@ -1,0 +1,14 @@
+@namespace Zits.Ui
+
+@* Styled wrapper over the Navius Label primitive (htmlFor wiring + dbl-click guard). *@
+<NaviusLabel @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusLabel>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70";
+}

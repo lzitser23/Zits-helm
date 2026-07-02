@@ -1,0 +1,22 @@
+@namespace Zits.Ui
+
+@*
+    ButtonGroupText. A non-interactive label/segment inside a ButtonGroup —
+    muted, bordered, sized to match adjacent buttons.
+*@
+
+<div data-slot="button-group-text" @attributes="Attributes" class="@Css">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "flex items-center gap-2 rounded-md border bg-muted px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

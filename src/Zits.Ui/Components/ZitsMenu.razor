@@ -1,0 +1,13 @@
+@namespace Zits.Ui
+@* Root of the styled menu over the Navius Menu primitive. Renders no DOM. *@
+<NaviusMenu Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" Modal="Modal" Dir="@Dir">
+    @ChildContent
+</NaviusMenu>
+@code {
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; }
+    [Parameter] public bool Modal { get; set; } = true;
+    [Parameter] public string? Dir { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

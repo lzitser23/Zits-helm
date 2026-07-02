@@ -1,0 +1,31 @@
+@namespace Zits.Ui
+
+@*
+    Alert. A callout for user attention. Pure Tailwind (no brain needed)
+    with a cva-style Variant. role="alert" announces it to assistive tech.
+*@
+
+<div role="alert" @attributes="Attributes" class="@Css">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>default | destructive</summary>
+    [Parameter] public string Variant { get; set; } = "default";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "relative w-full rounded-lg border px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground [&>svg~*]:pl-7";
+
+    private string VariantClass => Variant switch
+    {
+        "destructive" => "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+        _ => "bg-background text-foreground",
+    };
+
+    private string Css => Cn.Class(Base, VariantClass, Cn.UserClass(Attributes));
+}

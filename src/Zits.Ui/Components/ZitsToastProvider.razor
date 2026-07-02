@@ -1,0 +1,20 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Toast
+
+@* Cascades toast configuration (limit / timeout / label / swipe) to the tree. Renders no DOM. *@
+<NaviusToastProvider Limit="Limit" Timeout="Timeout" Label="Label" SwipeDirection="SwipeDirection" SwipeThreshold="SwipeThreshold">
+    @ChildContent
+</NaviusToastProvider>
+
+@code {
+    /// <summary>Max simultaneously-visible toasts; the rest queue.</summary>
+    [Parameter] public int Limit { get; set; } = 1;
+
+    /// <summary>Default auto-close duration in ms (renamed from Duration).</summary>
+    [Parameter] public int Timeout { get; set; } = 5000;
+
+    [Parameter] public string Label { get; set; } = "Notification";
+    [Parameter] public string SwipeDirection { get; set; } = "right";
+    [Parameter] public double SwipeThreshold { get; set; } = 50;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

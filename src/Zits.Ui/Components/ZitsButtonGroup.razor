@@ -1,0 +1,32 @@
+@namespace Zits.Ui
+
+@*
+    ButtonGroup. Pure Tailwind (no brain needed). Groups buttons / inputs / selects
+    into a single segmented control, collapsing inner borders and corner radii.
+    Orientation drives which corners/borders are flattened (cva-style switch).
+*@
+
+<div role="group" data-slot="button-group" data-orientation="@Orientation" @attributes="Attributes" class="@Css">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>horizontal | vertical</summary>
+    [Parameter] public string Orientation { get; set; } = "horizontal";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "flex w-fit items-stretch has-[>[data-slot=button-group]]:gap-2 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1";
+
+    private string OrientationClass => Orientation switch
+    {
+        "vertical" => "flex-col [&>*:not(:first-child)]:rounded-t-none [&>*:not(:first-child)]:border-t-0 [&>*:not(:last-child)]:rounded-b-none",
+        _ => "[&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none",
+    };
+
+    private string Css => Cn.Class(Base, OrientationClass, Cn.UserClass(Attributes));
+}

@@ -1,0 +1,8 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Menubar
+@* One menu within the menubar. Renders no DOM; passes through to the brain. *@
+<NaviusMenubarMenu Value="@Value">@ChildContent</NaviusMenubarMenu>
+@code {
+    [Parameter] public string Value { get; set; } = "";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

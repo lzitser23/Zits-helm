@@ -1,0 +1,21 @@
+@namespace Zits.Ui
+
+@* Separator between OTP groups. Renders a lucide Dot by default; override via ChildContent. *@
+<div role="separator" @attributes="Attributes" class="@Cn.Class(Base, Cn.UserClass(Attributes))">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dot">
+            <circle cx="12.1" cy="12.1" r="1" />
+        </svg>
+    }
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+    private const string Base = "";
+}

@@ -1,0 +1,13 @@
+@namespace Zits.Ui
+@*
+    PaginationPrevious — a PaginationLink (default size) with a chevron and label.
+*@
+<ZitsPaginationLink aria-label="Go to previous page" Size="default" Href="@Href" class="@LinkClass" @attributes="Attributes">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="m15 18-6-6 6-6" /></svg>
+    <span>Previous</span>
+</ZitsPaginationLink>
+@code {
+    [Parameter] public string? Href { get; set; } = "#";
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+    private string LinkClass => Cn.Class("gap-1 pl-2.5", Cn.UserClass(Attributes));
+}

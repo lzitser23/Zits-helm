@@ -1,0 +1,29 @@
+@namespace Zits.Ui
+
+@* Styled select over the Navius Select primitive. Root owns value + open state. *@
+<NaviusSelect Value="@Value" ValueChanged="ValueChanged" DefaultValue="@DefaultValue"
+              Multiple="Multiple" Values="Values" ValuesChanged="ValuesChanged" DefaultValues="DefaultValues"
+              Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen"
+              Placeholder="@Placeholder" Disabled="Disabled" Name="@Name"
+              Required="Required" Dir="@Dir">
+    @ChildContent
+</NaviusSelect>
+
+@code {
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    [Parameter] public string? DefaultValue { get; set; }
+    [Parameter] public bool Multiple { get; set; }
+    [Parameter] public IReadOnlyList<string> Values { get; set; } = Array.Empty<string>();
+    [Parameter] public EventCallback<IReadOnlyList<string>> ValuesChanged { get; set; }
+    [Parameter] public IReadOnlyList<string>? DefaultValues { get; set; }
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; }
+    [Parameter] public string? Placeholder { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? Name { get; set; }
+    [Parameter] public bool Required { get; set; }
+    [Parameter] public string? Dir { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

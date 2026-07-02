@@ -1,0 +1,35 @@
+@namespace Zits.Ui
+@*
+    PaginationLink — a page-number link styled with the button variants
+    (outline when active, ghost otherwise).
+*@
+<a href="@Href" aria-current="@(IsActive ? "page" : null)" @attributes="Attributes" class="@Css">@ChildContent</a>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public bool IsActive { get; set; }
+
+    /// <summary>default | sm | lg | icon — defaults to icon.</summary>
+    [Parameter] public string Size { get; set; } = "icon";
+
+    [Parameter] public string? Href { get; set; } = "#";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string ButtonBase =
+        "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+
+    private string VariantClass => IsActive
+        ? "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+        : "hover:bg-accent hover:text-accent-foreground";
+
+    private string SizeClass => Size switch
+    {
+        "sm" => "h-8 rounded-md px-3 text-xs",
+        "lg" => "h-10 rounded-md px-8",
+        "default" => "h-9 px-4 py-2",
+        _ => "h-9 w-9",
+    };
+
+    private string Css => Cn.Class(ButtonBase, VariantClass, SizeClass, Cn.UserClass(Attributes));
+}

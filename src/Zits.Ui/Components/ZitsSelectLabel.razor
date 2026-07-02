@@ -1,0 +1,7 @@
+@namespace Zits.Ui
+<NaviusSelectLabel @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusSelectLabel>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+    private const string Base = "px-2 py-1.5 text-sm font-semibold";
+}

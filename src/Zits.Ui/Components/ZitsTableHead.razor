@@ -1,0 +1,6 @@
+@namespace Zits.Ui
+<th @attributes="Attributes" class="@Cn.Class("h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0", Cn.UserClass(Attributes))">@ChildContent</th>
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+}

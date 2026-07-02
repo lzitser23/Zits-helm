@@ -1,0 +1,449 @@
+@namespace Zits.Ui
+@using System.Globalization
+
+@*
+    Calendar — a dependency-free C# day picker. Pure C# month math + roving-tabindex keyboard nav;
+    the only interop is the built-in ElementReference.FocusAsync.
+
+    Modes:
+      single   — @bind-Selected (DateOnly?), DefaultSelected, click toggles.
+      range    — @bind-SelectedRange ((DateOnly? Start, DateOnly? End)),
+                 DefaultSelectedRange; hovering previews the tentative range.
+      multiple — @bind-SelectedDates (IReadOnlyList<DateOnly>), DefaultSelectedDates.
+
+    Also: DisabledMatcher / MinDate / MaxDate, FirstDayOfWeek, NumberOfMonths,
+    ShowOutsideDays. Day state is exposed via data-selected / data-range-start /
+    data-range-end / data-range-middle / data-today / data-outside / data-disabled
+    plus the matching classes.
+*@
+
+<div @attributes="Attributes" class="@RootCss">
+    <div class="flex flex-col sm:flex-row gap-2" @onmouseleave="ClearHover">
+        @for (var m = 0; m < N; m++)
+        {
+            var monthDate = _view.AddMonths(m);
+            <div class="space-y-4">
+                <div class="flex justify-center pt-1 relative items-center w-full">
+                    @if (m == 0)
+                    {
+                        <ZitsButton Variant="outline" class="@NavButtonLeft" OnClick="PrevMonth" aria-label="Go to previous month">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="m15 18-6-6 6-6" /></svg>
+                        </ZitsButton>
+                    }
+                    <div class="text-sm font-medium" aria-live="polite">@monthDate.ToString("MMMM yyyy", CultureInfo.InvariantCulture)</div>
+                    @if (m == N - 1)
+                    {
+                        <ZitsButton Variant="outline" class="@NavButtonRight" OnClick="NextMonth" aria-label="Go to next month">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="m9 18 6-6-6-6" /></svg>
+                        </ZitsButton>
+                    }
+                </div>
+
+                <table class="w-full border-collapse space-y-1" role="grid">
+                    <thead>
+                        <tr class="flex">
+                            @foreach (var wd in HeaderDays())
+                            {
+                                <th scope="col" class="text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]" abbr="@wd.Full">@wd.Short</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var week in WeeksOf(monthDate))
+                        {
+                            <tr class="flex w-full mt-2">
+                                @foreach (var day in week)
+                                {
+                                    var st = StateOf(day, monthDate);
+                                    <td class="@st.CellClass" role="presentation">
+                                        @if (!st.Hidden)
+                                        {
+                                            <ZitsCalendarDay Class="@st.DayClass"
+                                                             ExtraAttributes="st.Attrs"
+                                                             IsFocusTarget="st.Target"
+                                                             Focus="st.Target && _focusRequested"
+                                                             OnClick="() => SelectDay(day)"
+                                                             OnKeyDown="e => HandleKeyDown(day, e)"
+                                                             OnPointerEnter="HoverCb(day)">
+                                                @day.Day
+                                            </ZitsCalendarDay>
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    // ---- single -----------------------------------------------------------
+    /// <summary>Selected day (single mode). Two-way bindable via @bind-Selected.</summary>
+    [Parameter] public DateOnly? Selected { get; set; }
+    [Parameter] public EventCallback<DateOnly?> SelectedChanged { get; set; }
+    /// <summary>Uncontrolled initial selection (single mode).</summary>
+    [Parameter] public DateOnly? DefaultSelected { get; set; }
+
+    // ---- range ------------------------------------------------------------
+    /// <summary>Selected range (range mode). Two-way bindable via @bind-SelectedRange.</summary>
+    [Parameter] public (DateOnly? Start, DateOnly? End) SelectedRange { get; set; }
+    [Parameter] public EventCallback<(DateOnly? Start, DateOnly? End)> SelectedRangeChanged { get; set; }
+    /// <summary>Uncontrolled initial range (range mode).</summary>
+    [Parameter] public (DateOnly? Start, DateOnly? End) DefaultSelectedRange { get; set; }
+
+    // ---- multiple ---------------------------------------------------------
+    /// <summary>Selected days (multiple mode). Two-way bindable via @bind-SelectedDates.</summary>
+    [Parameter] public IReadOnlyList<DateOnly>? SelectedDates { get; set; }
+    [Parameter] public EventCallback<IReadOnlyList<DateOnly>> SelectedDatesChanged { get; set; }
+    /// <summary>Uncontrolled initial days (multiple mode).</summary>
+    [Parameter] public IReadOnlyList<DateOnly>? DefaultSelectedDates { get; set; }
+
+    // ---- shared -----------------------------------------------------------
+    /// <summary>single | range | multiple.</summary>
+    [Parameter] public string Mode { get; set; } = "single";
+
+    /// <summary>Which month is shown first when there is no selection. Defaults to today.</summary>
+    [Parameter] public DateOnly? DefaultMonth { get; set; }
+
+    /// <summary>Predicate making matched days unselectable.</summary>
+    [Parameter] public Func<DateOnly, bool>? DisabledMatcher { get; set; }
+    [Parameter] public DateOnly? MinDate { get; set; }
+    [Parameter] public DateOnly? MaxDate { get; set; }
+
+    /// <summary>Week start (reorders the header + grid). Defaults to Sunday.</summary>
+    [Parameter] public DayOfWeek FirstDayOfWeek { get; set; } = DayOfWeek.Sunday;
+
+    /// <summary>How many months to render side by side. Defaults to 1.</summary>
+    [Parameter] public int NumberOfMonths { get; set; } = 1;
+
+    /// <summary>Render faded leading/trailing days of adjacent months. Defaults to true.</summary>
+    [Parameter] public bool ShowOutsideDays { get; set; } = true;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    // ---- state ------------------------------------------------------------
+    private DateOnly _view;          // first-of-month of the first visible month
+    private DateOnly _focusedDay;    // roving-tabindex day
+    private DateOnly? _hoverDay;     // range mid-selection preview anchor
+    private DateOnly? _selected;
+    private (DateOnly? Start, DateOnly? End) _range;
+    private List<DateOnly> _dates = new();
+    private DateOnly? _lastPrimary;
+    private bool _focusRequested;    // one-shot: move DOM focus after this render
+    private bool _initialized;
+    private bool _selectedControlled, _rangeControlled, _datesControlled;
+
+    private static readonly DateOnly Today = DateOnly.FromDateTime(DateTime.Now);
+
+    private int N => Math.Max(1, NumberOfMonths);
+
+    // ---- classes ----------------------------------------------------------
+    private const string Base = "p-3 inline-block rounded-md border";
+
+    private const string NavButtonClass = "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100";
+    private const string NavButtonLeft = NavButtonClass + " absolute left-1";
+    private const string NavButtonRight = NavButtonClass + " absolute right-1";
+
+    private const string CellBase = "relative p-0 text-center text-sm focus-within:relative focus-within:z-20";
+
+    // Day cell: ghost-button base, rounded, h-9 w-9.
+    private const string DayBase =
+        "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-normal ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-accent hover:text-accent-foreground h-9 w-9 p-0 aria-selected:opacity-100";
+    private const string DaySelected =
+        "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground";
+    private const string DayRangeMiddle =
+        "bg-accent text-accent-foreground rounded-none hover:bg-accent hover:text-accent-foreground";
+    private const string DayToday = "bg-accent text-accent-foreground";
+    private const string DayOutside = "text-muted-foreground opacity-50";
+    private const string DayDisabled = "text-muted-foreground opacity-50 pointer-events-none";
+
+    private string RootCss => Cn.Class(Base, Cn.UserClass(Attributes));
+
+    // ---- lifecycle --------------------------------------------------------
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        // Controlled-ness = whether the value parameter was supplied this render.
+        _selectedControlled = parameters.TryGetValue<DateOnly?>(nameof(Selected), out _);
+        _rangeControlled = parameters.TryGetValue<(DateOnly?, DateOnly?)>(nameof(SelectedRange), out _);
+        _datesControlled = parameters.TryGetValue<IReadOnlyList<DateOnly>?>(nameof(SelectedDates), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (!_initialized)
+        {
+            _selected = _selectedControlled ? Selected : DefaultSelected;
+            _range = _rangeControlled ? SelectedRange : DefaultSelectedRange;
+            _dates = new List<DateOnly>((_datesControlled ? SelectedDates : DefaultSelectedDates) ?? Array.Empty<DateOnly>());
+            _dates.Sort();
+
+            var anchor = PrimarySelection() ?? DefaultMonth ?? Today;
+            _view = FirstOfMonth(anchor);
+            _focusedDay = PrimarySelection() ?? (IsVisible(Today) ? Today : _view);
+            _lastPrimary = PrimarySelection();
+            _initialized = true;
+            return;
+        }
+
+        // Sync the controlled values; leave uncontrolled state untouched.
+        if (_selectedControlled) _selected = Selected;
+        if (_rangeControlled) _range = SelectedRange;
+        if (_datesControlled)
+        {
+            _dates = new List<DateOnly>(SelectedDates ?? Array.Empty<DateOnly>());
+            _dates.Sort();
+        }
+
+        // Re-anchor the view to an externally-changed selection that fell offscreen.
+        var primary = PrimarySelection();
+        if (primary is { } p && p != _lastPrimary && !IsVisible(p))
+        {
+            _view = FirstOfMonth(p);
+            _focusedDay = p;
+        }
+        _lastPrimary = primary;
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        // The focus one-shot has been consumed by the target day's render.
+        _focusRequested = false;
+        return Task.CompletedTask;
+    }
+
+    // ---- navigation -------------------------------------------------------
+    private void PrevMonth()
+    {
+        _view = _view.AddMonths(-1);
+        _focusedDay = _focusedDay.AddMonths(-1);
+    }
+
+    private void NextMonth()
+    {
+        _view = _view.AddMonths(1);
+        _focusedDay = _focusedDay.AddMonths(1);
+    }
+
+    private void HandleKeyDown(DateOnly day, KeyboardEventArgs e)
+    {
+        DateOnly? target = e.Key switch
+        {
+            "ArrowLeft" => day.AddDays(-1),
+            "ArrowRight" => day.AddDays(1),
+            "ArrowUp" => day.AddDays(-7),
+            "ArrowDown" => day.AddDays(7),
+            "Home" => day.AddDays(-WeekIndex(day)),
+            "End" => day.AddDays(6 - WeekIndex(day)),
+            "PageUp" => day.AddMonths(-1),
+            "PageDown" => day.AddMonths(1),
+            _ => null,
+        };
+        // Enter / Space fall through to the button's native click -> SelectDay.
+        if (target is not { } t) return;
+
+        _focusedDay = t;
+        EnsureVisible(t);
+        _focusRequested = true; // pull DOM focus to the moved day after re-render
+    }
+
+    private void EnsureVisible(DateOnly day)
+    {
+        if (day < _view)
+        {
+            _view = FirstOfMonth(day);
+        }
+        else if (day >= _view.AddMonths(N))
+        {
+            _view = FirstOfMonth(day).AddMonths(-(N - 1));
+        }
+    }
+
+    // ---- selection --------------------------------------------------------
+    private async Task SelectDay(DateOnly day)
+    {
+        if (IsDisabled(day)) return;
+        _focusedDay = day;
+
+        switch (Mode)
+        {
+            case "range":
+            {
+                var (s, e) = _range;
+                if (s is null || e is not null)
+                {
+                    _range = (day, null); // begin a new range
+                }
+                else
+                {
+                    var a = s.Value;
+                    _range = day < a ? ((DateOnly?)day, (DateOnly?)a) : ((DateOnly?)a, (DateOnly?)day);
+                }
+                _hoverDay = null;
+                _lastPrimary = PrimarySelection();
+                await SelectedRangeChanged.InvokeAsync(_range);
+                break;
+            }
+            case "multiple":
+            {
+                var list = new List<DateOnly>(_dates);
+                if (!list.Remove(day)) list.Add(day);
+                list.Sort();
+                _dates = list;
+                _lastPrimary = PrimarySelection();
+                await SelectedDatesChanged.InvokeAsync(_dates);
+                break;
+            }
+            default:
+            {
+                var next = _selected == day ? (DateOnly?)null : day;
+                _selected = next;
+                _lastPrimary = next;
+                await SelectedChanged.InvokeAsync(next);
+                break;
+            }
+        }
+    }
+
+    private EventCallback HoverCb(DateOnly day)
+        => Mode == "range" ? EventCallback.Factory.Create(this, () => SetHover(day)) : default;
+
+    private void SetHover(DateOnly day)
+    {
+        if (Mode != "range") return;
+        if (_range.Start is null || _range.End is not null) return; // only mid-selection
+        if (IsDisabled(day)) return;
+        _hoverDay = day;
+    }
+
+    private void ClearHover()
+    {
+        if (_hoverDay is not null) _hoverDay = null;
+    }
+
+    // ---- per-day state ----------------------------------------------------
+    private (bool Hidden, string CellClass, string DayClass, Dictionary<string, object> Attrs, bool Target) StateOf(DateOnly day, DateOnly monthDate)
+    {
+        var outside = !SameMonth(day, monthDate);
+        if (outside && !ShowOutsideDays)
+        {
+            return (true, CellBase, string.Empty, new(), false);
+        }
+
+        var disabled = IsDisabled(day);
+        var today = day == Today;
+
+        bool sel = false, rStart = false, rEnd = false, rMid = false;
+        switch (Mode)
+        {
+            case "range":
+                var (lo, hi) = EffectiveRange();
+                if (lo is { } a && hi is { } b)
+                {
+                    rStart = day == a;
+                    rEnd = day == b;
+                    rMid = day > a && day < b;
+                    sel = day >= a && day <= b;
+                }
+                break;
+            case "multiple":
+                sel = _dates.Contains(day);
+                break;
+            default:
+                sel = _selected == day;
+                break;
+        }
+
+        var attrs = new Dictionary<string, object>
+        {
+            ["aria-label"] = day.ToString("dddd, MMMM d, yyyy", CultureInfo.InvariantCulture),
+            ["data-day"] = day.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+        };
+        if (sel) { attrs["aria-selected"] = "true"; attrs["data-selected"] = "true"; }
+        if (rStart) attrs["data-range-start"] = "true";
+        if (rEnd) attrs["data-range-end"] = "true";
+        if (rMid) attrs["data-range-middle"] = "true";
+        if (today) attrs["data-today"] = "true";
+        if (outside) attrs["data-outside"] = "true";
+        if (disabled) { attrs["data-disabled"] = "true"; attrs["aria-disabled"] = "true"; }
+
+        var dayClass = Cn.Class(
+            DayBase,
+            sel && !rMid ? DaySelected : null,
+            rMid ? DayRangeMiddle : null,
+            !sel && today ? DayToday : null,
+            outside ? DayOutside : null,
+            disabled ? DayDisabled : null);
+
+        var cellClass = Mode == "range"
+            ? Cn.Class(CellBase, sel ? "bg-accent" : null, rStart ? "rounded-l-md" : null, rEnd ? "rounded-r-md" : null)
+            : Cn.Class(CellBase, sel ? "bg-accent rounded-md" : null);
+
+        var target = day == _focusedDay && SameMonth(day, monthDate);
+
+        return (false, cellClass, dayClass, attrs, target);
+    }
+
+    // ---- helpers ----------------------------------------------------------
+    private DateOnly? PrimarySelection() => Mode switch
+    {
+        "range" => _range.Start ?? _range.End,
+        "multiple" => _dates.Count > 0 ? _dates[0] : null,
+        _ => _selected,
+    };
+
+    // The tentative (ordered) range to paint, including hover preview.
+    private (DateOnly? Lo, DateOnly? Hi) EffectiveRange()
+    {
+        var (s, e) = _range;
+        if (s is { } a && e is { } b) return a <= b ? (a, b) : (b, a);
+        if (s is { } s2 && _hoverDay is { } h) return s2 <= h ? (s2, h) : (h, s2);
+        if (s is { } s3) return (s3, s3);
+        return (null, null);
+    }
+
+    private bool IsDisabled(DateOnly day) =>
+        (MinDate is { } mn && day < mn) ||
+        (MaxDate is { } mx && day > mx) ||
+        (DisabledMatcher?.Invoke(day) ?? false);
+
+    private bool IsVisible(DateOnly d) => d >= _view && d < _view.AddMonths(N);
+
+    private int WeekIndex(DateOnly day) => (((int)day.DayOfWeek - (int)FirstDayOfWeek) % 7 + 7) % 7;
+
+    private IEnumerable<(string Short, string Full)> HeaderDays()
+    {
+        for (var i = 0; i < 7; i++)
+        {
+            yield return WeekdayNames[((int)FirstDayOfWeek + i) % 7];
+        }
+    }
+
+    private IEnumerable<DateOnly[]> WeeksOf(DateOnly monthDate)
+    {
+        var first = FirstOfMonth(monthDate);
+        var offset = WeekIndex(first);
+        var start = first.AddDays(-offset);
+        var daysInMonth = DateTime.DaysInMonth(monthDate.Year, monthDate.Month);
+        var weeks = (int)Math.Ceiling((offset + daysInMonth) / 7.0);
+        for (var w = 0; w < weeks; w++)
+        {
+            var week = new DateOnly[7];
+            for (var d = 0; d < 7; d++) week[d] = start.AddDays(w * 7 + d);
+            yield return week;
+        }
+    }
+
+    private static bool SameMonth(DateOnly a, DateOnly b) => a.Year == b.Year && a.Month == b.Month;
+    private static DateOnly FirstOfMonth(DateOnly d) => new(d.Year, d.Month, 1);
+
+    private static readonly (string Short, string Full)[] WeekdayNames =
+    {
+        ("Su", "Sunday"), ("Mo", "Monday"), ("Tu", "Tuesday"), ("We", "Wednesday"),
+        ("Th", "Thursday"), ("Fr", "Friday"), ("Sa", "Saturday"),
+    };
+}
