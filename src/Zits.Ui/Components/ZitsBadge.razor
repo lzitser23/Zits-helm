@@ -11,6 +11,9 @@
     [Parameter(CaptureUnmatchedValues = true)]
     public IDictionary<string, object>? Attributes { get; set; }
 
+    /// <summary>Opt in to a looped live-status pulse (Navius.Motion <c>motion-pulse</c>). Inert unless the app links _content/Navius.Motion/navius-motion.css.</summary>
+    [Parameter] public bool Pulse { get; set; }
+
     private const string Base =
         "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2";
 
@@ -22,5 +25,5 @@
         _ => "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
     };
 
-    private string Css => Cn.Class(Base, VariantClass, Cn.UserClass(Attributes));
+    private string Css => Cn.Class(Base, VariantClass, Pulse ? "motion-pulse" : null, Cn.UserClass(Attributes));
 }

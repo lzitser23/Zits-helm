@@ -8,7 +8,10 @@
     [Parameter(CaptureUnmatchedValues = true)]
     public IDictionary<string, object>? Attributes { get; set; }
 
-    private const string Base = "animate-pulse rounded-md bg-muted";
+    /// <summary>Swap the pulse for a shimmer sweep (Navius.Motion <c>motion-shimmer</c>). Inert unless the app links _content/Navius.Motion/navius-motion.css.</summary>
+    [Parameter] public bool Shimmer { get; set; }
 
-    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+    private const string Base = "rounded-md bg-muted";
+
+    private string Css => Cn.Class(Shimmer ? "motion-shimmer" : "animate-pulse", Base, Cn.UserClass(Attributes));
 }

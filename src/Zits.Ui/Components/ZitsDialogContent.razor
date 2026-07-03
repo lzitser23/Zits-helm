@@ -3,7 +3,7 @@
 @* Portals + overlays the panel, with a built-in close affordance. *@
 <NaviusDialogPortal>
     <NaviusDialogBackdrop class="@OverlayClass" />
-    <NaviusDialogPopup @attributes="Cn.Merge(Attributes, ContentBase)">
+    <NaviusDialogPopup @attributes="Cn.Merge(Attributes, ContentBase, Motion)">
         @ChildContent
         <NaviusDialogClose class="@CloseClass" aria-label="Close">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -17,6 +17,8 @@
 
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    /// <summary>Optional Navius.Motion presence class (e.g. "motion-pop") forwarded onto the popup. Inert unless the app links _content/Navius.Motion/navius-motion.css.</summary>
+    [Parameter] public string? Motion { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
 
     private const string OverlayClass =
