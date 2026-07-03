@@ -1,0 +1,96 @@
+@namespace Zits.Ui
+@using System.Globalization
+@using Navius.Primitives.Components.CurrencyInput
+
+@*
+    CurrencyInput = the headless NaviusCurrencyInput + the Input skin. The decimal? truth and the
+    NumberFormatInfo formatting live in the brain; this wrapper owns controlled/uncontrolled the
+    ZitsCalendar way (a _value mirror seeded from DefaultValue, only adopting Value when supplied).
+    The culture's currency symbol is rendered inline in the value (a documented simplification of
+    the spec's separate adornment slot), so no extra symbol element is needed here.
+*@
+
+<NaviusCurrencyInput Value="_value"
+                     ValueChanged="OnValueChangedAsync"
+                     Culture="Culture"
+                     Currency="@Currency"
+                     MinFractionDigits="MinFractionDigits"
+                     MaxFractionDigits="MaxFractionDigits"
+                     AllowNegative="AllowNegative"
+                     Min="Min"
+                     Max="Max"
+                     ShowSymbol="ShowSymbol"
+                     Disabled="Disabled"
+                     Invalid="Invalid"
+                     @attributes="Cn.Merge(Attributes, Base)" />
+
+@code {
+    /// <summary>Controlled value. Use <c>@bind-Value</c>.</summary>
+    [Parameter] public decimal? Value { get; set; }
+
+    [Parameter] public EventCallback<decimal?> ValueChanged { get; set; }
+
+    /// <summary>Uncontrolled initial value.</summary>
+    [Parameter] public decimal? DefaultValue { get; set; }
+
+    [Parameter] public CultureInfo? Culture { get; set; }
+
+    [Parameter] public string? Currency { get; set; }
+
+    [Parameter] public int? MinFractionDigits { get; set; }
+
+    [Parameter] public int? MaxFractionDigits { get; set; }
+
+    [Parameter] public bool AllowNegative { get; set; }
+
+    [Parameter] public decimal? Min { get; set; }
+
+    [Parameter] public decimal? Max { get; set; }
+
+    [Parameter] public bool ShowSymbol { get; set; } = true;
+
+    [Parameter] public bool Disabled { get; set; }
+
+    [Parameter] public bool Invalid { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private decimal? _value;
+    private bool _valueSet;
+    private bool _initialized;
+
+    private const string Base =
+        "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm tabular-nums shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[invalid]:border-destructive data-[invalid]:ring-destructive data-[negative]:text-destructive";
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueSet = parameters.TryGetValue<decimal?>(nameof(Value), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (!_initialized)
+        {
+            _value = _valueSet ? Value : DefaultValue;
+            _initialized = true;
+            return;
+        }
+
+        if (_valueSet)
+        {
+            _value = Value;
+        }
+    }
+
+    private async Task OnValueChangedAsync(decimal? v)
+    {
+        if (!_valueSet)
+        {
+            _value = v;
+        }
+
+        await ValueChanged.InvokeAsync(v);
+    }
+}

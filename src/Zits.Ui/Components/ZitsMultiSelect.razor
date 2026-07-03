@@ -1,0 +1,167 @@
+@namespace Zits.Ui
+@typeparam TItem
+@using Navius.Primitives.Components.Combobox
+@using Navius.Primitives.Portal
+
+@*
+    MultiSelect: a presentational skin over the existing brain Combobox Multiple (no brain
+    changes). All state/filtering/keyboard/ARIA come from NaviusCombobox unchanged; this wrapper
+    only presets Multiple and renders the trigger as removable chips that collapse past
+    MaxDisplayChips to a "+N more" badge. Controlled/uncontrolled is owned here the ZitsCalendar
+    way: a _current mirror seeded from DefaultValues, only adopting Values when supplied, always
+    fed to the (delegate-controlled) brain, so it never force-forwards a stale param and the
+    chip loop always has the live selection to slice for the overflow badge.
+*@
+
+<NaviusCombobox Items="Items"
+                Multiple="true"
+                Values="_current"
+                ValuesChanged="OnValuesChangedAsync"
+                ItemToString="ItemToString"
+                Placeholder="@Placeholder"
+                TItem="TItem">
+    <ItemTemplate Context="item">
+        <NaviusComboboxItem class="@Option">
+            <NaviusComboboxItemIndicator class="absolute left-2 inline-flex items-center">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </NaviusComboboxItemIndicator>
+            @Label(item)
+        </NaviusComboboxItem>
+    </ItemTemplate>
+    <ChildContent>
+        <div class="@RootClass">
+            <div class="flex flex-wrap items-center gap-1 rounded-md border border-input bg-background p-1 shadow-sm focus-within:ring-1 focus-within:ring-ring">
+                @{
+                    var shown = Math.Min(_current.Count, MaxDisplayChips);
+                }
+                @for (var i = 0; i < shown; i++)
+                {
+                    var item = _current[i];
+                    <NaviusComboboxChip Value="item" @key="item" class="@Chip">
+                        @Label(item)
+                        <NaviusComboboxChipRemove aria-label="@($"Remove {Label(item)}")" class="rounded-sm leading-none text-muted-foreground hover:text-foreground">×</NaviusComboboxChipRemove>
+                    </NaviusComboboxChip>
+                }
+                @if (_current.Count > MaxDisplayChips)
+                {
+                    <span class="@Badge">+@(_current.Count - MaxDisplayChips) more</span>
+                }
+                @if (ShowSelectedCount && _current.Count > 0)
+                {
+                    <span class="@Badge">@_current.Count selected</span>
+                }
+                <NaviusComboboxInput Placeholder="@(_current.Count == 0 ? Placeholder : null)" class="@Field" @attributes="InputExtra" />
+                @if (ClearButton && _current.Count > 0)
+                {
+                    <NaviusComboboxClear aria-label="Clear all" class="ml-auto inline-flex items-center rounded-sm px-1 text-muted-foreground hover:text-foreground">×</NaviusComboboxClear>
+                }
+            </div>
+        </div>
+        <NaviusComboboxPortal>
+            <NaviusComboboxPositioner Side="@Side" Align="@Align" SideOffset="4">
+                <NaviusComboboxPopup class="@List">
+                    <NaviusComboboxList class="outline-none" />
+                    <NaviusComboboxEmpty class="px-2 py-1.5 text-sm text-muted-foreground">No results</NaviusComboboxEmpty>
+                </NaviusComboboxPopup>
+            </NaviusComboboxPositioner>
+        </NaviusComboboxPortal>
+    </ChildContent>
+</NaviusCombobox>
+
+@code {
+    [Parameter] public IReadOnlyList<TItem> Items { get; set; } = Array.Empty<TItem>();
+
+    /// <summary>Controlled selection. Use <c>@bind-Value</c>.</summary>
+    [Parameter] public IReadOnlyList<TItem> Value { get; set; } = Array.Empty<TItem>();
+
+    [Parameter] public EventCallback<IReadOnlyList<TItem>> ValueChanged { get; set; }
+
+    /// <summary>Uncontrolled initial selection.</summary>
+    [Parameter] public IReadOnlyList<TItem> DefaultValue { get; set; } = Array.Empty<TItem>();
+
+    [Parameter] public Func<TItem, string>? ItemToString { get; set; }
+
+    [Parameter] public string? Placeholder { get; set; }
+
+    /// <summary>Chips beyond this collapse to a "+N more" badge.</summary>
+    [Parameter] public int MaxDisplayChips { get; set; } = 3;
+
+    /// <summary>When false the input is read-only (a dropdown-only multiselect, no typeahead filter).</summary>
+    [Parameter] public bool Searchable { get; set; } = true;
+
+    /// <summary>Show a clear-all button once there is a selection.</summary>
+    [Parameter] public bool ClearButton { get; set; }
+
+    /// <summary>Append an "N selected" badge after the chips.</summary>
+    [Parameter] public bool ShowSelectedCount { get; set; }
+
+    [Parameter] public string Side { get; set; } = "bottom";
+
+    [Parameter] public string Align { get; set; } = "start";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private static readonly IReadOnlyDictionary<string, object> ReadOnlyAttr =
+        new Dictionary<string, object> { ["readonly"] = "readonly" };
+
+    private List<TItem> _current = new();
+    private bool _valueSet;
+    private bool _initialized;
+
+    private IReadOnlyDictionary<string, object>? InputExtra => Searchable ? null : ReadOnlyAttr;
+
+    private const string Root = "relative w-full min-w-[220px]";
+
+    private const string Field =
+        "h-7 min-w-[6rem] flex-1 bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground";
+
+    private const string Chip =
+        "inline-flex items-center gap-1 rounded bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground";
+
+    private const string Badge =
+        "inline-flex items-center rounded bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground";
+
+    private const string List =
+        "z-50 max-h-[300px] w-[240px] overflow-y-auto overflow-x-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-none data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-95 data-[open]:zoom-in-95";
+
+    private const string Option =
+        "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[selected]:font-medium";
+
+    private string RootClass => Cn.Class(Root, Cn.UserClass(Attributes));
+
+    private string Label(TItem item) => ItemToString is not null ? ItemToString(item) : item?.ToString() ?? "";
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueSet = parameters.TryGetValue<IReadOnlyList<TItem>>(nameof(Value), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (!_initialized)
+        {
+            _current = new List<TItem>(_valueSet ? Value : DefaultValue);
+            _initialized = true;
+            return;
+        }
+
+        if (_valueSet)
+        {
+            _current = new List<TItem>(Value);
+        }
+    }
+
+    private async Task OnValuesChangedAsync(IReadOnlyList<TItem> values)
+    {
+        if (!_valueSet)
+        {
+            _current = new List<TItem>(values);
+        }
+
+        await ValueChanged.InvokeAsync(values);
+    }
+}

@@ -1,0 +1,27 @@
+@namespace Zits.Ui
+
+@* The primary action, a real ZitsButton inheriting the group's Variant/Size/Disabled, squared on the trigger side. *@
+
+<ZitsButton Variant="@Context.Variant"
+            Size="@Context.Size"
+            Disabled="Context.Disabled"
+            Type="@Type"
+            OnClick="OnClick"
+            @attributes="Cn.Merge(Attributes, Seam)">
+    @ChildContent
+</ZitsButton>
+
+@code {
+    [CascadingParameter] private SplitButtonContext Context { get; set; } = default!;
+
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    [Parameter] public string Type { get; set; } = "button";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Seam = "rounded-r-none";
+}
