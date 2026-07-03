@@ -1,0 +1,32 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.MessageScroller
+
+@*
+    One transcript row (= shadcn MessageScroller.Item). content-visibility:auto keeps
+    off-screen rows out of render work while leaving them in the DOM for selection, copy,
+    find-in-page and AT. Give the row a stable MessageId (for jump / visibility / prepend
+    preservation) and a stable @@key when rendering from a list.
+*@
+
+<NaviusMessageScrollerItem MessageId="@MessageId"
+                           ScrollAnchor="ScrollAnchor"
+                           data-slot="message-scroller-item"
+                           @attributes="Cn.Merge(Attributes, Base)">
+    @ChildContent
+</NaviusMessageScrollerItem>
+
+@code {
+    /// <summary>Stable row id used by jump-to-message, visibility and prepend preservation.</summary>
+    [Parameter] public string? MessageId { get; set; }
+
+    /// <summary>Marks the row as a turn boundary that anchors newly appended turns.</summary>
+    [Parameter] public bool ScrollAnchor { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "min-w-0 shrink-0 [contain-intrinsic-size:auto_10rem] [content-visibility:auto]";
+}

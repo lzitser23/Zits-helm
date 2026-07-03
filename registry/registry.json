@@ -67,6 +67,71 @@
         { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverDescription.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverDescription.razor" },
         { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverClose.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverClose.razor" }
       ]
+    },
+    {
+      "name": "message-scroller",
+      "type": "registry:ui",
+      "title": "MessageScroller (headless)",
+      "dependencies": [],
+      "registryDependencies": ["core"],
+      "files": [
+        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/MessageScrollerContext.cs", "type": "registry:ui", "target": "Navius/MessageScroller/MessageScrollerContext.cs" },
+        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/MessageScrollerPart.cs", "type": "registry:ui", "target": "Navius/MessageScroller/MessageScrollerPart.cs" },
+        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerProvider.razor", "type": "registry:ui", "target": "Navius/MessageScroller/NaviusMessageScrollerProvider.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScroller.razor", "type": "registry:ui", "target": "Navius/MessageScroller/NaviusMessageScroller.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerViewport.razor", "type": "registry:ui", "target": "Navius/MessageScroller/NaviusMessageScrollerViewport.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerContent.razor", "type": "registry:ui", "target": "Navius/MessageScroller/NaviusMessageScrollerContent.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerItem.razor", "type": "registry:ui", "target": "Navius/MessageScroller/NaviusMessageScrollerItem.razor" },
+        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerButton.razor", "type": "registry:ui", "target": "Navius/MessageScroller/NaviusMessageScrollerButton.razor" }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button (headless brain + styled ZitsButton)",
+      "dependencies": [],
+      "registryDependencies": ["cn"],
+      "files": [
+        { "path": "../navius/src/Navius.Primitives/Components/Button/NaviusButton.razor", "type": "registry:ui", "target": "Navius/Button/NaviusButton.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsButton.razor", "type": "registry:ui", "target": "Zits/ZitsButton.razor" }
+      ]
+    },
+    {
+      "name": "chat",
+      "type": "registry:ui",
+      "title": "Chat (MessageScroller, Message, Bubble, Attachment, Marker)",
+      "dependencies": [],
+      "registryDependencies": ["message-scroller", "cn", "button"],
+      "files": [
+        { "path": "src/Zits.Ui/Components/ZitsMessageScrollerProvider.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageScrollerProvider.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMessageScroller.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageScroller.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMessageScrollerViewport.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageScrollerViewport.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMessageScrollerContent.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageScrollerContent.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMessageScrollerItem.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageScrollerItem.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMessageScrollerButton.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageScrollerButton.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMessage.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessage.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMessageGroup.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageGroup.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMessageAvatar.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageAvatar.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMessageContent.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageContent.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMessageHeader.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageHeader.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMessageFooter.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageFooter.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsBubble.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsBubble.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsBubbleGroup.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsBubbleGroup.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsBubbleContent.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsBubbleContent.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsBubbleReactions.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsBubbleReactions.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsAttachment.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachment.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsAttachmentGroup.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentGroup.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsAttachmentMedia.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentMedia.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsAttachmentContent.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentContent.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsAttachmentTitle.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentTitle.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsAttachmentDescription.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentDescription.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsAttachmentActions.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentActions.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsAttachmentAction.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentAction.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsAttachmentTrigger.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentTrigger.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMarker.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMarker.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMarkerIcon.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMarkerIcon.razor" },
+        { "path": "src/Zits.Ui/Components/ZitsMarkerContent.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMarkerContent.razor" }
+      ]
     }
   ]
 }

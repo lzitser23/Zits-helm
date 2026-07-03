@@ -1,0 +1,24 @@
+@namespace Zits.Ui
+
+@* An icon action on an attachment (remove, download, retry). Defaults to a ghost icon-xs
+   button; always give it an aria-label. *@
+<ZitsButton data-slot="attachment-action"
+            Variant="@Variant"
+            Size="@Size"
+            OnClick="OnClick"
+            @attributes="Attributes">@ChildContent</ZitsButton>
+
+@code {
+    /// <summary>Button variant (default: ghost).</summary>
+    [Parameter] public string Variant { get; set; } = "ghost";
+
+    /// <summary>Button size (default: icon-xs).</summary>
+    [Parameter] public string Size { get; set; } = "icon-xs";
+
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+}

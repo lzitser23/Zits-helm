@@ -1,0 +1,19 @@
+@namespace Zits.Ui
+
+@* The framed content of a bubble; the parent ZitsBubble's variant paints it. For an
+   interactive bubble the shadcn source renders this asChild over a button/a; Blazor has no
+   Slot equivalent (ADR-0003), so render your own button/link inside and it inherits the
+   variant's hover treatment via the [&>[data-slot=bubble-content]:is(button,a)] selectors. *@
+<div data-slot="bubble-content" @attributes="Attributes" class="@Css">@ChildContent</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "w-fit max-w-full min-w-0 overflow-hidden rounded-3xl border border-transparent px-3 py-2.5 text-sm leading-relaxed wrap-break-word group-data-[align=end]/bubble:self-end [button]:text-left [button,a]:transition-colors [button,a]:outline-none [button,a]:focus-visible:border-ring [button,a]:focus-visible:ring-3 [button,a]:focus-visible:ring-ring/30";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

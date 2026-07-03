@@ -1,0 +1,20 @@
+@namespace Zits.Ui
+
+@* Full-card overlay button (z-10, behind the actions cluster) that opens the attachment,
+   e.g. a preview dialog. It has no text, so give it an aria-label. The shadcn source can
+   render this asChild over an <a href>; Blazor has no Slot equivalent (ADR-0003), so wrap
+   this component in your own anchor when a link is needed. *@
+<button type="button" data-slot="attachment-trigger" @onclick="OnClick" @attributes="Attributes" class="@Css">@ChildContent</button>
+
+@code {
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "absolute inset-0 z-10 outline-none";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

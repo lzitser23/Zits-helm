@@ -1,0 +1,28 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.MessageScroller
+
+@*
+    The scroll container (= shadcn MessageScroller.Viewport): a labelled, keyboard-focusable
+    scroll region that the engine drives. The scroll-fade-b utility fades the bottom edge and
+    the scrollbar thumb hides while the viewport programmatically follows the latest message
+    (data-[autoscrolling]). Requires a bounded height from its ancestors.
+*@
+
+<NaviusMessageScrollerViewport PreserveScrollOnPrepend="PreserveScrollOnPrepend"
+                               data-slot="message-scroller-viewport"
+                               @attributes="Cn.Merge(Attributes, Base)">
+    @ChildContent
+</NaviusMessageScrollerViewport>
+
+@code {
+    /// <summary>Keep the first visible row stable when older rows are prepended.</summary>
+    [Parameter] public bool PreserveScrollOnPrepend { get; set; } = true;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "size-full min-h-0 min-w-0 scroll-fade-b scrollbar-thin scrollbar-gutter-stable overflow-y-auto overscroll-contain contain-content data-[autoscrolling]:scrollbar-thumb-transparent data-[autoscrolling]:scrollbar-track-transparent";
+}

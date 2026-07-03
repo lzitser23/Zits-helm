@@ -1,0 +1,37 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.MessageScroller
+
+@*
+    Message-scroller root (a chat extra; the shadcn MessageScroller.Provider role,
+    no Base UI counterpart). Renders NO DOM: it owns the scroll options and cascades
+    the shared state so the scroll commands, the scrollable-edge state and the
+    visibility subscription work anywhere inside it. There is no controlled/uncontrolled
+    value here, so the params forward straight through (no always-controlled wart).
+*@
+
+<NaviusMessageScrollerProvider AutoScroll="AutoScroll"
+                               DefaultScrollPosition="@DefaultScrollPosition"
+                               ScrollEdgeThreshold="ScrollEdgeThreshold"
+                               ScrollMargin="ScrollMargin"
+                               ScrollPreviousItemPeek="ScrollPreviousItemPeek">
+    @ChildContent
+</NaviusMessageScrollerProvider>
+
+@code {
+    /// <summary>Follow new content, but only while the reader is already at the live edge.</summary>
+    [Parameter] public bool AutoScroll { get; set; }
+
+    /// <summary>Opening position, applied once: start | end (default) | last-anchor.</summary>
+    [Parameter] public string DefaultScrollPosition { get; set; } = "end";
+
+    /// <summary>Distance in pixels from either edge that still counts as being at it.</summary>
+    [Parameter] public double ScrollEdgeThreshold { get; set; } = 8;
+
+    /// <summary>Margin in pixels applied to the aligned edge for scroll targets and visibility.</summary>
+    [Parameter] public double ScrollMargin { get; set; }
+
+    /// <summary>Extra margin so part of the previous item stays visible above an anchored turn.</summary>
+    [Parameter] public double ScrollPreviousItemPeek { get; set; } = 64;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

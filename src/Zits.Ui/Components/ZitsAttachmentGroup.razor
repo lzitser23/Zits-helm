@@ -1,0 +1,18 @@
+@namespace Zits.Ui
+
+@* Horizontally scrollable, snap-mandatory row of attachments with an edge fade (scroll-fade-x)
+   and a hidden scrollbar. For a purely presentational row add tabindex="0" role="group" and an
+   aria-label via the attribute seam. *@
+<div data-slot="attachment-group" @attributes="Attributes" class="@Css">@ChildContent</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "flex min-w-0 scroll-fade-x snap-x snap-mandatory scroll-px-1 scrollbar-none gap-3 overflow-x-auto overscroll-x-contain py-1 *:data-[slot=attachment]:flex-none *:data-[slot=attachment]:snap-start";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

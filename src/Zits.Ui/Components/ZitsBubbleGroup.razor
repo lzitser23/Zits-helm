@@ -1,0 +1,15 @@
+@namespace Zits.Ui
+
+@* Stacks consecutive bubbles from the same sender; alignment goes on each ZitsBubble. *@
+<div data-slot="bubble-group" @attributes="Attributes" class="@Css">@ChildContent</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "flex min-w-0 flex-col gap-2";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

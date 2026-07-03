@@ -1,0 +1,16 @@
+@namespace Zits.Ui
+
+@* File name; shimmers automatically while the attachment is uploading or processing. *@
+<span data-slot="attachment-title" @attributes="Attributes" class="@Css">@ChildContent</span>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "block max-w-full min-w-0 truncate font-medium group-data-[state=processing]/attachment:shimmer group-data-[state=uploading]/attachment:shimmer";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

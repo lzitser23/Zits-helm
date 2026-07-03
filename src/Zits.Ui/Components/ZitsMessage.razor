@@ -1,0 +1,21 @@
+@namespace Zits.Ui
+
+@* One conversation row: a presentational layout wrapper (no state, no context).
+   align=start is a received row, align=end flips it (flex-row-reverse) and pushes
+   the bubble/footer to the end. Accessibility comes from the content placed inside. *@
+<div data-slot="message" data-align="@Align" @attributes="Attributes" class="@Css">@ChildContent</div>
+
+@code {
+    /// <summary>start (received, default) | end (sent).</summary>
+    [Parameter] public string Align { get; set; } = "start";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

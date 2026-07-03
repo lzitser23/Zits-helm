@@ -1,0 +1,60 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.MessageScroller
+
+@*
+    The scroll-to-start/end control (= shadcn MessageScroller.Button), absolutely positioned
+    over the frame. Context-aware: it slides in only while the viewport can scroll in its
+    direction and goes inert (data-active=false) otherwise, so it never becomes a ghost focus
+    stop. Toward the end it re-engages streamed-reply follow when the provider enables AutoScroll.
+    Defaults to a down-arrow icon (flipped for direction="start") plus an sr-only label.
+
+    Note: the shadcn source renders through a Button via a base-ui `render` prop; Blazor has no
+    Slot/render equivalent (ADR-0003), so the styled surface is applied directly to the brain button.
+*@
+
+<NaviusMessageScrollerButton Direction="@Direction"
+                             Behavior="@Behavior"
+                             data-slot="message-scroller-button"
+                             data-variant="@Variant"
+                             data-size="@Size"
+                             @attributes="Cn.Merge(Attributes, Base, State)">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+            <path d="M12 5v14" />
+            <path d="m19 12-7 7-7-7" />
+        </svg>
+        <span class="sr-only">@(Direction == "start" ? "Scroll to start" : "Scroll to end")</span>
+    }
+</NaviusMessageScrollerButton>
+
+@code {
+    /// <summary>Which edge the button scrolls toward: end (default) or start.</summary>
+    [Parameter] public string Direction { get; set; } = "end";
+
+    /// <summary>Scroll behavior for the jump: smooth (default) or auto.</summary>
+    [Parameter] public string Behavior { get; set; } = "smooth";
+
+    /// <summary>shadcn Button variant marker (default: secondary).</summary>
+    [Parameter] public string Variant { get; set; } = "secondary";
+
+    /// <summary>shadcn Button size marker (default: icon-sm).</summary>
+    [Parameter] public string Size { get; set; } = "icon-sm";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    // The shadcn Button surface (secondary / icon-sm), applied directly.
+    private const string Base =
+        "inline-flex size-8 items-center justify-center gap-2 whitespace-nowrap rounded-md border text-sm font-medium shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+
+    // Positioning + enter/exit state (verbatim from the shadcn message-scroller wrapper).
+    private const string State =
+        "absolute inset-s-1/2 -translate-x-1/2 border-border bg-background text-foreground transition-[translate,scale,opacity] duration-200 hover:bg-muted hover:text-foreground data-[active=false]:pointer-events-none data-[active=false]:scale-95 data-[active=false]:opacity-0 data-[active=false]:duration-400 data-[active=false]:ease-[cubic-bezier(0.7,0,0.84,0)] data-[active=true]:translate-y-0 data-[active=true]:scale-100 data-[active=true]:opacity-100 data-[active=true]:ease-[cubic-bezier(0.23,1,0.32,1)] data-[direction=end]:bottom-4 data-[direction=end]:data-[active=false]:translate-y-full data-[direction=start]:top-4 data-[direction=start]:data-[active=false]:-translate-y-full rtl:translate-x-1/2 data-[direction=start]:[&_svg]:rotate-180";
+}

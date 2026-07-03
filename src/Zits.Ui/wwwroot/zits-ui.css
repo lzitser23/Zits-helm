@@ -122,3 +122,120 @@
   from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
   to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
+
+/* ---------------------------------------------------------------------------
+ * Chat component utilities (shadcn `shadcn/tailwind.css`): scroll-fade + shimmer.
+ * Pure CSS (no JS, no scroll listeners); used by MessageScroller (scroll-fade-b),
+ * AttachmentGroup (scroll-fade-x) and Attachment/Marker status text (shimmer).
+ * ------------------------------------------------------------------------- */
+
+/* scroll-fade: a scroll-aware edge fade via a mask-image driven by CSS
+ * scroll-driven animations. --sf-t / --sf-b are the fade depths on each edge;
+ * they default to a static both-edge fade (the documented fallback) and the
+ * scroll timeline eases them in/out over --scroll-fade-reveal. */
+@property --sf-t { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --sf-b { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --sf-s { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+@property --sf-e { syntax: "<length-percentage>"; inherits: false; initial-value: 0px; }
+
+.scroll-fade, .scroll-fade-y, .scroll-fade-x,
+.scroll-fade-t, .scroll-fade-b, .scroll-fade-l, .scroll-fade-r,
+.scroll-fade-s, .scroll-fade-e {
+  --scroll-fade-size: min(12%, 40px);
+  --scroll-fade-reveal: 96px;
+}
+
+.scroll-fade, .scroll-fade-y {
+  --sf-t: var(--scroll-fade-size);
+  --sf-b: var(--scroll-fade-size);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 var(--sf-t), #000 calc(100% - var(--sf-b)), transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 var(--sf-t), #000 calc(100% - var(--sf-b)), transparent);
+}
+.scroll-fade-t { --sf-t: var(--scroll-fade-size);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 var(--sf-t));
+  mask-image: linear-gradient(to bottom, transparent, #000 var(--sf-t)); }
+.scroll-fade-b { --sf-b: var(--scroll-fade-size);
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--sf-b)), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--sf-b)), transparent); }
+.scroll-fade-x, .scroll-fade-s, .scroll-fade-e {
+  --sf-s: var(--scroll-fade-size);
+  --sf-e: var(--scroll-fade-size);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--sf-s), #000 calc(100% - var(--sf-e)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--sf-s), #000 calc(100% - var(--sf-e)), transparent);
+}
+.scroll-fade-l { --sf-s: var(--scroll-fade-size);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--sf-s));
+  mask-image: linear-gradient(to right, transparent, #000 var(--sf-s)); }
+.scroll-fade-r { --sf-e: var(--scroll-fade-size);
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--sf-e)), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - var(--sf-e)), transparent); }
+.scroll-fade-none { --sf-t: 0px; --sf-b: 0px; --sf-s: 0px; --sf-e: 0px;
+  -webkit-mask-image: none; mask-image: none; animation: none; }
+
+@supports (animation-timeline: scroll()) {
+  .scroll-fade, .scroll-fade-y {
+    --sf-t: 0px;
+    animation: sf-in-t linear both, sf-out-b linear both;
+    animation-timeline: scroll(self y), scroll(self y);
+    animation-range: 0 var(--scroll-fade-reveal), calc(100% - var(--scroll-fade-reveal)) 100%;
+  }
+  .scroll-fade-t { animation: sf-in-t linear both; animation-timeline: scroll(self y); animation-range: 0 var(--scroll-fade-reveal); }
+  .scroll-fade-b { animation: sf-out-b linear both; animation-timeline: scroll(self y); animation-range: calc(100% - var(--scroll-fade-reveal)) 100%; }
+  .scroll-fade-x, .scroll-fade-s, .scroll-fade-e {
+    --sf-s: 0px;
+    animation: sf-in-s linear both, sf-out-e linear both;
+    animation-timeline: scroll(self x), scroll(self x);
+    animation-range: 0 var(--scroll-fade-reveal), calc(100% - var(--scroll-fade-reveal)) 100%;
+  }
+}
+@keyframes sf-in-t { from { --sf-t: 0px; } to { --sf-t: var(--scroll-fade-size); } }
+@keyframes sf-out-b { from { --sf-b: var(--scroll-fade-size); } to { --sf-b: 0px; } }
+@keyframes sf-in-s { from { --sf-s: 0px; } to { --sf-s: var(--scroll-fade-size); } }
+@keyframes sf-out-e { from { --sf-e: var(--scroll-fade-size); } to { --sf-e: 0px; } }
+
+/* shimmer: a highlight band sweeping across text for live status ("Thinking…").
+ * The text is painted with background-clip:text; a brighter band built on
+ * currentColor sweeps in a seamless loop and adapts to any text color. */
+.shimmer {
+  --shimmer-duration: 2s;
+  --shimmer-spread: calc(3ch + 40px);
+  --shimmer-highlight: color-mix(in oklch, currentColor, #fff 70%);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-repeat: no-repeat, no-repeat;
+  background-size: 200% 100%, 100% 100%;
+  background-position: 150% 0, 0 0;
+  background-image:
+    linear-gradient(90deg, transparent, var(--shimmer-highlight), transparent),
+    linear-gradient(currentColor, currentColor);
+  animation: tw-shimmer var(--shimmer-duration) linear infinite;
+}
+.shimmer-once { animation-iteration-count: 1; }
+.shimmer-reverse { animation-direction: reverse; }
+.shimmer-none { -webkit-text-fill-color: currentColor; background-image: none; animation: none; }
+@keyframes tw-shimmer {
+  from { background-position: 150% 0, 0 0; }
+  to { background-position: -50% 0, 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shimmer { animation: none; -webkit-text-fill-color: currentColor; background-image: none; }
+}
+
+/* ---------------------------------------------------------------------------
+ * Dev fallback for the Tailwind v3 Play CDN (the playground). Tailwind v4 (the
+ * production build) provides these natively via the chat components' utility
+ * classes; these plain-CSS rules set the same values so the dev showcase renders
+ * the v4-only utilities (the `*:` child variant, logical `inset-s`, wrap-break-word).
+ * Harmless (redundant) under the production v4 build.
+ * ------------------------------------------------------------------------- */
+.wrap-break-word { overflow-wrap: break-word; }
+.inset-s-1\/2 { inset-inline-start: 50%; }
+[data-slot="bubble"][data-variant="default"] > [data-slot="bubble-content"] { background: var(--primary); color: var(--primary-foreground); }
+[data-slot="bubble"][data-variant="secondary"] > [data-slot="bubble-content"] { background: var(--secondary); color: var(--secondary-foreground); }
+[data-slot="bubble"][data-variant="muted"] > [data-slot="bubble-content"] { background: var(--muted); }
+[data-slot="bubble"][data-variant="outline"] > [data-slot="bubble-content"] { background: var(--background); border-color: var(--border); }
+[data-slot="bubble"][data-variant="destructive"] > [data-slot="bubble-content"] { background: color-mix(in oklch, var(--destructive) 10%, transparent); color: var(--destructive); }
+[data-slot="bubble"][data-variant="tinted"] > [data-slot="bubble-content"] { background: oklch(from var(--primary) 0.93 calc(c * 0.4) h); color: var(--foreground); }
+.dark [data-slot="bubble"][data-variant="tinted"] > [data-slot="bubble-content"] { background: oklch(from var(--primary) 0.3 calc(c * 0.4) h); }
+[data-slot="bubble"][data-variant="ghost"] > [data-slot="bubble-content"] { background: transparent; padding: 0; border-radius: 0; }
