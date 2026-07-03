@@ -1,0 +1,108 @@
+@namespace Zits.Ui
+
+@* Hand-rolled radial bar chart (no recharts). One concentric ring per category, each
+   a stroked arc swept from StartAngle proportional to its value, coloured with
+   var(--color-<key>) from the cascaded ChartConfig where <key> is the row Label. An
+   optional muted background track shows the full sweep. Drawn into a square, centred
+   sub-box so the rings stay round under preserveAspectRatio="none". Hovering a ring
+   drives the floating ZitsChartTooltip. *@
+<div class="relative mx-auto aspect-square h-full" @onmouseleave="() => SetHover(null)">
+    <svg class="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        @foreach (var b in _bars)
+        {
+            @if (ShowBackground)
+            {
+                <path d="@ChartMath.ArcPath(ChartMath.Cx, ChartMath.Cy, b.Radius, StartAngle, EndAngle)"
+                      fill="none" stroke="var(--muted)" stroke-width="@ChartMath.N(_thickness)" stroke-opacity="0.6" />
+            }
+        }
+        @foreach (var b in _bars)
+        {
+            var idx = b.Index;
+            <path data-bar data-bar-key="@b.Key" d="@ChartMath.ArcPath(ChartMath.Cx, ChartMath.Cy, b.Radius, StartAngle, b.EndAngle)"
+                  fill="none" stroke="var(--color-@(b.Key))" stroke-width="@ChartMath.N(_thickness)"
+                  stroke-linecap="@(CornerRadius > 0 ? "round" : "butt")" />
+            <path data-hit d="@ChartMath.ArcPath(ChartMath.Cx, ChartMath.Cy, b.Radius, StartAngle, EndAngle)"
+                  fill="none" stroke="transparent" stroke-width="@ChartMath.N(_thickness)" pointer-events="stroke"
+                  @onmouseover="() => SetHover(idx)" @onmousemove="() => SetHover(idx)" />
+        }
+    </svg>
+
+    @if (ShowTooltip && _hover is int ht && ht < _bars.Count)
+    {
+        var b = _bars[ht];
+        <ZitsChartTooltip data-chart-tooltip="true"
+                          Left="ChartMath.PolarX(ChartMath.Cx, b.Radius, b.EndAngle)"
+                          Top="ChartMath.PolarY(ChartMath.Cy, b.Radius, b.EndAngle)">
+            <ZitsChartTooltipContent Payload="PayloadFor(ht)" />
+        </ZitsChartTooltip>
+    }
+</div>
+
+@code {
+    /// <summary>Rows of data: one ring per row. The row Label is the ChartConfig key that colours it.</summary>
+    [Parameter] public IEnumerable<ChartDataPoint>? Data { get; set; }
+
+    /// <summary>Which Values entry holds each ring's magnitude. Null uses the row's single value.</summary>
+    [Parameter] public string? DataKey { get; set; }
+
+    /// <summary>Sweep start, in degrees (0 = 12 o'clock, clockwise).</summary>
+    [Parameter] public double StartAngle { get; set; } = 0;
+
+    /// <summary>Sweep end, in degrees. A full ring is StartAngle + 360.</summary>
+    [Parameter] public double EndAngle { get; set; } = 360;
+
+    /// <summary>Innermost ring radius in viewBox units (centre at 50).</summary>
+    [Parameter] public double InnerRadius { get; set; } = 12;
+
+    /// <summary>Outermost ring radius in viewBox units (centre at 50, so &le; ~48).</summary>
+    [Parameter] public double OuterRadius { get; set; } = 40;
+
+    /// <summary>Draw the muted full-sweep track behind each ring.</summary>
+    [Parameter] public bool ShowBackground { get; set; } = true;
+
+    /// <summary>Any value &gt; 0 rounds the ring end caps; 0 leaves them flat.</summary>
+    [Parameter] public double CornerRadius { get; set; }
+
+    [Parameter] public bool ShowTooltip { get; set; } = true;
+
+    [CascadingParameter] private ZitsChartContainer? Chart { get; set; }
+
+    private sealed record Bar(int Index, string Key, double Value, double Radius, double EndAngle);
+
+    private List<Bar> _bars = new();
+    private double _thickness = 4;
+    private int? _hover;
+
+    protected override void OnParametersSet()
+    {
+        _bars = new();
+        var points = Data?.ToList() ?? new();
+        if (points.Count == 0) return;
+
+        double max = points.Max(ValueOf);
+        if (max <= 0) max = 1;
+        double band = (OuterRadius - InnerRadius) / points.Count;
+        _thickness = band * 0.65;
+        double span = EndAngle - StartAngle;
+
+        for (int i = 0; i < points.Count; i++)
+        {
+            double value = ValueOf(points[i]);
+            double radius = OuterRadius - (i + 0.5) * band;
+            double end = StartAngle + value / max * span;
+            _bars.Add(new Bar(i, points[i].Label, value, radius, end));
+        }
+    }
+
+    private double ValueOf(ChartDataPoint p)
+        => DataKey is not null && p.Values.TryGetValue(DataKey, out var v) ? v : p.Values.Values.FirstOrDefault();
+
+    private void SetHover(int? i)
+    {
+        if (_hover != i) _hover = i;
+    }
+
+    private IReadOnlyList<ChartTooltipPayloadItem> PayloadFor(int i)
+        => new[] { new ChartTooltipPayloadItem(_bars[i].Key, _bars[i].Value) };
+}

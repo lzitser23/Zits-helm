@@ -1,0 +1,68 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Sortable
+
+@*
+    Styled drag-to-reorder over the Navius Sortable primitive (engine pointer drag + APG
+    grab-and-move keyboard, single reorder reducer). Controlled via @bind-Values or uncontrolled
+    via DefaultValues: Values is forwarded to the primitive ONLY when the consumer set it, so the
+    uncontrolled DefaultValues path stays live (the always-controlled wart fix, ZitsCalendar
+    discipline). The consumer iterates the same key list to render one ZitsSortableItem per key.
+    Presentational only: a stacked list; everything else forwards.
+*@
+
+<NaviusSortable DefaultValues="DefaultValues"
+                ValuesChanged="ValuesChanged"
+                Orientation="Orientation"
+                Disabled="Disabled"
+                OnReorder="OnReorder"
+                @attributes="Forwarded">
+    @ChildContent
+</NaviusSortable>
+
+@code {
+    /// <summary>Controlled order of item keys. Bind with <c>@bind-Values</c>.</summary>
+    [Parameter] public IReadOnlyList<string>? Values { get; set; }
+
+    [Parameter] public EventCallback<IReadOnlyList<string>> ValuesChanged { get; set; }
+
+    /// <summary>Uncontrolled initial order.</summary>
+    [Parameter] public IReadOnlyList<string>? DefaultValues { get; set; }
+
+    [Parameter] public SortableOrientation Orientation { get; set; } = SortableOrientation.Vertical;
+
+    [Parameter] public bool Disabled { get; set; }
+
+    [Parameter] public EventCallback<SortableReorderEventArgs> OnReorder { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool _valuesSet;
+
+    private const string Root =
+        "flex flex-col gap-2 data-[orientation=horizontal]:flex-row data-[orientation=grid]:grid data-[orientation=grid]:grid-cols-3 data-[disabled]:opacity-50";
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        // Controlled-ness = whether Values was supplied this render; forward it only when set so
+        // DefaultValues drives the uncontrolled path (the always-controlled wart fix).
+        _valuesSet = parameters.TryGetValue<IReadOnlyList<string>?>(nameof(Values), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>(Cn.Merge(Attributes, Root));
+            if (_valuesSet && Values is not null)
+            {
+                merged["Values"] = Values;
+            }
+
+            return merged;
+        }
+    }
+}

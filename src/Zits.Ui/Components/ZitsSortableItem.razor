@@ -1,0 +1,38 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Sortable
+
+@*
+    Styled reorderable row over the Navius SortableItem primitive. Value is the stable key the
+    order tracks by (forwarded with @, not a literal). Pointer drag fades + lifts the dragged
+    row (data-dragging) and rings the drop slot (data-drop-target); keyboard grab rings the row
+    (data-keyboard-grabbed). Compose a ZitsSortableItemHandle inside for a handle-only drag.
+*@
+
+<NaviusSortableItem Value="@Value"
+                    Label="@Label"
+                    Disabled="Disabled"
+                    @attributes="Cn.Merge(Attributes, Root)">
+    @ChildContent
+</NaviusSortableItem>
+
+@code {
+    /// <summary>The stable key that identifies this row in the sortable's order (required).</summary>
+    [Parameter] public string Value { get; set; } = default!;
+
+    /// <summary>Accessible name for live-region announcements (defaults to <see cref="Value"/>).</summary>
+    [Parameter] public string? Label { get; set; }
+
+    [Parameter] public bool Disabled { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Root =
+        "flex items-center gap-3 rounded-md border border-border bg-card px-3 py-2 text-sm text-card-foreground shadow-sm outline-none transition-[box-shadow,opacity] " +
+        "data-[dragging]:opacity-60 data-[dragging]:shadow-md " +
+        "data-[drop-target]:ring-2 data-[drop-target]:ring-ring " +
+        "data-[keyboard-grabbed]:ring-2 data-[keyboard-grabbed]:ring-primary " +
+        "focus-visible:ring-2 focus-visible:ring-ring data-[disabled]:opacity-50";
+}

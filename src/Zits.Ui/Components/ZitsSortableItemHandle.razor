@@ -1,0 +1,33 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.Sortable
+
+@*
+    Styled drag handle over the Navius SortableItemHandle primitive. Its presence scopes pointer
+    drag to the handle; keyboard reordering still acts on the whole row (the handle is aria-hidden).
+    Defaults to a grip-dots glyph with a grab cursor; pass ChildContent to override.
+*@
+
+<NaviusSortableItemHandle @attributes="Cn.Merge(Attributes, Root)">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <svg viewBox="0 0 24 24" fill="currentColor" class="size-4">
+            <circle cx="9" cy="6" r="1.5" /><circle cx="15" cy="6" r="1.5" />
+            <circle cx="9" cy="12" r="1.5" /><circle cx="15" cy="12" r="1.5" />
+            <circle cx="9" cy="18" r="1.5" /><circle cx="15" cy="18" r="1.5" />
+        </svg>
+    }
+</NaviusSortableItemHandle>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Root =
+        "inline-flex shrink-0 cursor-grab items-center text-muted-foreground hover:text-foreground active:cursor-grabbing touch-none select-none";
+}
