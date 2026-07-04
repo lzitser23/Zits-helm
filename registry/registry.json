@@ -10,7 +10,11 @@
       "dependencies": [],
       "registryDependencies": [],
       "files": [
-        { "path": "registry/lib/Cn.cs", "type": "registry:lib", "target": "Navius/Cn.cs" }
+        {
+          "path": "registry/lib/Cn.cs",
+          "type": "registry:lib",
+          "target": "Navius/Cn.cs"
+        }
       ]
     },
     {
@@ -20,12 +24,71 @@
       "dependencies": [],
       "registryDependencies": [],
       "files": [
-        { "path": "../navius/src/Navius.Primitives/wwwroot/navius-interop.js", "type": "registry:file", "target": "wwwroot/navius-interop.js" },
-        { "path": "../navius/src/Navius.Primitives/Interop/NaviusJsInterop.cs", "type": "registry:lib", "target": "Navius/Interop/NaviusJsInterop.cs" },
-        { "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayContext.cs", "type": "registry:lib", "target": "Navius/Overlays/OverlayContext.cs" },
-        { "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayPresence.cs", "type": "registry:lib", "target": "Navius/Overlays/OverlayPresence.cs" },
-        { "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayPopupBase.cs", "type": "registry:lib", "target": "Navius/Overlays/OverlayPopupBase.cs" },
-        { "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayAnchoredPopupBase.cs", "type": "registry:lib", "target": "Navius/Overlays/OverlayAnchoredPopupBase.cs" }
+        {
+          "path": "../navius/src/Navius.Primitives/wwwroot/navius-interop.js",
+          "type": "registry:file",
+          "target": "wwwroot/navius-interop.js"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Interop/NaviusJsInterop.cs",
+          "type": "registry:lib",
+          "target": "Navius/Interop/NaviusJsInterop.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayContext.cs",
+          "type": "registry:lib",
+          "target": "Navius/Overlays/OverlayContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayPresence.cs",
+          "type": "registry:lib",
+          "target": "Navius/Overlays/OverlayPresence.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayPopupBase.cs",
+          "type": "registry:lib",
+          "target": "Navius/Overlays/OverlayPopupBase.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayAnchoredPopupBase.cs",
+          "type": "registry:lib",
+          "target": "Navius/Overlays/OverlayAnchoredPopupBase.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Common/DateTimeSegment.cs",
+          "type": "registry:lib",
+          "target": "Navius/Common/DateTimeSegment.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Common/NaviusBubbleInput.razor",
+          "type": "registry:lib",
+          "target": "Navius/Common/NaviusBubbleInput.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Common/NaviusDateRange.cs",
+          "type": "registry:lib",
+          "target": "Navius/Common/NaviusDateRange.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Common/NaviusEventArgs.cs",
+          "type": "registry:lib",
+          "target": "Navius/Common/NaviusEventArgs.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Common/NaviusFieldSegment.razor",
+          "type": "registry:lib",
+          "target": "Navius/Common/NaviusFieldSegment.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Common/NaviusFieldSegmentLiteral.razor",
+          "type": "registry:lib",
+          "target": "Navius/Common/NaviusFieldSegmentLiteral.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Common/SegmentFieldContext.cs",
+          "type": "registry:lib",
+          "target": "Navius/Common/SegmentFieldContext.cs"
+        }
       ]
     },
     {
@@ -33,17 +96,96 @@
       "type": "registry:ui",
       "title": "Dialog",
       "dependencies": [],
-      "registryDependencies": ["core"],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
       "files": [
-        { "path": "../navius/src/Navius.Primitives/Components/Dialog/DialogContext.cs", "type": "registry:ui", "target": "Navius/Dialog/DialogContext.cs" },
-        { "path": "../navius/src/Navius.Primitives/Components/Dialog/DialogPart.cs", "type": "registry:ui", "target": "Navius/Dialog/DialogPart.cs" },
-        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialog.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialog.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogTrigger.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialogTrigger.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogBackdrop.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialogBackdrop.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogPopup.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialogPopup.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogTitle.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialogTitle.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogDescription.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialogDescription.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogClose.razor", "type": "registry:ui", "target": "Navius/Dialog/NaviusDialogClose.razor" }
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Dialog/DialogContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Dialog/DialogContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Dialog/DialogPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Dialog/DialogPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialog.razor",
+          "type": "registry:ui",
+          "target": "Navius/Dialog/NaviusDialog.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogBackdrop.razor",
+          "type": "registry:ui",
+          "target": "Navius/Dialog/NaviusDialogBackdrop.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogClose.razor",
+          "type": "registry:ui",
+          "target": "Navius/Dialog/NaviusDialogClose.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogDescription.razor",
+          "type": "registry:ui",
+          "target": "Navius/Dialog/NaviusDialogDescription.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Dialog/NaviusDialogPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/Dialog/NaviusDialogPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogTitle.razor",
+          "type": "registry:ui",
+          "target": "Navius/Dialog/NaviusDialogTitle.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Dialog/NaviusDialogTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Dialog/NaviusDialogTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDialog.razor",
+          "type": "registry:ui",
+          "target": "Zits/Dialog/ZitsDialog.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDialogContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Dialog/ZitsDialogContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDialogDescription.razor",
+          "type": "registry:ui",
+          "target": "Zits/Dialog/ZitsDialogDescription.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDialogFooter.razor",
+          "type": "registry:ui",
+          "target": "Zits/Dialog/ZitsDialogFooter.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDialogHeader.razor",
+          "type": "registry:ui",
+          "target": "Zits/Dialog/ZitsDialogHeader.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDialogTitle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Dialog/ZitsDialogTitle.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDialogTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Dialog/ZitsDialogTrigger.razor"
+        }
       ]
     },
     {
@@ -51,21 +193,96 @@
       "type": "registry:ui",
       "title": "Popover",
       "dependencies": [],
-      "registryDependencies": ["core"],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
       "files": [
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/PopoverContext.cs", "type": "registry:ui", "target": "Navius/Popover/PopoverContext.cs" },
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/PopoverPart.cs", "type": "registry:ui", "target": "Navius/Popover/PopoverPart.cs" },
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopover.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopover.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverTrigger.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverTrigger.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverPortal.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverPortal.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverPositioner.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverPositioner.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverPopup.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverPopup.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverBackdrop.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverBackdrop.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverArrow.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverArrow.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverAnchor.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverAnchor.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverTitle.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverTitle.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverDescription.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverDescription.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverClose.razor", "type": "registry:ui", "target": "Navius/Popover/NaviusPopoverClose.razor" }
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopover.razor",
+          "type": "registry:ui",
+          "target": "Navius/Popover/NaviusPopover.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverAnchor.razor",
+          "type": "registry:ui",
+          "target": "Navius/Popover/NaviusPopoverAnchor.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverArrow.razor",
+          "type": "registry:ui",
+          "target": "Navius/Popover/NaviusPopoverArrow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverBackdrop.razor",
+          "type": "registry:ui",
+          "target": "Navius/Popover/NaviusPopoverBackdrop.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverClose.razor",
+          "type": "registry:ui",
+          "target": "Navius/Popover/NaviusPopoverClose.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverDescription.razor",
+          "type": "registry:ui",
+          "target": "Navius/Popover/NaviusPopoverDescription.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Popover/NaviusPopoverPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/Popover/NaviusPopoverPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverPositioner.razor",
+          "type": "registry:ui",
+          "target": "Navius/Popover/NaviusPopoverPositioner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverTitle.razor",
+          "type": "registry:ui",
+          "target": "Navius/Popover/NaviusPopoverTitle.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/NaviusPopoverTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Popover/NaviusPopoverTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/PopoverContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Popover/PopoverContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Popover/PopoverPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Popover/PopoverPart.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPopover.razor",
+          "type": "registry:ui",
+          "target": "Zits/Popover/ZitsPopover.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPopoverAnchor.razor",
+          "type": "registry:ui",
+          "target": "Zits/Popover/ZitsPopoverAnchor.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPopoverContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Popover/ZitsPopoverContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPopoverTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Popover/ZitsPopoverTrigger.razor"
+        }
       ]
     },
     {
@@ -73,16 +290,50 @@
       "type": "registry:ui",
       "title": "MessageScroller (headless)",
       "dependencies": [],
-      "registryDependencies": ["core"],
+      "registryDependencies": [
+        "core"
+      ],
       "files": [
-        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/MessageScrollerContext.cs", "type": "registry:ui", "target": "Navius/MessageScroller/MessageScrollerContext.cs" },
-        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/MessageScrollerPart.cs", "type": "registry:ui", "target": "Navius/MessageScroller/MessageScrollerPart.cs" },
-        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerProvider.razor", "type": "registry:ui", "target": "Navius/MessageScroller/NaviusMessageScrollerProvider.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScroller.razor", "type": "registry:ui", "target": "Navius/MessageScroller/NaviusMessageScroller.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerViewport.razor", "type": "registry:ui", "target": "Navius/MessageScroller/NaviusMessageScrollerViewport.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerContent.razor", "type": "registry:ui", "target": "Navius/MessageScroller/NaviusMessageScrollerContent.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerItem.razor", "type": "registry:ui", "target": "Navius/MessageScroller/NaviusMessageScrollerItem.razor" },
-        { "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerButton.razor", "type": "registry:ui", "target": "Navius/MessageScroller/NaviusMessageScrollerButton.razor" }
+        {
+          "path": "../navius/src/Navius.Primitives/Components/MessageScroller/MessageScrollerContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/MessageScroller/MessageScrollerContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/MessageScroller/MessageScrollerPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/MessageScroller/MessageScrollerPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerProvider.razor",
+          "type": "registry:ui",
+          "target": "Navius/MessageScroller/NaviusMessageScrollerProvider.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScroller.razor",
+          "type": "registry:ui",
+          "target": "Navius/MessageScroller/NaviusMessageScroller.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerViewport.razor",
+          "type": "registry:ui",
+          "target": "Navius/MessageScroller/NaviusMessageScrollerViewport.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerContent.razor",
+          "type": "registry:ui",
+          "target": "Navius/MessageScroller/NaviusMessageScrollerContent.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/MessageScroller/NaviusMessageScrollerItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/MessageScroller/NaviusMessageScrollerButton.razor",
+          "type": "registry:ui",
+          "target": "Navius/MessageScroller/NaviusMessageScrollerButton.razor"
+        }
       ]
     },
     {
@@ -90,10 +341,20 @@
       "type": "registry:ui",
       "title": "Button (headless brain + styled ZitsButton)",
       "dependencies": [],
-      "registryDependencies": ["cn"],
+      "registryDependencies": [
+        "cn"
+      ],
       "files": [
-        { "path": "../navius/src/Navius.Primitives/Components/Button/NaviusButton.razor", "type": "registry:ui", "target": "Navius/Button/NaviusButton.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsButton.razor", "type": "registry:ui", "target": "Zits/ZitsButton.razor" }
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Button/NaviusButton.razor",
+          "type": "registry:ui",
+          "target": "Navius/Button/NaviusButton.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsButton.razor",
+          "type": "registry:ui",
+          "target": "Zits/ZitsButton.razor"
+        }
       ]
     },
     {
@@ -101,36 +362,4580 @@
       "type": "registry:ui",
       "title": "Chat (MessageScroller, Message, Bubble, Attachment, Marker)",
       "dependencies": [],
-      "registryDependencies": ["message-scroller", "cn", "button"],
+      "registryDependencies": [
+        "message-scroller",
+        "cn",
+        "button"
+      ],
       "files": [
-        { "path": "src/Zits.Ui/Components/ZitsMessageScrollerProvider.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageScrollerProvider.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMessageScroller.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageScroller.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMessageScrollerViewport.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageScrollerViewport.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMessageScrollerContent.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageScrollerContent.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMessageScrollerItem.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageScrollerItem.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMessageScrollerButton.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageScrollerButton.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMessage.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessage.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMessageGroup.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageGroup.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMessageAvatar.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageAvatar.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMessageContent.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageContent.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMessageHeader.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageHeader.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMessageFooter.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMessageFooter.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsBubble.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsBubble.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsBubbleGroup.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsBubbleGroup.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsBubbleContent.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsBubbleContent.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsBubbleReactions.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsBubbleReactions.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsAttachment.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachment.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsAttachmentGroup.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentGroup.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsAttachmentMedia.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentMedia.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsAttachmentContent.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentContent.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsAttachmentTitle.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentTitle.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsAttachmentDescription.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentDescription.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsAttachmentActions.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentActions.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsAttachmentAction.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentAction.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsAttachmentTrigger.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsAttachmentTrigger.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMarker.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMarker.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMarkerIcon.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMarkerIcon.razor" },
-        { "path": "src/Zits.Ui/Components/ZitsMarkerContent.razor", "type": "registry:ui", "target": "Zits/Chat/ZitsMarkerContent.razor" }
+        {
+          "path": "src/Zits.Ui/Components/ZitsMessageScrollerProvider.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMessageScrollerProvider.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMessageScroller.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMessageScroller.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMessageScrollerViewport.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMessageScrollerViewport.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMessageScrollerContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMessageScrollerContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMessageScrollerItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMessageScrollerItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMessageScrollerButton.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMessageScrollerButton.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMessage.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMessage.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMessageGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMessageGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMessageAvatar.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMessageAvatar.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMessageContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMessageContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMessageHeader.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMessageHeader.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMessageFooter.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMessageFooter.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsBubble.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsBubble.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsBubbleGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsBubbleGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsBubbleContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsBubbleContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsBubbleReactions.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsBubbleReactions.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAttachment.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsAttachment.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAttachmentGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsAttachmentGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAttachmentMedia.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsAttachmentMedia.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAttachmentContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsAttachmentContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAttachmentTitle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsAttachmentTitle.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAttachmentDescription.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsAttachmentDescription.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAttachmentActions.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsAttachmentActions.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAttachmentAction.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsAttachmentAction.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAttachmentTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsAttachmentTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMarker.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMarker.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMarkerIcon.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMarkerIcon.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMarkerContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chat/ZitsMarkerContent.razor"
+        }
+      ]
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "title": "Accordion",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Accordion/AccordionContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Accordion/AccordionContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Accordion/AccordionPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Accordion/AccordionPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Accordion/NaviusAccordion.razor",
+          "type": "registry:ui",
+          "target": "Navius/Accordion/NaviusAccordion.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Accordion/NaviusAccordionHeader.razor",
+          "type": "registry:ui",
+          "target": "Navius/Accordion/NaviusAccordionHeader.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Accordion/NaviusAccordionItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Accordion/NaviusAccordionItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Accordion/NaviusAccordionPanel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Accordion/NaviusAccordionPanel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Accordion/NaviusAccordionTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Accordion/NaviusAccordionTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAccordion.razor",
+          "type": "registry:ui",
+          "target": "Zits/Accordion/ZitsAccordion.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAccordionContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Accordion/ZitsAccordionContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAccordionItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Accordion/ZitsAccordionItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAccordionTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Accordion/ZitsAccordionTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsAlert.razor",
+          "type": "registry:ui",
+          "target": "Zits/Alert/ZitsAlert.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAlertDescription.razor",
+          "type": "registry:ui",
+          "target": "Zits/Alert/ZitsAlertDescription.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAlertTitle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Alert/ZitsAlertTitle.razor"
+        }
+      ]
+    },
+    {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "title": "Alert Dialog",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AlertDialog/AlertDialogContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/AlertDialog/AlertDialogContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AlertDialog/AlertDialogPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/AlertDialog/AlertDialogPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AlertDialog/NaviusAlertDialog.razor",
+          "type": "registry:ui",
+          "target": "Navius/AlertDialog/NaviusAlertDialog.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AlertDialog/NaviusAlertDialogAction.razor",
+          "type": "registry:ui",
+          "target": "Navius/AlertDialog/NaviusAlertDialogAction.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AlertDialog/NaviusAlertDialogBackdrop.razor",
+          "type": "registry:ui",
+          "target": "Navius/AlertDialog/NaviusAlertDialogBackdrop.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AlertDialog/NaviusAlertDialogCancel.razor",
+          "type": "registry:ui",
+          "target": "Navius/AlertDialog/NaviusAlertDialogCancel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AlertDialog/NaviusAlertDialogDescription.razor",
+          "type": "registry:ui",
+          "target": "Navius/AlertDialog/NaviusAlertDialogDescription.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AlertDialog/NaviusAlertDialogPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/AlertDialog/NaviusAlertDialogPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AlertDialog/NaviusAlertDialogPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/AlertDialog/NaviusAlertDialogPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AlertDialog/NaviusAlertDialogTitle.razor",
+          "type": "registry:ui",
+          "target": "Navius/AlertDialog/NaviusAlertDialogTitle.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AlertDialog/NaviusAlertDialogTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/AlertDialog/NaviusAlertDialogTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAlertDialog.razor",
+          "type": "registry:ui",
+          "target": "Zits/AlertDialog/ZitsAlertDialog.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAlertDialogAction.razor",
+          "type": "registry:ui",
+          "target": "Zits/AlertDialog/ZitsAlertDialogAction.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAlertDialogCancel.razor",
+          "type": "registry:ui",
+          "target": "Zits/AlertDialog/ZitsAlertDialogCancel.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAlertDialogContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/AlertDialog/ZitsAlertDialogContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAlertDialogDescription.razor",
+          "type": "registry:ui",
+          "target": "Zits/AlertDialog/ZitsAlertDialogDescription.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAlertDialogFooter.razor",
+          "type": "registry:ui",
+          "target": "Zits/AlertDialog/ZitsAlertDialogFooter.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAlertDialogHeader.razor",
+          "type": "registry:ui",
+          "target": "Zits/AlertDialog/ZitsAlertDialogHeader.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAlertDialogTitle.razor",
+          "type": "registry:ui",
+          "target": "Zits/AlertDialog/ZitsAlertDialogTitle.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAlertDialogTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/AlertDialog/ZitsAlertDialogTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "aspect-ratio",
+      "type": "registry:ui",
+      "title": "Aspect Ratio",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AspectRatio/NaviusAspectRatio.razor",
+          "type": "registry:ui",
+          "target": "Navius/AspectRatio/NaviusAspectRatio.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAspectRatio.razor",
+          "type": "registry:ui",
+          "target": "Zits/AspectRatio/ZitsAspectRatio.razor"
+        }
+      ]
+    },
+    {
+      "name": "autocomplete",
+      "type": "registry:ui",
+      "title": "Autocomplete",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/AutocompleteContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/AutocompleteContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/AutocompleteGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/AutocompleteGroupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/AutocompleteItemContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/AutocompleteItemContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/AutocompletePart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/AutocompletePart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocomplete.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocomplete.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteArrow.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteArrow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteBackdrop.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteBackdrop.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteClear.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteClear.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteCollection.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteCollection.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteEmpty.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteEmpty.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteGroupLabel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteGroupLabel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteIcon.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteIcon.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteInput.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteList.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteList.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompletePopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompletePopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompletePortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompletePortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompletePositioner.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompletePositioner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteRow.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteRow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteSeparator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteSeparator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteStatus.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteStatus.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Autocomplete/NaviusAutocompleteValue.razor",
+          "type": "registry:ui",
+          "target": "Navius/Autocomplete/NaviusAutocompleteValue.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAutocomplete.razor",
+          "type": "registry:ui",
+          "target": "Zits/Autocomplete/ZitsAutocomplete.razor"
+        }
+      ]
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "title": "Avatar",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Avatar/AvatarContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Avatar/AvatarContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Avatar/AvatarPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Avatar/AvatarPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Avatar/NaviusAvatar.razor",
+          "type": "registry:ui",
+          "target": "Navius/Avatar/NaviusAvatar.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Avatar/NaviusAvatarFallback.razor",
+          "type": "registry:ui",
+          "target": "Navius/Avatar/NaviusAvatarFallback.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Avatar/NaviusAvatarImage.razor",
+          "type": "registry:ui",
+          "target": "Navius/Avatar/NaviusAvatarImage.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAvatar.razor",
+          "type": "registry:ui",
+          "target": "Zits/Avatar/ZitsAvatar.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAvatarFallback.razor",
+          "type": "registry:ui",
+          "target": "Zits/Avatar/ZitsAvatarFallback.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsAvatarImage.razor",
+          "type": "registry:ui",
+          "target": "Zits/Avatar/ZitsAvatarImage.razor"
+        }
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsBadge.razor",
+          "type": "registry:ui",
+          "target": "Zits/Badge/ZitsBadge.razor"
+        }
+      ]
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "title": "Breadcrumb",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsBreadcrumb.razor",
+          "type": "registry:ui",
+          "target": "Zits/Breadcrumb/ZitsBreadcrumb.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsBreadcrumbItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Breadcrumb/ZitsBreadcrumbItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsBreadcrumbLink.razor",
+          "type": "registry:ui",
+          "target": "Zits/Breadcrumb/ZitsBreadcrumbLink.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsBreadcrumbList.razor",
+          "type": "registry:ui",
+          "target": "Zits/Breadcrumb/ZitsBreadcrumbList.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsBreadcrumbPage.razor",
+          "type": "registry:ui",
+          "target": "Zits/Breadcrumb/ZitsBreadcrumbPage.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsBreadcrumbSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/Breadcrumb/ZitsBreadcrumbSeparator.razor"
+        }
+      ]
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "title": "Button Group",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsButtonGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/ButtonGroup/ZitsButtonGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsButtonGroupSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/ButtonGroup/ZitsButtonGroupSeparator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsButtonGroupText.razor",
+          "type": "registry:ui",
+          "target": "Zits/ButtonGroup/ZitsButtonGroupText.razor"
+        }
+      ]
+    },
+    {
+      "name": "calendar",
+      "type": "registry:ui",
+      "title": "Calendar",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsCalendar.razor",
+          "type": "registry:ui",
+          "target": "Zits/Calendar/ZitsCalendar.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCalendarDay.razor",
+          "type": "registry:ui",
+          "target": "Zits/Calendar/ZitsCalendarDay.razor"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsCard.razor",
+          "type": "registry:ui",
+          "target": "Zits/Card/ZitsCard.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCardContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Card/ZitsCardContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCardDescription.razor",
+          "type": "registry:ui",
+          "target": "Zits/Card/ZitsCardDescription.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCardFooter.razor",
+          "type": "registry:ui",
+          "target": "Zits/Card/ZitsCardFooter.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCardHeader.razor",
+          "type": "registry:ui",
+          "target": "Zits/Card/ZitsCardHeader.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCardTitle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Card/ZitsCardTitle.razor"
+        }
+      ]
+    },
+    {
+      "name": "carousel",
+      "type": "registry:ui",
+      "title": "Carousel",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsCarousel.razor",
+          "type": "registry:ui",
+          "target": "Zits/Carousel/ZitsCarousel.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCarouselContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Carousel/ZitsCarouselContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCarouselItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Carousel/ZitsCarouselItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCarouselNext.razor",
+          "type": "registry:ui",
+          "target": "Zits/Carousel/ZitsCarouselNext.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCarouselPrevious.razor",
+          "type": "registry:ui",
+          "target": "Zits/Carousel/ZitsCarouselPrevious.razor"
+        }
+      ]
+    },
+    {
+      "name": "chart",
+      "type": "registry:ui",
+      "title": "Chart",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsAreaChart.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsAreaChart.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsBarChart.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsBarChart.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsChart.cs",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsChart.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsChartContainer.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsChartContainer.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsChartLegend.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsChartLegend.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsChartLegendContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsChartLegendContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsChartTooltip.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsChartTooltip.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsChartTooltipContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsChartTooltipContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsLineChart.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsLineChart.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPieChart.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsPieChart.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsRadarChart.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsRadarChart.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsRadialBarChart.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsRadialBarChart.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsScatterChart.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsScatterChart.razor"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn",
+        "core"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Checkbox/CheckboxContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Checkbox/CheckboxContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Checkbox/CheckboxGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Checkbox/CheckboxGroupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Checkbox/NaviusCheckbox.razor",
+          "type": "registry:ui",
+          "target": "Navius/Checkbox/NaviusCheckbox.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Checkbox/NaviusCheckboxGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Checkbox/NaviusCheckboxGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Checkbox/NaviusCheckboxIndicator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Checkbox/NaviusCheckboxIndicator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCheckbox.razor",
+          "type": "registry:ui",
+          "target": "Zits/Checkbox/ZitsCheckbox.razor"
+        }
+      ]
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:ui",
+      "title": "Collapsible",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Collapsible/CollapsibleContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Collapsible/CollapsibleContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Collapsible/CollapsiblePart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Collapsible/CollapsiblePart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Collapsible/NaviusCollapsible.razor",
+          "type": "registry:ui",
+          "target": "Navius/Collapsible/NaviusCollapsible.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Collapsible/NaviusCollapsiblePanel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Collapsible/NaviusCollapsiblePanel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Collapsible/NaviusCollapsibleTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Collapsible/NaviusCollapsibleTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCollapsible.razor",
+          "type": "registry:ui",
+          "target": "Zits/Collapsible/ZitsCollapsible.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCollapsibleContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Collapsible/ZitsCollapsibleContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCollapsibleTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Collapsible/ZitsCollapsibleTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "color-picker",
+      "type": "registry:ui",
+      "title": "Color Picker",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/ColorMath.cs",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/ColorMath.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/ColorPickerContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/ColorPickerContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/ColorPickerPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/ColorPickerPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/ColorPickerTrackPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/ColorPickerTrackPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/NaviusColorPicker.razor",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/NaviusColorPicker.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/NaviusColorPickerAlphaSlider.razor",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/NaviusColorPickerAlphaSlider.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/NaviusColorPickerArea.razor",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/NaviusColorPickerArea.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/NaviusColorPickerField.razor",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/NaviusColorPickerField.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/NaviusColorPickerHueSlider.razor",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/NaviusColorPickerHueSlider.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/NaviusColorPickerSwatch.razor",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/NaviusColorPickerSwatch.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/NaviusColorPickerSwatchItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/NaviusColorPickerSwatchItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/NaviusColorPickerSwatches.razor",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/NaviusColorPickerSwatches.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ColorPicker/SwatchesContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/ColorPicker/SwatchesContext.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsColorPicker.razor",
+          "type": "registry:ui",
+          "target": "Zits/ColorPicker/ZitsColorPicker.razor"
+        }
+      ]
+    },
+    {
+      "name": "combobox",
+      "type": "registry:ui",
+      "title": "Combobox",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxChipContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/ComboboxChipContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/ComboboxContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/ComboboxGroupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxItemContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/ComboboxItemContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/ComboboxPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusCombobox.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusCombobox.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxArrow.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxArrow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxBackdrop.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxBackdrop.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxChip.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxChip.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxChipRemove.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxChipRemove.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxChips.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxChips.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxClear.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxClear.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxCollection.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxCollection.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxEmpty.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxEmpty.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxGroupLabel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxGroupLabel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxIcon.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxIcon.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxInput.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxItemIndicator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxItemIndicator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxList.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxList.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxPositioner.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxPositioner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxRow.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxRow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxSeparator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxSeparator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxStatus.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxStatus.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxValue.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxValue.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCombobox.razor",
+          "type": "registry:ui",
+          "target": "Zits/Combobox/ZitsCombobox.razor"
+        }
+      ]
+    },
+    {
+      "name": "command",
+      "type": "registry:ui",
+      "title": "Command",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsCommand.razor",
+          "type": "registry:ui",
+          "target": "Zits/Command/ZitsCommand.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCommandEmpty.razor",
+          "type": "registry:ui",
+          "target": "Zits/Command/ZitsCommandEmpty.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCommandGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Command/ZitsCommandGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCommandInput.razor",
+          "type": "registry:ui",
+          "target": "Zits/Command/ZitsCommandInput.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCommandItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Command/ZitsCommandItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCommandList.razor",
+          "type": "registry:ui",
+          "target": "Zits/Command/ZitsCommandList.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCommandSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/Command/ZitsCommandSeparator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCommandShortcut.razor",
+          "type": "registry:ui",
+          "target": "Zits/Command/ZitsCommandShortcut.razor"
+        }
+      ]
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "title": "Context Menu",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/ContextMenuCheckableContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/ContextMenuCheckableContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/ContextMenuContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/ContextMenuContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/ContextMenuGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/ContextMenuGroupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/ContextMenuPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/ContextMenuPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/ContextMenuRadioGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/ContextMenuRadioGroupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/ContextMenuSubContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/ContextMenuSubContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenu.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenu.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuArrow.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuArrow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuCheckboxItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuCheckboxItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuItemIndicator.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuItemIndicator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuLabel.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuLabel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuPositioner.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuPositioner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuRadioGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuRadioGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuRadioItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuRadioItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuSeparator.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuSeparator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuSub.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuSub.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuSubContent.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuSubContent.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuSubTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuSubTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ContextMenu/NaviusContextMenuTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/ContextMenu/NaviusContextMenuTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenu.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenu.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuCheckboxItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuCheckboxItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuLabel.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuLabel.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuRadioGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuRadioGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuRadioItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuRadioItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuSeparator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuShortcut.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuShortcut.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuSub.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuSub.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuSubContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuSubContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuSubTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuSubTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsContextMenuTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/ContextMenu/ZitsContextMenuTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "currency-input",
+      "type": "registry:ui",
+      "title": "Currency Input",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/CurrencyInput/CurrencyEngine.cs",
+          "type": "registry:ui",
+          "target": "Navius/CurrencyInput/CurrencyEngine.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/CurrencyInput/NaviusCurrencyInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/CurrencyInput/NaviusCurrencyInput.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsCurrencyInput.razor",
+          "type": "registry:ui",
+          "target": "Zits/CurrencyInput/ZitsCurrencyInput.razor"
+        }
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "title": "Data Table",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn",
+        "button",
+        "checkbox",
+        "input",
+        "table",
+        "dropdown-menu"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DataGrid/DataGridColumn.cs",
+          "type": "registry:ui",
+          "target": "Navius/DataGrid/DataGridColumn.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DataGrid/DataGridContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/DataGrid/DataGridContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DataGrid/DataGridPagination.cs",
+          "type": "registry:ui",
+          "target": "Navius/DataGrid/DataGridPagination.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DataGrid/DataGridPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/DataGrid/DataGridPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DataGrid/DataGridSort.cs",
+          "type": "registry:ui",
+          "target": "Navius/DataGrid/DataGridSort.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DataGrid/NaviusDataGrid.razor",
+          "type": "registry:ui",
+          "target": "Navius/DataGrid/NaviusDataGrid.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DataGrid/SortDirection.cs",
+          "type": "registry:ui",
+          "target": "Navius/DataGrid/SortDirection.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDataTable.razor",
+          "type": "registry:ui",
+          "target": "Zits/DataTable/ZitsDataTable.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDataTableColumnHeader.razor",
+          "type": "registry:ui",
+          "target": "Zits/DataTable/ZitsDataTableColumnHeader.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDataTableContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/DataTable/ZitsDataTableContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDataTablePagination.razor",
+          "type": "registry:ui",
+          "target": "Zits/DataTable/ZitsDataTablePagination.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDataTableViewOptions.razor",
+          "type": "registry:ui",
+          "target": "Zits/DataTable/ZitsDataTableViewOptions.razor"
+        }
+      ]
+    },
+    {
+      "name": "date-input",
+      "type": "registry:ui",
+      "title": "Date Input",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn",
+        "core"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DateInput/NaviusDateInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/DateInput/NaviusDateInput.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDateInput.razor",
+          "type": "registry:ui",
+          "target": "Zits/DateInput/ZitsDateInput.razor"
+        }
+      ]
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "title": "Date Picker",
+      "dependencies": [],
+      "registryDependencies": [
+        "popover",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsDatePicker.razor",
+          "type": "registry:ui",
+          "target": "Zits/DatePicker/ZitsDatePicker.razor"
+        }
+      ]
+    },
+    {
+      "name": "date-range-picker",
+      "type": "registry:ui",
+      "title": "Date Range Picker",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn",
+        "calendar",
+        "core"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DateRangePicker/DateRangePickerContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/DateRangePicker/DateRangePickerContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DateRangePicker/NaviusDateRangePicker.razor",
+          "type": "registry:ui",
+          "target": "Navius/DateRangePicker/NaviusDateRangePicker.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DateRangePicker/NaviusDateRangePickerContent.razor",
+          "type": "registry:ui",
+          "target": "Navius/DateRangePicker/NaviusDateRangePickerContent.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DateRangePicker/NaviusDateRangePickerControl.razor",
+          "type": "registry:ui",
+          "target": "Navius/DateRangePicker/NaviusDateRangePickerControl.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DateRangePicker/NaviusDateRangePickerInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/DateRangePicker/NaviusDateRangePickerInput.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DateRangePicker/NaviusDateRangePickerSeparator.razor",
+          "type": "registry:ui",
+          "target": "Navius/DateRangePicker/NaviusDateRangePickerSeparator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DateRangePicker/NaviusDateRangePickerTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/DateRangePicker/NaviusDateRangePickerTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDateRangePicker.razor",
+          "type": "registry:ui",
+          "target": "Zits/DateRangePicker/ZitsDateRangePicker.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDateRangePreset.cs",
+          "type": "registry:ui",
+          "target": "Zits/DateRangePicker/ZitsDateRangePreset.cs"
+        }
+      ]
+    },
+    {
+      "name": "dialog-service",
+      "type": "registry:ui",
+      "title": "Dialog Service",
+      "dependencies": [],
+      "registryDependencies": [
+        "dialog",
+        "alert-dialog"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/ZitsDialogService.cs",
+          "type": "registry:ui",
+          "target": "Zits/DialogService/ZitsDialogService.cs"
+        },
+        {
+          "path": "src/Zits.Ui/ZitsDialogOutlet.razor",
+          "type": "registry:ui",
+          "target": "Zits/DialogService/ZitsDialogOutlet.razor"
+        },
+        {
+          "path": "src/Zits.Ui/ServiceCollectionExtensions.cs",
+          "type": "registry:ui",
+          "target": "Zits/DialogService/ServiceCollectionExtensions.cs"
+        }
+      ]
+    },
+    {
+      "name": "direction-provider",
+      "type": "registry:ui",
+      "title": "Direction Provider",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/DirectionProvider/NaviusDirectionProvider.razor",
+          "type": "registry:ui",
+          "target": "Navius/DirectionProvider/NaviusDirectionProvider.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDirectionProvider.razor",
+          "type": "registry:ui",
+          "target": "Zits/DirectionProvider/ZitsDirectionProvider.razor"
+        }
+      ]
+    },
+    {
+      "name": "drawer",
+      "type": "registry:ui",
+      "title": "Drawer",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Drawer/DrawerContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Drawer/DrawerContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Drawer/DrawerPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Drawer/DrawerPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Drawer/NaviusDrawer.razor",
+          "type": "registry:ui",
+          "target": "Navius/Drawer/NaviusDrawer.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Drawer/NaviusDrawerBackdrop.razor",
+          "type": "registry:ui",
+          "target": "Navius/Drawer/NaviusDrawerBackdrop.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Drawer/NaviusDrawerClose.razor",
+          "type": "registry:ui",
+          "target": "Navius/Drawer/NaviusDrawerClose.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Drawer/NaviusDrawerDescription.razor",
+          "type": "registry:ui",
+          "target": "Navius/Drawer/NaviusDrawerDescription.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Drawer/NaviusDrawerPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Drawer/NaviusDrawerPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Drawer/NaviusDrawerPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/Drawer/NaviusDrawerPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Drawer/NaviusDrawerTitle.razor",
+          "type": "registry:ui",
+          "target": "Navius/Drawer/NaviusDrawerTitle.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Drawer/NaviusDrawerTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Drawer/NaviusDrawerTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDrawer.razor",
+          "type": "registry:ui",
+          "target": "Zits/Drawer/ZitsDrawer.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDrawerContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Drawer/ZitsDrawerContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDrawerDescription.razor",
+          "type": "registry:ui",
+          "target": "Zits/Drawer/ZitsDrawerDescription.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDrawerFooter.razor",
+          "type": "registry:ui",
+          "target": "Zits/Drawer/ZitsDrawerFooter.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDrawerHeader.razor",
+          "type": "registry:ui",
+          "target": "Zits/Drawer/ZitsDrawerHeader.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDrawerTitle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Drawer/ZitsDrawerTitle.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsDrawerTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Drawer/ZitsDrawerTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "Dropdown Menu",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/MenuConstants.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menu/MenuConstants.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/MenuContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menu/MenuContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/MenuGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menu/MenuGroupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/MenuItemStateContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menu/MenuItemStateContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/MenuPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menu/MenuPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/MenuRadioContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menu/MenuRadioContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/MenuSubContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menu/MenuSubContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenu.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenu.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuArrow.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuArrow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuCheckboxItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuCheckboxItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuGroupLabel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuGroupLabel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuItemIndicator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuItemIndicator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuPositioner.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuPositioner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuRadioGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuRadioGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuRadioItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuRadioItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuSeparator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuSeparator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuSub.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuSub.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuSubContent.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuSubContent.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuSubTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuSubTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menu/NaviusMenuTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menu/NaviusMenuTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenu.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenu.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuCheckboxItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuCheckboxItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuLabel.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuLabel.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuPortal.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuPortal.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuRadioGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuRadioGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuRadioItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuRadioItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuSeparator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuShortcut.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuShortcut.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuSub.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuSub.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuSubContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuSubContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuSubTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuSubTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenuTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/DropdownMenu/ZitsMenuTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "title": "Empty",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsEmpty.razor",
+          "type": "registry:ui",
+          "target": "Zits/Empty/ZitsEmpty.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsEmptyContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Empty/ZitsEmptyContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsEmptyDescription.razor",
+          "type": "registry:ui",
+          "target": "Zits/Empty/ZitsEmptyDescription.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsEmptyHeader.razor",
+          "type": "registry:ui",
+          "target": "Zits/Empty/ZitsEmptyHeader.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsEmptyMedia.razor",
+          "type": "registry:ui",
+          "target": "Zits/Empty/ZitsEmptyMedia.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsEmptyTitle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Empty/ZitsEmptyTitle.razor"
+        }
+      ]
+    },
+    {
+      "name": "field",
+      "type": "registry:ui",
+      "title": "Field",
+      "dependencies": [],
+      "registryDependencies": [
+        "label",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsField.razor",
+          "type": "registry:ui",
+          "target": "Zits/Field/ZitsField.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsFieldContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Field/ZitsFieldContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsFieldDescription.razor",
+          "type": "registry:ui",
+          "target": "Zits/Field/ZitsFieldDescription.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsFieldError.razor",
+          "type": "registry:ui",
+          "target": "Zits/Field/ZitsFieldError.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsFieldLabel.razor",
+          "type": "registry:ui",
+          "target": "Zits/Field/ZitsFieldLabel.razor"
+        }
+      ]
+    },
+    {
+      "name": "file-upload",
+      "type": "registry:ui",
+      "title": "File Upload",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/FileUploadContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/FileUploadContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/FileUploadItemContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/FileUploadItemContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/FileUploadPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/FileUploadPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/NaviusFileRejection.cs",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/NaviusFileRejection.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/NaviusFileUpload.razor",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/NaviusFileUpload.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/NaviusFileUploadClear.razor",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/NaviusFileUploadClear.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/NaviusFileUploadDropzone.razor",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/NaviusFileUploadDropzone.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/NaviusFileUploadInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/NaviusFileUploadInput.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/NaviusFileUploadItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/NaviusFileUploadItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/NaviusFileUploadItemDelete.razor",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/NaviusFileUploadItemDelete.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/NaviusFileUploadItemName.razor",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/NaviusFileUploadItemName.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/NaviusFileUploadItemSize.razor",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/NaviusFileUploadItemSize.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/NaviusFileUploadList.razor",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/NaviusFileUploadList.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/FileUpload/NaviusFileUploadTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/FileUpload/NaviusFileUploadTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsFileUpload.razor",
+          "type": "registry:ui",
+          "target": "Zits/FileUpload/ZitsFileUpload.razor"
+        }
+      ]
+    },
+    {
+      "name": "hover-card",
+      "type": "registry:ui",
+      "title": "Hover Card",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PreviewCard/NaviusPreviewCard.razor",
+          "type": "registry:ui",
+          "target": "Navius/PreviewCard/NaviusPreviewCard.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PreviewCard/NaviusPreviewCardArrow.razor",
+          "type": "registry:ui",
+          "target": "Navius/PreviewCard/NaviusPreviewCardArrow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PreviewCard/NaviusPreviewCardBackdrop.razor",
+          "type": "registry:ui",
+          "target": "Navius/PreviewCard/NaviusPreviewCardBackdrop.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PreviewCard/NaviusPreviewCardPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/PreviewCard/NaviusPreviewCardPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PreviewCard/NaviusPreviewCardPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/PreviewCard/NaviusPreviewCardPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PreviewCard/NaviusPreviewCardPositioner.razor",
+          "type": "registry:ui",
+          "target": "Navius/PreviewCard/NaviusPreviewCardPositioner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PreviewCard/NaviusPreviewCardTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/PreviewCard/NaviusPreviewCardTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PreviewCard/PreviewCardContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/PreviewCard/PreviewCardContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PreviewCard/PreviewCardPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/PreviewCard/PreviewCardPart.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPreviewCard.razor",
+          "type": "registry:ui",
+          "target": "Zits/HoverCard/ZitsPreviewCard.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPreviewCardContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/HoverCard/ZitsPreviewCardContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPreviewCardTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/HoverCard/ZitsPreviewCardTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsInput.razor",
+          "type": "registry:ui",
+          "target": "Zits/Input/ZitsInput.razor"
+        }
+      ]
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "title": "Input Group",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsInputGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/InputGroup/ZitsInputGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsInputGroupAddon.razor",
+          "type": "registry:ui",
+          "target": "Zits/InputGroup/ZitsInputGroupAddon.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsInputGroupInput.razor",
+          "type": "registry:ui",
+          "target": "Zits/InputGroup/ZitsInputGroupInput.razor"
+        }
+      ]
+    },
+    {
+      "name": "item",
+      "type": "registry:ui",
+      "title": "Item",
+      "dependencies": [],
+      "registryDependencies": [
+        "separator",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Item/ZitsItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsItemActions.razor",
+          "type": "registry:ui",
+          "target": "Zits/Item/ZitsItemActions.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsItemContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Item/ZitsItemContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsItemDescription.razor",
+          "type": "registry:ui",
+          "target": "Zits/Item/ZitsItemDescription.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsItemFooter.razor",
+          "type": "registry:ui",
+          "target": "Zits/Item/ZitsItemFooter.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsItemGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Item/ZitsItemGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsItemHeader.razor",
+          "type": "registry:ui",
+          "target": "Zits/Item/ZitsItemHeader.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsItemMedia.razor",
+          "type": "registry:ui",
+          "target": "Zits/Item/ZitsItemMedia.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsItemSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/Item/ZitsItemSeparator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsItemTitle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Item/ZitsItemTitle.razor"
+        }
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsKbd.razor",
+          "type": "registry:ui",
+          "target": "Zits/Kbd/ZitsKbd.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsKbdGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Kbd/ZitsKbdGroup.razor"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Label/NaviusLabel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Label/NaviusLabel.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsLabel.razor",
+          "type": "registry:ui",
+          "target": "Zits/Label/ZitsLabel.razor"
+        }
+      ]
+    },
+    {
+      "name": "masked-input",
+      "type": "registry:ui",
+      "title": "Masked Input",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/MaskedInput/MaskEngine.cs",
+          "type": "registry:ui",
+          "target": "Navius/MaskedInput/MaskEngine.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/MaskedInput/NaviusMaskedInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/MaskedInput/NaviusMaskedInput.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMaskedInput.razor",
+          "type": "registry:ui",
+          "target": "Zits/MaskedInput/ZitsMaskedInput.razor"
+        }
+      ]
+    },
+    {
+      "name": "menubar",
+      "type": "registry:ui",
+      "title": "Menubar",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/MenubarContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/MenubarContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/MenubarGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/MenubarGroupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/MenubarItemIndicatorContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/MenubarItemIndicatorContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/MenubarMenuContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/MenubarMenuContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/MenubarPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/MenubarPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/MenubarRadioGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/MenubarRadioGroupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/MenubarSubContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/MenubarSubContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubar.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubar.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarArrow.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarArrow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarCheckboxItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarCheckboxItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarItemIndicator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarItemIndicator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarLabel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarLabel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarMenu.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarMenu.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarPositioner.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarPositioner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarRadioGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarRadioGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarRadioItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarRadioItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarSeparator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarSeparator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarSub.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarSub.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarSubContent.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarSubContent.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarSubTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarSubTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Menubar/NaviusMenubarTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Menubar/NaviusMenubarTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubar.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubar.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarCheckboxItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarCheckboxItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarLabel.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarLabel.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarMenu.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarMenu.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarRadioGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarRadioGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarRadioItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarRadioItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarSeparator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarShortcut.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarShortcut.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarSub.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarSub.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarSubContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarSubContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarSubTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarSubTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMenubarTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Menubar/ZitsMenubarTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "multi-select",
+      "type": "registry:ui",
+      "title": "Multi Select",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxChipContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/ComboboxChipContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/ComboboxContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/ComboboxGroupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxItemContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/ComboboxItemContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/ComboboxPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusCombobox.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusCombobox.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxArrow.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxArrow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxBackdrop.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxBackdrop.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxChip.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxChip.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxChipRemove.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxChipRemove.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxChips.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxChips.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxClear.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxClear.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxCollection.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxCollection.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxEmpty.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxEmpty.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxGroupLabel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxGroupLabel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxIcon.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxIcon.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxInput.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxItemIndicator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxItemIndicator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxList.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxList.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxPositioner.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxPositioner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxRow.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxRow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxSeparator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxSeparator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxStatus.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxStatus.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxValue.razor",
+          "type": "registry:ui",
+          "target": "Navius/Combobox/NaviusComboboxValue.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsMultiSelect.razor",
+          "type": "registry:ui",
+          "target": "Zits/MultiSelect/ZitsMultiSelect.razor"
+        }
+      ]
+    },
+    {
+      "name": "native-select",
+      "type": "registry:ui",
+      "title": "Native Select",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsNativeSelect.razor",
+          "type": "registry:ui",
+          "target": "Zits/NativeSelect/ZitsNativeSelect.razor"
+        }
+      ]
+    },
+    {
+      "name": "navigation-menu",
+      "type": "registry:ui",
+      "title": "Navigation Menu",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NavigationMenuContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NavigationMenuContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NavigationMenuPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NavigationMenuPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NavigationMenuPopupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NavigationMenuPopupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenu.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenu.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuArrow.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuArrow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuBackdrop.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuBackdrop.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuContent.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuContent.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuIcon.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuIcon.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuLink.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuLink.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuList.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuList.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuPositioner.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuPositioner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuSub.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuSub.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NavigationMenu/NaviusNavigationMenuViewport.razor",
+          "type": "registry:ui",
+          "target": "Navius/NavigationMenu/NaviusNavigationMenuViewport.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsNavigationMenu.razor",
+          "type": "registry:ui",
+          "target": "Zits/NavigationMenu/ZitsNavigationMenu.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsNavigationMenuArrow.razor",
+          "type": "registry:ui",
+          "target": "Zits/NavigationMenu/ZitsNavigationMenuArrow.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsNavigationMenuContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/NavigationMenu/ZitsNavigationMenuContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsNavigationMenuIcon.razor",
+          "type": "registry:ui",
+          "target": "Zits/NavigationMenu/ZitsNavigationMenuIcon.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsNavigationMenuItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/NavigationMenu/ZitsNavigationMenuItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsNavigationMenuLink.razor",
+          "type": "registry:ui",
+          "target": "Zits/NavigationMenu/ZitsNavigationMenuLink.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsNavigationMenuList.razor",
+          "type": "registry:ui",
+          "target": "Zits/NavigationMenu/ZitsNavigationMenuList.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsNavigationMenuPopup.razor",
+          "type": "registry:ui",
+          "target": "Zits/NavigationMenu/ZitsNavigationMenuPopup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsNavigationMenuPositioner.razor",
+          "type": "registry:ui",
+          "target": "Zits/NavigationMenu/ZitsNavigationMenuPositioner.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsNavigationMenuTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/NavigationMenu/ZitsNavigationMenuTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsNavigationMenuViewport.razor",
+          "type": "registry:ui",
+          "target": "Zits/NavigationMenu/ZitsNavigationMenuViewport.razor"
+        }
+      ]
+    },
+    {
+      "name": "otp",
+      "type": "registry:ui",
+      "title": "Otp",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/OneTimePasswordField/NaviusOneTimePasswordField.razor",
+          "type": "registry:ui",
+          "target": "Navius/OneTimePasswordField/NaviusOneTimePasswordField.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/OneTimePasswordField/NaviusOneTimePasswordFieldHiddenInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/OneTimePasswordField/NaviusOneTimePasswordFieldHiddenInput.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/OneTimePasswordField/NaviusOneTimePasswordFieldInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/OneTimePasswordField/NaviusOneTimePasswordFieldInput.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/OneTimePasswordField/OneTimePasswordFieldContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/OneTimePasswordField/OneTimePasswordFieldContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/OneTimePasswordField/OneTimePasswordFieldPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/OneTimePasswordField/OneTimePasswordFieldPart.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsInputOtp.razor",
+          "type": "registry:ui",
+          "target": "Zits/Otp/ZitsInputOtp.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsInputOtpGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Otp/ZitsInputOtpGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsInputOtpSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/Otp/ZitsInputOtpSeparator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsInputOtpSlot.razor",
+          "type": "registry:ui",
+          "target": "Zits/Otp/ZitsInputOtpSlot.razor"
+        }
+      ]
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "title": "Pagination",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsPagination.razor",
+          "type": "registry:ui",
+          "target": "Zits/Pagination/ZitsPagination.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPaginationContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Pagination/ZitsPaginationContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPaginationEllipsis.razor",
+          "type": "registry:ui",
+          "target": "Zits/Pagination/ZitsPaginationEllipsis.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPaginationItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Pagination/ZitsPaginationItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPaginationLink.razor",
+          "type": "registry:ui",
+          "target": "Zits/Pagination/ZitsPaginationLink.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPaginationNext.razor",
+          "type": "registry:ui",
+          "target": "Zits/Pagination/ZitsPaginationNext.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsPaginationPrevious.razor",
+          "type": "registry:ui",
+          "target": "Zits/Pagination/ZitsPaginationPrevious.razor"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "Progress",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Progress/NaviusProgress.razor",
+          "type": "registry:ui",
+          "target": "Navius/Progress/NaviusProgress.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Progress/NaviusProgressIndicator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Progress/NaviusProgressIndicator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Progress/NaviusProgressLabel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Progress/NaviusProgressLabel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Progress/NaviusProgressTrack.razor",
+          "type": "registry:ui",
+          "target": "Navius/Progress/NaviusProgressTrack.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Progress/NaviusProgressValue.razor",
+          "type": "registry:ui",
+          "target": "Navius/Progress/NaviusProgressValue.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Progress/ProgressContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Progress/ProgressContext.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsProgress.razor",
+          "type": "registry:ui",
+          "target": "Zits/Progress/ZitsProgress.razor"
+        }
+      ]
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "Radio Group",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn",
+        "core"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/RadioGroup/NaviusRadioGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/RadioGroup/NaviusRadioGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/RadioGroup/NaviusRadioGroupIndicator.razor",
+          "type": "registry:ui",
+          "target": "Navius/RadioGroup/NaviusRadioGroupIndicator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/RadioGroup/NaviusRadioGroupItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/RadioGroup/NaviusRadioGroupItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/RadioGroup/RadioGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/RadioGroup/RadioGroupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/RadioGroup/RadioGroupItemContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/RadioGroup/RadioGroupItemContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/RadioGroup/RadioGroupPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/RadioGroup/RadioGroupPart.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsRadioGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/RadioGroup/ZitsRadioGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsRadioGroupItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/RadioGroup/ZitsRadioGroupItem.razor"
+        }
+      ]
+    },
+    {
+      "name": "rating",
+      "type": "registry:ui",
+      "title": "Rating",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn",
+        "core"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Rating/NaviusRating.razor",
+          "type": "registry:ui",
+          "target": "Navius/Rating/NaviusRating.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Rating/NaviusRatingItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Rating/NaviusRatingItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Rating/RatingContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Rating/RatingContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Rating/RatingPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Rating/RatingPart.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsRating.razor",
+          "type": "registry:ui",
+          "target": "Zits/Rating/ZitsRating.razor"
+        }
+      ]
+    },
+    {
+      "name": "resizable",
+      "type": "registry:ui",
+      "title": "Resizable",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsResizableHandle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Resizable/ZitsResizableHandle.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsResizablePanel.razor",
+          "type": "registry:ui",
+          "target": "Zits/Resizable/ZitsResizablePanel.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsResizablePanelGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Resizable/ZitsResizablePanelGroup.razor"
+        }
+      ]
+    },
+    {
+      "name": "scroll-area",
+      "type": "registry:ui",
+      "title": "Scroll Area",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ScrollArea/NaviusScrollArea.razor",
+          "type": "registry:ui",
+          "target": "Navius/ScrollArea/NaviusScrollArea.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ScrollArea/NaviusScrollAreaCorner.razor",
+          "type": "registry:ui",
+          "target": "Navius/ScrollArea/NaviusScrollAreaCorner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ScrollArea/NaviusScrollAreaScrollbar.razor",
+          "type": "registry:ui",
+          "target": "Navius/ScrollArea/NaviusScrollAreaScrollbar.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ScrollArea/NaviusScrollAreaThumb.razor",
+          "type": "registry:ui",
+          "target": "Navius/ScrollArea/NaviusScrollAreaThumb.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ScrollArea/NaviusScrollAreaViewport.razor",
+          "type": "registry:ui",
+          "target": "Navius/ScrollArea/NaviusScrollAreaViewport.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ScrollArea/ScrollAreaContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/ScrollArea/ScrollAreaContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ScrollArea/ScrollAreaPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/ScrollArea/ScrollAreaPart.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsScrollArea.razor",
+          "type": "registry:ui",
+          "target": "Zits/ScrollArea/ZitsScrollArea.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsScrollBar.razor",
+          "type": "registry:ui",
+          "target": "Zits/ScrollArea/ZitsScrollBar.razor"
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelect.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelect.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectArrow.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectArrow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectIcon.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectIcon.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectItemIndicator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectItemIndicator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectItemText.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectItemText.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectLabel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectLabel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectPositioner.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectPositioner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectScrollDownButton.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectScrollDownButton.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectScrollUpButton.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectScrollUpButton.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectSeparator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectSeparator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectValue.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectValue.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/NaviusSelectViewport.razor",
+          "type": "registry:ui",
+          "target": "Navius/Select/NaviusSelectViewport.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/SelectContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Select/SelectContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/SelectGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Select/SelectGroupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/SelectItemContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Select/SelectItemContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/SelectPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Select/SelectPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Select/SelectViewportContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Select/SelectViewportContext.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSelect.razor",
+          "type": "registry:ui",
+          "target": "Zits/Select/ZitsSelect.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSelectContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Select/ZitsSelectContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSelectGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Select/ZitsSelectGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSelectItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Select/ZitsSelectItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSelectLabel.razor",
+          "type": "registry:ui",
+          "target": "Zits/Select/ZitsSelectLabel.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSelectSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/Select/ZitsSelectSeparator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSelectTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Select/ZitsSelectTrigger.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSelectValue.razor",
+          "type": "registry:ui",
+          "target": "Zits/Select/ZitsSelectValue.razor"
+        }
+      ]
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Separator/NaviusSeparator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Separator/NaviusSeparator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/Separator/ZitsSeparator.razor"
+        }
+      ]
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "dependencies": [],
+      "registryDependencies": [
+        "dialog",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsSheet.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sheet/ZitsSheet.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSheetContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sheet/ZitsSheetContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSheetDescription.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sheet/ZitsSheetDescription.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSheetFooter.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sheet/ZitsSheetFooter.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSheetHeader.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sheet/ZitsSheetHeader.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSheetTitle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sheet/ZitsSheetTitle.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSheetTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sheet/ZitsSheetTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "title": "Sidebar",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "dialog",
+        "cn",
+        "button",
+        "input",
+        "separator",
+        "skeleton"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebar.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebar.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarFooter.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarFooter.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarGroupAction.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarGroupAction.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarGroupContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarGroupContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarGroupLabel.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarGroupLabel.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarHeader.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarHeader.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarInput.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarInput.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarInset.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarInset.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarMenu.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarMenu.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarMenuAction.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarMenuAction.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarMenuBadge.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarMenuBadge.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarMenuButton.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarMenuButton.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarMenuItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarMenuItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarMenuSkeleton.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarMenuSkeleton.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarMenuSub.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarMenuSub.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarMenuSubButton.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarMenuSubButton.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarMenuSubItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarMenuSubItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarProvider.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarProvider.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarRail.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarRail.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarSeparator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSidebarTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sidebar/ZitsSidebarTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsSkeleton.razor",
+          "type": "registry:ui",
+          "target": "Zits/Skeleton/ZitsSkeleton.razor"
+        }
+      ]
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "title": "Slider",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Slider/NaviusSlider.razor",
+          "type": "registry:ui",
+          "target": "Navius/Slider/NaviusSlider.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Slider/NaviusSliderRange.razor",
+          "type": "registry:ui",
+          "target": "Navius/Slider/NaviusSliderRange.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Slider/NaviusSliderThumb.razor",
+          "type": "registry:ui",
+          "target": "Navius/Slider/NaviusSliderThumb.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Slider/NaviusSliderTrack.razor",
+          "type": "registry:ui",
+          "target": "Navius/Slider/NaviusSliderTrack.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Slider/SliderContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Slider/SliderContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Slider/SliderPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Slider/SliderPart.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSlider.razor",
+          "type": "registry:ui",
+          "target": "Zits/Slider/ZitsSlider.razor"
+        }
+      ]
+    },
+    {
+      "name": "sonner",
+      "type": "registry:ui",
+      "title": "Sonner",
+      "dependencies": [],
+      "registryDependencies": [
+        "toast",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsSonner.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sonner/ZitsSonner.razor"
+        }
+      ]
+    },
+    {
+      "name": "sortable",
+      "type": "registry:ui",
+      "title": "Sortable",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Sortable/NaviusSortable.razor",
+          "type": "registry:ui",
+          "target": "Navius/Sortable/NaviusSortable.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Sortable/NaviusSortableItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Sortable/NaviusSortableItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Sortable/NaviusSortableItemHandle.razor",
+          "type": "registry:ui",
+          "target": "Navius/Sortable/NaviusSortableItemHandle.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Sortable/SortableContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Sortable/SortableContext.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSortable.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sortable/ZitsSortable.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSortableItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sortable/ZitsSortableItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSortableItemHandle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Sortable/ZitsSortableItemHandle.razor"
+        }
+      ]
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsSpinner.razor",
+          "type": "registry:ui",
+          "target": "Zits/Spinner/ZitsSpinner.razor"
+        }
+      ]
+    },
+    {
+      "name": "split-button",
+      "type": "registry:ui",
+      "title": "Split Button",
+      "dependencies": [],
+      "registryDependencies": [
+        "dropdown-menu",
+        "button",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/SplitButtonContext.cs",
+          "type": "registry:ui",
+          "target": "Zits/SplitButton/SplitButtonContext.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSplitButton.razor",
+          "type": "registry:ui",
+          "target": "Zits/SplitButton/ZitsSplitButton.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSplitButtonAction.razor",
+          "type": "registry:ui",
+          "target": "Zits/SplitButton/ZitsSplitButtonAction.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSplitButtonMenu.razor",
+          "type": "registry:ui",
+          "target": "Zits/SplitButton/ZitsSplitButtonMenu.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSplitButtonTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/SplitButton/ZitsSplitButtonTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn",
+        "core"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Switch/NaviusSwitch.razor",
+          "type": "registry:ui",
+          "target": "Navius/Switch/NaviusSwitch.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Switch/NaviusSwitchContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Switch/NaviusSwitchContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Switch/NaviusSwitchThumb.razor",
+          "type": "registry:ui",
+          "target": "Navius/Switch/NaviusSwitchThumb.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsSwitch.razor",
+          "type": "registry:ui",
+          "target": "Zits/Switch/ZitsSwitch.razor"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsTable.razor",
+          "type": "registry:ui",
+          "target": "Zits/Table/ZitsTable.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTableBody.razor",
+          "type": "registry:ui",
+          "target": "Zits/Table/ZitsTableBody.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTableCaption.razor",
+          "type": "registry:ui",
+          "target": "Zits/Table/ZitsTableCaption.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTableCell.razor",
+          "type": "registry:ui",
+          "target": "Zits/Table/ZitsTableCell.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTableFooter.razor",
+          "type": "registry:ui",
+          "target": "Zits/Table/ZitsTableFooter.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTableHead.razor",
+          "type": "registry:ui",
+          "target": "Zits/Table/ZitsTableHead.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTableHeader.razor",
+          "type": "registry:ui",
+          "target": "Zits/Table/ZitsTableHeader.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTableRow.razor",
+          "type": "registry:ui",
+          "target": "Zits/Table/ZitsTableRow.razor"
+        }
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tabs/NaviusTabs.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tabs/NaviusTabs.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tabs/NaviusTabsList.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tabs/NaviusTabsList.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tabs/NaviusTabsPanel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tabs/NaviusTabsPanel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tabs/NaviusTabsTab.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tabs/NaviusTabsTab.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tabs/TabsContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Tabs/TabsContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tabs/TabsPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Tabs/TabsPart.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTabs.razor",
+          "type": "registry:ui",
+          "target": "Zits/Tabs/ZitsTabs.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTabsContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Tabs/ZitsTabsContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTabsList.razor",
+          "type": "registry:ui",
+          "target": "Zits/Tabs/ZitsTabsList.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTabsTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Tabs/ZitsTabsTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "tag-input",
+      "type": "registry:ui",
+      "title": "Tag Input",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn",
+        "core"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TagInput/NaviusTag.razor",
+          "type": "registry:ui",
+          "target": "Navius/TagInput/NaviusTag.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TagInput/NaviusTagInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/TagInput/NaviusTagInput.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TagInput/NaviusTagInputField.razor",
+          "type": "registry:ui",
+          "target": "Navius/TagInput/NaviusTagInputField.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TagInput/NaviusTagInputList.razor",
+          "type": "registry:ui",
+          "target": "Navius/TagInput/NaviusTagInputList.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TagInput/NaviusTagRemove.razor",
+          "type": "registry:ui",
+          "target": "Navius/TagInput/NaviusTagRemove.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TagInput/TagInputContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/TagInput/TagInputContext.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTagInput.razor",
+          "type": "registry:ui",
+          "target": "Zits/TagInput/ZitsTagInput.razor"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsTextarea.razor",
+          "type": "registry:ui",
+          "target": "Zits/Textarea/ZitsTextarea.razor"
+        }
+      ]
+    },
+    {
+      "name": "time-input",
+      "type": "registry:ui",
+      "title": "Time Input",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn",
+        "core"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TimeInput/NaviusTimeInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/TimeInput/NaviusTimeInput.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTimeInput.razor",
+          "type": "registry:ui",
+          "target": "Zits/TimeInput/ZitsTimeInput.razor"
+        }
+      ]
+    },
+    {
+      "name": "time-picker",
+      "type": "registry:ui",
+      "title": "Time Picker",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn",
+        "core"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TimePicker/NaviusTimePicker.razor",
+          "type": "registry:ui",
+          "target": "Navius/TimePicker/NaviusTimePicker.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TimePicker/NaviusTimePickerColumn.razor",
+          "type": "registry:ui",
+          "target": "Navius/TimePicker/NaviusTimePickerColumn.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TimePicker/NaviusTimePickerContent.razor",
+          "type": "registry:ui",
+          "target": "Navius/TimePicker/NaviusTimePickerContent.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TimePicker/NaviusTimePickerInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/TimePicker/NaviusTimePickerInput.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TimePicker/NaviusTimePickerOption.razor",
+          "type": "registry:ui",
+          "target": "Navius/TimePicker/NaviusTimePickerOption.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TimePicker/NaviusTimePickerTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/TimePicker/NaviusTimePickerTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/TimePicker/TimePickerContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/TimePicker/TimePickerContext.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTimePicker.razor",
+          "type": "registry:ui",
+          "target": "Zits/TimePicker/ZitsTimePicker.razor"
+        }
+      ]
+    },
+    {
+      "name": "timeline",
+      "type": "registry:ui",
+      "title": "Timeline",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/TimelineContext.cs",
+          "type": "registry:ui",
+          "target": "Zits/Timeline/TimelineContext.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTimeline.razor",
+          "type": "registry:ui",
+          "target": "Zits/Timeline/ZitsTimeline.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTimelineConnector.razor",
+          "type": "registry:ui",
+          "target": "Zits/Timeline/ZitsTimelineConnector.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTimelineContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Timeline/ZitsTimelineContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTimelineDescription.razor",
+          "type": "registry:ui",
+          "target": "Zits/Timeline/ZitsTimelineDescription.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTimelineDot.razor",
+          "type": "registry:ui",
+          "target": "Zits/Timeline/ZitsTimelineDot.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTimelineItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Timeline/ZitsTimelineItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTimelineSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/Timeline/ZitsTimelineSeparator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTimelineTime.razor",
+          "type": "registry:ui",
+          "target": "Zits/Timeline/ZitsTimelineTime.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTimelineTitle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Timeline/ZitsTimelineTitle.razor"
+        }
+      ]
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Toast",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/NaviusToastAction.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toast/NaviusToastAction.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/NaviusToastArrow.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toast/NaviusToastArrow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/NaviusToastClose.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toast/NaviusToastClose.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/NaviusToastContent.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toast/NaviusToastContent.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/NaviusToastDescription.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toast/NaviusToastDescription.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/NaviusToastPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toast/NaviusToastPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/NaviusToastPositioner.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toast/NaviusToastPositioner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/NaviusToastProvider.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toast/NaviusToastProvider.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/NaviusToastRoot.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toast/NaviusToastRoot.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/NaviusToastTitle.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toast/NaviusToastTitle.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/NaviusToastViewport.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toast/NaviusToastViewport.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/ToastContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Toast/ToastContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/ToastManager.cs",
+          "type": "registry:ui",
+          "target": "Navius/Toast/ToastManager.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/ToastObject.cs",
+          "type": "registry:ui",
+          "target": "Navius/Toast/ToastObject.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toast/ToastProviderContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Toast/ToastProviderContext.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToast.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toast/ZitsToast.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToastAction.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toast/ZitsToastAction.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToastClose.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toast/ZitsToastClose.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToastContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toast/ZitsToastContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToastDescription.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toast/ZitsToastDescription.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToastProvider.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toast/ZitsToastProvider.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToastTitle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toast/ZitsToastTitle.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToastViewport.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toast/ZitsToastViewport.razor"
+        }
+      ]
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "title": "Toggle",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toggle/NaviusToggle.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toggle/NaviusToggle.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToggle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toggle/ZitsToggle.razor"
+        }
+      ]
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "title": "Toggle Group",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ToggleGroup/NaviusToggleGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/ToggleGroup/NaviusToggleGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ToggleGroup/NaviusToggleGroupItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/ToggleGroup/NaviusToggleGroupItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ToggleGroup/ToggleGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/ToggleGroup/ToggleGroupContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/ToggleGroup/ToggleGroupPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/ToggleGroup/ToggleGroupPart.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToggleGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/ToggleGroup/ZitsToggleGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToggleGroupItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/ToggleGroup/ZitsToggleGroupItem.razor"
+        },
+        {
+          "path": "src/Zits.Ui/ZitsToggleGroupVariant.cs",
+          "type": "registry:ui",
+          "target": "Zits/ToggleGroup/ZitsToggleGroupVariant.cs"
+        }
+      ]
+    },
+    {
+      "name": "toolbar",
+      "type": "registry:ui",
+      "title": "Toolbar",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toolbar/NaviusToolbar.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toolbar/NaviusToolbar.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toolbar/NaviusToolbarButton.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toolbar/NaviusToolbarButton.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toolbar/NaviusToolbarLink.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toolbar/NaviusToolbarLink.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toolbar/NaviusToolbarSeparator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toolbar/NaviusToolbarSeparator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toolbar/NaviusToolbarToggleGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toolbar/NaviusToolbarToggleGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toolbar/NaviusToolbarToggleItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Toolbar/NaviusToolbarToggleItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toolbar/ToolbarContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Toolbar/ToolbarContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toolbar/ToolbarPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Toolbar/ToolbarPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Toolbar/ToolbarToggleGroupContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Toolbar/ToolbarToggleGroupContext.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToolbar.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toolbar/ZitsToolbar.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToolbarButton.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toolbar/ZitsToolbarButton.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToolbarLink.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toolbar/ZitsToolbarLink.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToolbarSeparator.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toolbar/ZitsToolbarSeparator.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToolbarToggleGroup.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toolbar/ZitsToolbarToggleGroup.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsToolbarToggleItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Toolbar/ZitsToolbarToggleItem.razor"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tooltip/NaviusTooltip.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tooltip/NaviusTooltip.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tooltip/NaviusTooltipArrow.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tooltip/NaviusTooltipArrow.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tooltip/NaviusTooltipPopup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tooltip/NaviusTooltipPopup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tooltip/NaviusTooltipPortal.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tooltip/NaviusTooltipPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tooltip/NaviusTooltipPositioner.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tooltip/NaviusTooltipPositioner.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tooltip/NaviusTooltipProvider.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tooltip/NaviusTooltipProvider.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tooltip/NaviusTooltipTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tooltip/NaviusTooltipTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tooltip/TooltipContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Tooltip/TooltipContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tooltip/TooltipPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Tooltip/TooltipPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tooltip/TooltipProviderContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Tooltip/TooltipProviderContext.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTooltip.razor",
+          "type": "registry:ui",
+          "target": "Zits/Tooltip/ZitsTooltip.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTooltipContent.razor",
+          "type": "registry:ui",
+          "target": "Zits/Tooltip/ZitsTooltipContent.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTooltipProvider.razor",
+          "type": "registry:ui",
+          "target": "Zits/Tooltip/ZitsTooltipProvider.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTooltipTrigger.razor",
+          "type": "registry:ui",
+          "target": "Zits/Tooltip/ZitsTooltipTrigger.razor"
+        }
+      ]
+    },
+    {
+      "name": "tree",
+      "type": "registry:ui",
+      "title": "Tree",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tree/NaviusTree.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tree/NaviusTree.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tree/NaviusTreeGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tree/NaviusTreeGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tree/NaviusTreeItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tree/NaviusTreeItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tree/NaviusTreeItemContent.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tree/NaviusTreeItemContent.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tree/NaviusTreeItemIndicator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tree/NaviusTreeItemIndicator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tree/NaviusTreeItemTrigger.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tree/NaviusTreeItemTrigger.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tree/NaviusTreeItems.razor",
+          "type": "registry:ui",
+          "target": "Navius/Tree/NaviusTreeItems.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tree/TreeContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Tree/TreeContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tree/TreeItemContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Tree/TreeItemContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tree/TreeNode.cs",
+          "type": "registry:ui",
+          "target": "Navius/Tree/TreeNode.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Tree/TreePart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Tree/TreePart.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTree.razor",
+          "type": "registry:ui",
+          "target": "Zits/Tree/ZitsTree.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsTreeItem.razor",
+          "type": "registry:ui",
+          "target": "Zits/Tree/ZitsTreeItem.razor"
+        }
+      ]
+    },
+    {
+      "name": "typography",
+      "type": "registry:ui",
+      "title": "Typography",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Components/ZitsTypography.razor",
+          "type": "registry:ui",
+          "target": "Zits/Typography/ZitsTypography.razor"
+        }
       ]
     }
   ]
