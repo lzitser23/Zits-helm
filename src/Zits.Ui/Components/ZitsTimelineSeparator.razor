@@ -1,0 +1,28 @@
+@namespace Zits.Ui
+
+@*
+    Timeline separator, the dot + connector rail. Stacks along the cross axis of the timeline
+    (a column in a vertical timeline, a row in a horizontal one) so the connector line runs
+    toward the next item.
+*@
+
+<div data-navius-timeline-separator @attributes="Attributes" class="@SeparatorClass">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    [CascadingParameter] private TimelineContext? Context { get; set; }
+
+    private string Orientation => Context?.Orientation ?? "Vertical";
+
+    private const string Base = "flex items-center";
+
+    private string OrientationClass => Orientation == "Horizontal" ? "flex-row" : "flex-col";
+
+    private string SeparatorClass => Cn.Class(Base, OrientationClass, Cn.UserClass(Attributes));
+}

@@ -1,0 +1,25 @@
+@namespace Zits.Ui
+
+@*
+    Timeline connector, the line from this item's dot toward the next. Decorative, so it is
+    aria-hidden and carries no semantics. Grows to fill the rail along the timeline axis.
+*@
+
+<div data-navius-timeline-connector aria-hidden="true" @attributes="Attributes" class="@ConnectorClass"></div>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    [CascadingParameter] private TimelineContext? Context { get; set; }
+
+    private string Orientation => Context?.Orientation ?? "Vertical";
+
+    // Vertical: a thin vertical line that fills the remaining rail height.
+    // Horizontal: a thin horizontal line that fills the remaining rail width.
+    private string OrientationClass => Orientation == "Horizontal"
+        ? "h-px min-w-8 flex-1"
+        : "w-px min-h-8 flex-1";
+
+    private string ConnectorClass => Cn.Class("bg-border", OrientationClass, Cn.UserClass(Attributes));
+}

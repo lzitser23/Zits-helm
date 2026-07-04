@@ -1,11 +1,13 @@
 @namespace Zits.Ui
 
-@* Styled checkbox over the Navius Checkbox primitive (role=checkbox, tri-state, data-state, form input). *@
-<NaviusCheckbox Checked="Checked" CheckedChanged="CheckedChanged" DefaultChecked="DefaultChecked"
-                CheckedState="CheckedState" CheckedStateChanged="CheckedStateChanged"
-                DefaultCheckedState="DefaultCheckedState" Disabled="Disabled" ReadOnly="ReadOnly"
+@* Styled checkbox over the Navius Checkbox primitive (role=checkbox, tri-state, data-state, form input).
+   Checked / CheckedState are forwarded to the primitive ONLY when the consumer set them, so the
+   uncontrolled DefaultChecked / DefaultCheckedState paths stay live (the always-controlled wart fix). *@
+<NaviusCheckbox CheckedChanged="CheckedChanged" DefaultChecked="DefaultChecked"
+                CheckedStateChanged="CheckedStateChanged"
+                Disabled="Disabled" ReadOnly="ReadOnly"
                 Parent="Parent" Name="@Name" Value="@Value" Required="Required"
-                @attributes="Cn.Merge(Attributes, Base)">
+                @attributes="Forwarded">
     <NaviusCheckboxIndicator class="@Indicator">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -40,6 +42,46 @@
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool _checkedSet;
+    private bool _checkedStateSet;
+    private bool _defaultCheckedStateSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _checkedSet = parameters.TryGetValue<bool>(nameof(Checked), out _);
+        _checkedStateSet = parameters.TryGetValue<bool?>(nameof(CheckedState), out _);
+        _defaultCheckedStateSet = parameters.TryGetValue<bool?>(nameof(DefaultCheckedState), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    // Merge the styled classes and forward each value only when the consumer supplied it.
+    // The primitive also gives an explicitly-present DefaultCheckedState precedence over
+    // DefaultChecked, so that too is forwarded only when set, keeping DefaultChecked-only
+    // usage a plain boolean uncontrolled seed rather than a forced-indeterminate one.
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>(Cn.Merge(Attributes, Base));
+            if (_checkedSet)
+            {
+                merged["Checked"] = Checked;
+            }
+
+            if (_checkedStateSet)
+            {
+                merged["CheckedState"] = CheckedState!;
+            }
+
+            if (_defaultCheckedStateSet)
+            {
+                merged["DefaultCheckedState"] = DefaultCheckedState!;
+            }
+
+            return merged;
+        }
+    }
 
     private const string Base =
         "peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs outline-none transition-shadow focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 data-[checked]:border-primary data-[checked]:bg-primary data-[checked]:text-primary-foreground data-[indeterminate]:border-primary data-[indeterminate]:bg-primary data-[indeterminate]:text-primary-foreground aria-invalid:border-destructive aria-invalid:ring-destructive/20";

@@ -1,9 +1,11 @@
 @namespace Zits.Ui
 
-@* Styled toggle over the Navius Switch primitive (role=switch, data-state, form input). *@
-<NaviusSwitch Checked="Checked" CheckedChanged="CheckedChanged" DefaultChecked="DefaultChecked"
+@* Styled toggle over the Navius Switch primitive (role=switch, data-state, form input).
+   Checked is forwarded to the primitive ONLY when the consumer set it (@bind-Checked /
+   one-way Checked), so the uncontrolled DefaultChecked path stays live. *@
+<NaviusSwitch CheckedChanged="CheckedChanged" DefaultChecked="DefaultChecked"
               Disabled="Disabled" ReadOnly="ReadOnly" Name="@Name" Value="@Value" Required="Required" Form="@Form"
-              @attributes="Cn.Merge(Attributes, Base)">
+              @attributes="Forwarded">
     <NaviusSwitchThumb class="@Thumb" />
 </NaviusSwitch>
 
@@ -20,6 +22,30 @@
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool _checkedSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _checkedSet = parameters.TryGetValue<bool>(nameof(Checked), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    // Merge the styled classes and forward Checked only when the consumer supplied it,
+    // so the primitive's controlled-detection sees Checked only for controlled usage.
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>(Cn.Merge(Attributes, Base));
+            if (_checkedSet)
+            {
+                merged["Checked"] = Checked;
+            }
+
+            return merged;
+        }
+    }
 
     private const string Base =
         "peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[checked]:bg-primary data-[unchecked]:bg-input";

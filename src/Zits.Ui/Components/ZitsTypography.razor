@@ -1,0 +1,74 @@
+@namespace Zits.Ui
+@using Microsoft.AspNetCore.Components.Rendering
+
+@*
+    Typography, a helm-only presentational set matching the shadcn type scale wired to the
+    warm one-ink tokens. One component: Variant picks the default semantic element + type
+    classes; As overrides the rendered element. Purely visual (correct element, no ARIA).
+    The rendered tag is dynamic (Variant default or the As override), so the element is
+    emitted through the render-tree builder rather than fixed markup.
+*@
+
+@Render
+
+@code {
+    /// <summary>H1 | H2 | H3 | H4 | P | Blockquote | List | InlineCode | Lead | Large | Small | Muted.</summary>
+    [Parameter] public string Variant { get; set; } = "P";
+
+    /// <summary>Override the rendered element (e.g. "span"); defaults to the variant's semantic tag.</summary>
+    [Parameter] public string? As { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private string Element => As ?? DefaultElement;
+
+    private string DefaultElement => Variant switch
+    {
+        "H1" => "h1",
+        "H2" => "h2",
+        "H3" => "h3",
+        "H4" => "h4",
+        "Blockquote" => "blockquote",
+        "List" => "ul",
+        "InlineCode" or "Code" => "code",
+        "Small" => "small",
+        "Large" => "div",
+        // Lead, Muted, P and any unknown variant fall back to a paragraph.
+        _ => "p",
+    };
+
+    private string VariantClass => Variant switch
+    {
+        "H1" => "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl",
+        "H2" => "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0",
+        "H3" => "scroll-m-20 text-2xl font-semibold tracking-tight",
+        "H4" => "scroll-m-20 text-xl font-semibold tracking-tight",
+        "Blockquote" => "mt-6 border-l-2 pl-6 italic",
+        "List" => "my-6 ml-6 list-disc [&>li]:mt-2",
+        "InlineCode" or "Code" => "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
+        "Lead" => "text-xl text-muted-foreground",
+        "Large" => "text-lg font-semibold",
+        "Small" => "text-sm font-medium leading-none",
+        "Muted" => "text-sm text-muted-foreground",
+        // P and any unknown variant.
+        _ => "leading-7 [&:not(:first-child)]:mt-6",
+    };
+
+    private RenderFragment Render => (RenderTreeBuilder builder) =>
+    {
+        builder.OpenElement(0, Element);
+        if (Attributes is not null)
+        {
+            builder.AddMultipleAttributes(1, Attributes);
+        }
+        builder.AddAttribute(2, "data-navius-typography", "");
+        builder.AddAttribute(3, "data-variant", Variant);
+        // class last so it wins the duplicate-key override against any splatted class.
+        builder.AddAttribute(4, "class", Cn.Class(VariantClass, Cn.UserClass(Attributes)));
+        builder.AddContent(5, ChildContent);
+        builder.CloseElement();
+    };
+}

@@ -1,0 +1,40 @@
+@namespace Zits.Ui
+
+@*
+    Timeline item, an <li>. Status drives color states via data-status (complete | current |
+    pending). Lays out its separator + content along the cascaded axis; for Alternate the side
+    flips on even items (pure CSS nth-child).
+*@
+
+<li data-navius-timeline-item data-status="@Status" @attributes="Attributes" class="@ItemClass">
+    @ChildContent
+</li>
+
+@code {
+    /// <summary>complete | current | pending. Exposed as data-status for color states.</summary>
+    [Parameter] public string Status { get; set; } = "pending";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    [CascadingParameter] private TimelineContext? Context { get; set; }
+
+    private string Orientation => Context?.Orientation ?? "Vertical";
+    private string Align => Context?.Align ?? "Left";
+
+    private const string Base = "flex gap-4";
+
+    private string DirectionClass => (Orientation, Align) switch
+    {
+        ("Horizontal", "Right") => "flex-col-reverse",
+        ("Horizontal", "Alternate") => "flex-col even:flex-col-reverse",
+        ("Horizontal", _) => "flex-col",
+        (_, "Right") => "flex-row-reverse",
+        (_, "Alternate") => "flex-row even:flex-row-reverse",
+        _ => "flex-row",
+    };
+
+    private string ItemClass => Cn.Class(Base, DirectionClass, Cn.UserClass(Attributes));
+}

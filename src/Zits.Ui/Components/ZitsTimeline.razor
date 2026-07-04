@@ -1,0 +1,35 @@
+@namespace Zits.Ui
+
+@*
+    Timeline root, a helm-only presentational surface (no brain, no keyboard). Renders an <ol>;
+    items are <li>. Orientation (Vertical | Horizontal) and Align (Left | Right | Alternate) are
+    cascaded so the parts lay out along the shared axis. Alternate side selection is pure CSS
+    (odd/even), so no per-item index bookkeeping is needed here.
+*@
+
+<CascadingValue Value="Ctx" IsFixed="false">
+    <ol data-navius-timeline data-orientation="@Orientation" data-align="@Align" @attributes="Attributes" class="@RootClass">
+        @ChildContent
+    </ol>
+</CascadingValue>
+
+@code {
+    /// <summary>Vertical | Horizontal.</summary>
+    [Parameter] public string Orientation { get; set; } = "Vertical";
+
+    /// <summary>Left | Right | Alternate.</summary>
+    [Parameter] public string Align { get; set; } = "Left";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private TimelineContext Ctx => new(Orientation, Align);
+
+    private const string Base = "flex list-none";
+
+    private string OrientationClass => Orientation == "Horizontal" ? "flex-row" : "flex-col";
+
+    private string RootClass => Cn.Class(Base, OrientationClass, Cn.UserClass(Attributes));
+}
