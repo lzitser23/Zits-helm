@@ -50,7 +50,8 @@ dotnet run --project tools/Navius.Cli -- list
 dotnet run --project tools/Navius.Cli -- add dialog --to <dir> --namespace <ns>
 ```
 
-Wiring the full helm component set into the registry is tracked, not yet done.
+The registry ships **81 items**: the full helm component set plus the brain-vendoring
+`core`/`dialog`/`popover` primitives and the `cn` lib.
 
 ## License
 
