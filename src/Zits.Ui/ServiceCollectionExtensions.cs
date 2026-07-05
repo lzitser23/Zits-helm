@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Zits.Ui.Theming;
 
 namespace Zits.Ui;
 
@@ -10,10 +11,11 @@ namespace Zits.Ui;
 /// </summary>
 public static class ServiceCollectionExtensions
 {
-    /// <summary>Register the helm's injectable services (the dialog store).</summary>
+    /// <summary>Register the helm's injectable services.</summary>
     public static IServiceCollection AddZitsUi(this IServiceCollection services)
     {
         services.AddScoped<ZitsDialogService>();
+        services.AddScoped<ZitsThemeService>();
         return services;
     }
 }

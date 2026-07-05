@@ -1,0 +1,151 @@
+@namespace Zits.Ui
+@using Zits.Ui.Theming
+@implements IDisposable
+@inject ZitsThemeService Theme
+
+<ZitsPopover Open="_open" OpenChanged="@(open => _open = open)">
+    <ZitsPopoverTrigger data-slot="theme-switcher-trigger"
+                        class="inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-3 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+        Theme
+    </ZitsPopoverTrigger>
+    <ZitsPopoverContent Align="end" SideOffset="8" data-slot="theme-switcher-panel" class="w-[22rem] max-w-[calc(100vw-2rem)] p-0">
+        <div class="max-h-[min(42rem,calc(100vh-5rem))] overflow-y-auto p-4">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h2 class="text-sm font-semibold leading-none">Theme</h2>
+                    <p class="mt-1 text-xs text-muted-foreground">Runtime token customizer</p>
+                </div>
+                <button type="button" class="@ResetClass" @onclick="ResetAsync">Reset</button>
+            </div>
+
+            <div class="mt-4 space-y-5">
+                @Options("mode", "Mode", ModeOptions)
+                @Options("base", "Base", ZitsThemePresets.Bases)
+                @Options("primary", "Primary", ZitsThemePresets.Primaries)
+                @Options("radius", "Radius", ZitsThemePresets.Radii)
+                @Options("font", "Font", ZitsThemePresets.Fonts)
+                @Options("style", "Style", ZitsThemePresets.Styles)
+            </div>
+
+            <div class="mt-5 rounded-md border bg-muted/30 p-3">
+                <div class="flex items-center justify-between gap-3">
+                    <span class="text-xs font-medium text-muted-foreground">CSS export</span>
+                    <button type="button" class="@ResetClass" @onclick="CopyCssAsync">Copy CSS</button>
+                </div>
+                <textarea readonly data-slot="theme-css-export"
+                          class="mt-2 h-24 w-full resize-none rounded-md border bg-background p-2 font-mono text-[11px] leading-relaxed text-muted-foreground">@Theme.GenerateCss()</textarea>
+            </div>
+        </div>
+    </ZitsPopoverContent>
+</ZitsPopover>
+
+@code {
+    private static readonly string[] ModeOptions = ["system", "light", "dark"];
+    private bool _open;
+
+    private const string ResetClass =
+        "inline-flex h-7 items-center rounded-md border border-input bg-background px-2.5 text-xs font-medium hover:bg-accent hover:text-accent-foreground";
+
+    protected override void OnInitialized() => Theme.Changed += OnThemeChanged;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Theme.InitializeAsync();
+        }
+    }
+
+    private RenderFragment Options(string dimension, string label, IReadOnlyList<string> values) => builder =>
+    {
+        var seq = 0;
+        builder.OpenElement(seq++, "section");
+        builder.OpenElement(seq++, "div");
+        builder.AddAttribute(seq++, "class", "mb-2 text-xs font-medium text-muted-foreground");
+        builder.AddContent(seq++, label);
+        builder.CloseElement();
+        builder.OpenElement(seq++, "div");
+        builder.AddAttribute(seq++, "class", dimension == "primary" ? "grid grid-cols-3 gap-1.5" : "flex flex-wrap gap-1.5");
+
+        foreach (var value in values)
+        {
+            builder.OpenElement(seq++, "button");
+            builder.AddAttribute(seq++, "type", "button");
+            builder.AddAttribute(seq++, "data-dimension", dimension);
+            builder.AddAttribute(seq++, "data-value", value);
+            builder.AddAttribute(seq++, "aria-pressed", IsSelected(dimension, value));
+            builder.AddAttribute(seq++, "class", OptionClass(dimension, value));
+            builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, () => PickAsync(dimension, value)));
+            builder.AddContent(seq++, Label(value));
+            builder.CloseElement();
+        }
+
+        builder.CloseElement();
+        builder.CloseElement();
+    };
+
+    private async Task PickAsync(string dimension, string value)
+    {
+        switch (dimension)
+        {
+            case "mode":
+                await Theme.SetModeAsync(value switch
+                {
+                    "light" => ZitsThemeMode.Light,
+                    "dark" => ZitsThemeMode.Dark,
+                    _ => ZitsThemeMode.System,
+                });
+                break;
+            case "base":
+                await Theme.SetBaseAsync(value);
+                break;
+            case "primary":
+                await Theme.SetPrimaryAsync(value);
+                break;
+            case "radius":
+                await Theme.SetRadiusAsync(value);
+                break;
+            case "font":
+                await Theme.SetFontAsync(value);
+                break;
+            case "style":
+                await Theme.SetStyleAsync(value);
+                break;
+        }
+    }
+
+    private async Task ResetAsync() => await Theme.ResetAsync();
+
+    private async Task CopyCssAsync() => await Theme.CopyCssAsync();
+
+    private bool IsSelected(string dimension, string value) => dimension switch
+    {
+        "mode" => ZitsThemeService.ModeSlug(Theme.Current.Mode) == value,
+        "base" => Theme.Current.Base == value,
+        "primary" => Theme.Current.Primary == value,
+        "radius" => Theme.Current.Radius == value,
+        "font" => Theme.Current.Font == value,
+        "style" => Theme.Current.Style == value,
+        _ => false,
+    };
+
+    private string OptionClass(string dimension, string value)
+    {
+        var selected = IsSelected(dimension, value);
+        var primarySwatch = dimension == "primary" ? PrimarySwatchClass(value) : null;
+        return Cn.Class(
+            "inline-flex h-7 items-center justify-center rounded-md border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            selected ? "border-primary bg-primary text-primary-foreground" : "border-input bg-background hover:bg-accent hover:text-accent-foreground",
+            primarySwatch);
+    }
+
+    private static string? PrimarySwatchClass(string value)
+        => value == "ink" ? null : "before:mr-1.5 before:size-2 before:rounded-full before:bg-primary";
+
+    private static string Label(string value)
+        => value.Length == 0 ? value : char.ToUpperInvariant(value[0]) + value[1..];
+
+    private void OnThemeChanged() => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Theme.Changed -= OnThemeChanged;
+}

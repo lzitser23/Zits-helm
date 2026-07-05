@@ -1,0 +1,36 @@
+@namespace Zits.Ui
+@using Zits.Ui.Theming
+
+<div @attributes="ScopeAttributes">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public ZitsTheme? Theme { get; set; }
+    [Parameter] public string? Mode { get; set; }
+    [Parameter] public string? Base { get; set; }
+    [Parameter] public string? Primary { get; set; }
+    [Parameter] public string? Radius { get; set; }
+    [Parameter] public string? Font { get; set; }
+    [Parameter] public string? Style { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private IReadOnlyDictionary<string, object> ScopeAttributes
+    {
+        get
+        {
+            var theme = Theme ?? ZitsTheme.Default;
+            var dict = new Dictionary<string, object>(Cn.Merge(Attributes, "bg-background text-foreground"));
+
+            dict["data-zits-mode"] = Mode ?? ZitsThemeService.ModeSlug(theme.Mode);
+            dict["data-zits-base"] = Base ?? theme.Base;
+            dict["data-zits-primary"] = Primary ?? theme.Primary;
+            dict["data-zits-radius"] = Radius ?? theme.Radius;
+            dict["data-zits-font"] = Font ?? theme.Font;
+            dict["data-zits-style"] = Style ?? theme.Style;
+
+            return dict;
+        }
+    }
+}

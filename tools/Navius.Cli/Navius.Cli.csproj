@@ -7,9 +7,42 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>navius</AssemblyName>
     <RootNamespace>Navius.Cli</RootNamespace>
-    <!-- packs as `dotnet tool install -g Navius.Cli` once published -->
+    <PackageId>navius</PackageId>
+    <Version>0.3.0-preview.1</Version>
+    <Authors>Navius contributors</Authors>
+    <Description>Copy-paste component registry CLI for Blazor and zits/ui.</Description>
+    <PackageProjectUrl>https://github.com/lzitser23/Zits-helm</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/lzitser23/Zits-helm</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>blazor;cli;dotnet-tool;components;registry</PackageTags>
+    <PackageReleaseNotes>Preview release of the self-contained Navius registry CLI.</PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <!-- installs as `dotnet tool install -g navius` and runs as `navius` -->
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>navius</ToolCommandName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\registry\**\*"
+          Pack="true"
+          PackagePath="tools\$(TargetFramework)\any\registry\%(RecursiveDir)%(Filename)%(Extension)" />
+    <None Include="..\..\src\Zits.Ui\**\*.cs;..\..\src\Zits.Ui\**\*.razor;..\..\src\Zits.Ui\wwwroot\**\*"
+          Pack="true"
+          PackagePath="tools\$(TargetFramework)\any\registry-source\zits-helm\src\Zits.Ui\%(RecursiveDir)%(Filename)%(Extension)" />
+    <None Include="..\..\..\navius\src\Navius.Primitives\**\*.cs;..\..\..\navius\src\Navius.Primitives\**\*.razor;..\..\..\navius\src\Navius.Primitives\wwwroot\**\*"
+          Pack="true"
+          PackagePath="tools\$(TargetFramework)\any\registry-source\navius\src\Navius.Primitives\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
 
 </Project>

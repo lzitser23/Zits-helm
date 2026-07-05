@@ -1,7 +1,7 @@
 {
   "$schema": "https://navius.dev/schema/registry.json",
   "name": "navius",
-  "homepage": "https://github.com/lzitser23/zits-helm",
+  "homepage": "https://github.com/lzitser23/Zits-helm",
   "items": [
     {
       "name": "cn",
@@ -4935,6 +4935,63 @@
           "path": "src/Zits.Ui/Components/ZitsTypography.razor",
           "type": "registry:ui",
           "target": "Zits/Typography/ZitsTypography.razor"
+        }
+      ]
+    },
+    {
+      "name": "theme",
+      "type": "registry:ui",
+      "title": "Theming engine (generated OKLCH tokens + ZitsThemeService + ZitsThemeSwitcher + ZitsThemeScope)",
+      "dependencies": [],
+      "registryDependencies": [
+        "cn",
+        "popover"
+      ],
+      "files": [
+        {
+          "path": "src/Zits.Ui/Theming/ZitsTheme.cs",
+          "type": "registry:lib",
+          "target": "Zits/Theming/ZitsTheme.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Theming/ThemePalette.cs",
+          "type": "registry:lib",
+          "target": "Zits/Theming/ThemePalette.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Theming/ThemeStylesheet.cs",
+          "type": "registry:lib",
+          "target": "Zits/Theming/ThemeStylesheet.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Theming/ZitsThemeService.cs",
+          "type": "registry:lib",
+          "target": "Zits/Theming/ZitsThemeService.cs"
+        },
+        {
+          "path": "src/Zits.Ui/Theming/ZitsThemeSwitcher.razor",
+          "type": "registry:ui",
+          "target": "Zits/Theming/ZitsThemeSwitcher.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Theming/ZitsThemeScope.razor",
+          "type": "registry:ui",
+          "target": "Zits/Theming/ZitsThemeScope.razor"
+        },
+        {
+          "path": "src/Zits.Ui/wwwroot/zits-theme.js",
+          "type": "registry:file",
+          "target": "wwwroot/zits-theme.js"
+        },
+        {
+          "path": "src/Zits.Ui/wwwroot/zits-theme-init.js",
+          "type": "registry:file",
+          "target": "wwwroot/zits-theme-init.js"
+        },
+        {
+          "path": "src/Zits.Ui/wwwroot/zits-theme.css",
+          "type": "registry:file",
+          "target": "wwwroot/zits-theme.css"
         }
       ]
     }

@@ -6,9 +6,9 @@
    var(--color-<key>) from the cascaded ChartConfig where <key> is the slice's data
    Label. InnerRadius > 0 turns the pie into a donut (with an optional CenterContent
    overlay). Hovering a slice drives the floating ZitsChartTooltip. *@
-<div class="relative mx-auto aspect-square h-full" role="img" aria-label="@AriaSummary"
+<div class="relative mx-auto aspect-square h-full min-h-0 max-h-full max-w-full" role="img" aria-label="@AriaSummary"
      @onmouseleave="() => SetHover(null)">
-    <svg class="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <svg class="block h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         @foreach (var s in _slices)
         {
             var idx = s.Index;
