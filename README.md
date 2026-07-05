@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/zits-ui-logo.svg" alt="zits/ui mark" width="260" />
+  <img src="assets/zits-ui-logo.svg" alt="zits/ui mark" width="130" />
 </p>
 
 <h1 align="center">zits/helm</h1>
