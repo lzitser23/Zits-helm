@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/zits-ui-logo.svg" alt="zits/ui logo" width="420" />
+</p>
+
 <h1 align="center">zits/helm</h1>
 
 <p align="center">
