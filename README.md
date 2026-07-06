@@ -65,9 +65,8 @@ path: it copies registry items into an app so consumers own the component code.
 
 ## Installation
 
-Preview package IDs are prepared as `0.3.0-preview.1`. Until the packages are pushed
-to NuGet, use the source-checkout workflow in [Development](#development). After
-publish, install the styled layer and CLI with:
+Preview packages are published to NuGet as `0.3.0-preview.1`. Install the styled
+layer and CLI with:
 
 ```bash
 dotnet add package Zits.Ui --prerelease
