@@ -1,15 +1,56 @@
 @namespace Zits.Ui
 
-@* Styled select over the Navius Select primitive. Root owns value + open state. *@
-<NaviusSelect Value="@Value" ValueChanged="ValueChanged" DefaultValue="@DefaultValue"
-              Multiple="Multiple" Values="Values" ValuesChanged="ValuesChanged" DefaultValues="DefaultValues"
-              Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen"
+@* Styled select over the Navius Select primitive. Root owns value + open state.
+   Value / Values / Open are forwarded to the primitive ONLY when the consumer set them, so the
+   uncontrolled DefaultValue / DefaultValues / DefaultOpen paths stay live (the always-controlled wart fix). *@
+<NaviusSelect ValueChanged="ValueChanged" DefaultValue="@DefaultValue"
+              Multiple="Multiple" ValuesChanged="ValuesChanged" DefaultValues="DefaultValues"
+              OpenChanged="OpenChanged" DefaultOpen="DefaultOpen"
               Placeholder="@Placeholder" Disabled="Disabled" Name="@Name"
-              Required="Required" Dir="@Dir">
+              Required="Required" Dir="@Dir" @attributes="Forwarded">
     @ChildContent
 </NaviusSelect>
 
 @code {
+    private bool _valueSet;
+    private bool _valuesSet;
+    private bool _openSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueSet = parameters.TryGetValue<string?>(nameof(Value), out _);
+        _valuesSet = parameters.TryGetValue<IReadOnlyList<string>>(nameof(Values), out _);
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    // Forward each controlling param only when the consumer supplied it. Every key here is a
+    // real NaviusSelect parameter, so this splats cleanly even though the primitive has no
+    // CaptureUnmatchedValues.
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>();
+            if (_valueSet)
+            {
+                merged["Value"] = Value!;
+            }
+
+            if (_valuesSet)
+            {
+                merged["Values"] = Values;
+            }
+
+            if (_openSet)
+            {
+                merged["Open"] = Open;
+            }
+
+            return merged;
+        }
+    }
+
     [Parameter] public string? Value { get; set; }
     [Parameter] public EventCallback<string?> ValueChanged { get; set; }
     [Parameter] public string? DefaultValue { get; set; }

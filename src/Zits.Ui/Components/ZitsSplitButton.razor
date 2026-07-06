@@ -1,0 +1,82 @@
+@namespace Zits.Ui
+
+@*
+    SplitButton, a helm composite (no new brain logic): a primary action button glued to a
+    ZitsMenu trigger inside one visual group. Open state is owned here the ZitsCalendar way
+    (an _open mirror seeded from DefaultOpen, only adopting Open when supplied) and fed to the
+    menu, so controlled/uncontrolled is honored regardless of the menu's delegate-based model.
+    Cascades one Variant/Size/Disabled to the action + trigger.
+*@
+
+<ZitsMenu Open="_open" OpenChanged="OnOpenChangedAsync" Modal="Modal">
+    <CascadingValue Value="_context" IsFixed="false">
+        <div role="group" data-navius-split-button class="@RootClass" @attributes="Attributes">
+            @ChildContent
+        </div>
+    </CascadingValue>
+</ZitsMenu>
+
+@code {
+    /// <summary>default | destructive | outline | secondary | ghost | link (shared by both halves).</summary>
+    [Parameter] public string Variant { get; set; } = "default";
+
+    /// <summary>default | sm | lg (shared by both halves).</summary>
+    [Parameter] public string Size { get; set; } = "default";
+
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Controlled menu open state. Use <c>@bind-Open</c>.</summary>
+    [Parameter] public bool Open { get; set; }
+
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
+    /// <summary>Uncontrolled initial open state.</summary>
+    [Parameter] public bool DefaultOpen { get; set; }
+
+    [Parameter] public bool Modal { get; set; } = true;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private SplitButtonContext _context = new("default", "default", false);
+    private bool _open;
+    private bool _openSet;
+    private bool _initialized;
+
+    private string RootClass => Cn.Class("inline-flex items-center", Cn.UserClass(Attributes));
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnParametersSet()
+    {
+        _context = new SplitButtonContext(Variant, Size, Disabled);
+
+        if (!_initialized)
+        {
+            _open = _openSet ? Open : DefaultOpen;
+            _initialized = true;
+            return;
+        }
+
+        if (_openSet)
+        {
+            _open = Open;
+        }
+    }
+
+    private async Task OnOpenChangedAsync(bool value)
+    {
+        if (!_openSet)
+        {
+            _open = value;
+        }
+
+        await OpenChanged.InvokeAsync(value);
+    }
+}

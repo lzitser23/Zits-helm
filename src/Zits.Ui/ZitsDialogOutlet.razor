@@ -1,0 +1,98 @@
+@namespace Zits.Ui
+@implements IDisposable
+@inject ZitsDialogService Service
+
+@*
+    Host for the imperative ZitsDialogService. Mount ONE of these near the app root (like a
+    toast viewport). It renders one styled dialog per queued entry, composing the EXISTING
+    ZitsDialog / ZitsAlertDialog wrappers declaratively, so every dialog rides the brain's real
+    overlay machinery (focus trap, scroll lock, dismiss layer) rather than a re-implementation.
+
+    Each dialog is CONTROLLED off its entry's Open flag: a button click resolves the awaited
+    result and flips Open false (the controlled close animates it out); an Escape/outside
+    dismiss flows back through OpenChanged and resolves the entry's default. Once resolved, the
+    entry is removed a beat later so its exit animation can play.
+*@
+
+@foreach (var entry in Service.Entries)
+{
+    @if (entry.Kind == DialogKind.Custom)
+    {
+        <ZitsDialog @key="entry.Id" Open="entry.Open" OpenChanged="@(open => OnOpenChanged(entry, open))" Modal="entry.Modal">
+            <ZitsDialogContent>
+                @entry.Content
+            </ZitsDialogContent>
+        </ZitsDialog>
+    }
+    else
+    {
+        <ZitsAlertDialog @key="entry.Id" Open="entry.Open" OpenChanged="@(open => OnOpenChanged(entry, open))">
+            <ZitsAlertDialogContent>
+                <ZitsAlertDialogHeader>
+                    <ZitsAlertDialogTitle>@entry.Title</ZitsAlertDialogTitle>
+                    <ZitsAlertDialogDescription>@entry.Description</ZitsAlertDialogDescription>
+                </ZitsAlertDialogHeader>
+                <ZitsAlertDialogFooter>
+                    @if (entry.Kind == DialogKind.Confirm)
+                    {
+                        <ZitsAlertDialogCancel data-testid="dialog-cancel" @onclick="@(() => Service.Resolve(entry.Id, false))">@entry.CancelLabel</ZitsAlertDialogCancel>
+                        <ZitsAlertDialogAction data-testid="dialog-confirm"
+                                               data-destructive="@(entry.Destructive ? "" : null)"
+                                               @onclick="@(() => Service.Resolve(entry.Id, true))">@entry.ConfirmLabel</ZitsAlertDialogAction>
+                    }
+                    else
+                    {
+                        <ZitsAlertDialogAction data-testid="dialog-ok" @onclick="@(() => Service.Resolve(entry.Id, null))">@entry.OkLabel</ZitsAlertDialogAction>
+                    }
+                </ZitsAlertDialogFooter>
+            </ZitsAlertDialogContent>
+        </ZitsAlertDialog>
+    }
+}
+
+@code {
+    private readonly HashSet<string> _removing = new();
+
+    protected override void OnInitialized() => Service.Changed += OnServiceChanged;
+
+    private void OnServiceChanged()
+        => InvokeAsync(() =>
+        {
+            StateHasChanged();
+            SweepResolved();
+        });
+
+    // Schedule each newly-resolved entry for removal after its exit animation. The _removing
+    // guard makes this fire once per entry regardless of how many Changed events arrive.
+    private void SweepResolved()
+    {
+        foreach (var entry in Service.Entries)
+        {
+            if (entry.Resolved && _removing.Add(entry.Id))
+            {
+                var id = entry.Id;
+                _ = RemoveAfterExitAsync(id);
+            }
+        }
+    }
+
+    private async Task RemoveAfterExitAsync(string id)
+    {
+        await Task.Delay(250); // let the controlled close animate out
+        Service.Remove(id);
+        _removing.Remove(id);
+    }
+
+    // A dismiss (Escape / outside / a wrapper's own close) resolves the entry's default. Guarded
+    // by Resolve, so an explicit button click that already resolved wins.
+    private void OnOpenChanged(DialogEntry entry, bool open)
+    {
+        if (open)
+        {
+            return;
+        }
+        Service.Resolve(entry.Id, entry.DefaultResult);
+    }
+
+    public void Dispose() => Service.Changed -= OnServiceChanged;
+}

@@ -1,0 +1,16 @@
+@namespace Zits.Ui
+
+@* Sender name; always start-aligned regardless of the message side. *@
+<div data-slot="message-header" @attributes="Attributes" class="@Css">@ChildContent</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "flex max-w-full min-w-0 items-center px-3 text-xs font-medium text-muted-foreground group-has-data-[variant=ghost]/message:px-0";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

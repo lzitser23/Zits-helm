@@ -1,0 +1,91 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.ColorPicker
+
+@*
+    Styled inline color picker over the Navius ColorPicker primitive: a
+    saturation/value Area with a ring thumb, a rainbow HueSlider, an optional
+    checkerboard AlphaSlider, a preview Swatch + hex Field, and an optional preset
+    swatch grid. (The brain also ships a popover-triggered composition; this helm
+    surface is the inline panel.) Controlled via @bind-Value or uncontrolled via
+    DefaultValue: Value is forwarded to the primitive ONLY when the consumer set it
+    (the always-controlled wart fix).
+*@
+
+<NaviusColorPicker DefaultValue="@DefaultValue"
+                   ValueChanged="ValueChanged"
+                   Format="@Format"
+                   AlphaEnabled="AlphaEnabled"
+                   Disabled="Disabled"
+                   ReadOnly="ReadOnly"
+                   Name="@Name"
+                   @attributes="Forwarded">
+    <NaviusColorPickerArea class="@AreaClass" />
+    <NaviusColorPickerHueSlider class="@HueClass" />
+    @if (AlphaEnabled)
+    {
+        <NaviusColorPickerAlphaSlider class="@AlphaClass" />
+    }
+    <div class="flex items-center gap-2">
+        <NaviusColorPickerSwatch class="h-9 w-9 shrink-0 rounded-md border border-border" />
+        <NaviusColorPickerField class="h-9 w-full flex-1 rounded-md border border-input bg-transparent px-2 font-mono text-sm text-foreground outline-none focus-visible:ring-1 focus-visible:ring-ring data-[invalid]:border-destructive data-[invalid]:ring-destructive" />
+    </div>
+    @if (Swatches is not null && Swatches.Count > 0)
+    {
+        <NaviusColorPickerSwatches Colors="Swatches" class="@SwatchesClass" />
+    }
+</NaviusColorPicker>
+
+@code {
+    /// <summary>Controlled color string. Bind with <c>@bind-Value</c>.</summary>
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    /// <summary>Uncontrolled initial color.</summary>
+    [Parameter] public string? DefaultValue { get; set; }
+    [Parameter] public string Format { get; set; } = "hex";
+    [Parameter] public bool AlphaEnabled { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public string? Name { get; set; }
+    /// <summary>Optional preset colors rendered as a swatch grid.</summary>
+    [Parameter] public IReadOnlyList<string>? Swatches { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool _valueSet;
+
+    private const string Root =
+        "inline-flex w-64 flex-col gap-3 rounded-lg border border-border bg-popover p-3 text-popover-foreground shadow-md data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
+
+    private const string AreaClass =
+        "relative h-40 w-full cursor-crosshair overflow-hidden rounded-md border border-border touch-none [&_[data-navius-color-picker-area-thumb]]:h-4 [&_[data-navius-color-picker-area-thumb]]:w-4 [&_[data-navius-color-picker-area-thumb]]:rounded-full [&_[data-navius-color-picker-area-thumb]]:border-2 [&_[data-navius-color-picker-area-thumb]]:border-white [&_[data-navius-color-picker-area-thumb]]:shadow-md [&_[data-navius-color-picker-area-thumb]]:outline-none [&_[data-navius-color-picker-area-thumb]]:ring-1 [&_[data-navius-color-picker-area-thumb]]:ring-black/30";
+
+    private const string HueClass =
+        "relative h-3 w-full cursor-pointer rounded-full touch-none [&_[data-navius-color-picker-hue-thumb]]:h-4 [&_[data-navius-color-picker-hue-thumb]]:w-4 [&_[data-navius-color-picker-hue-thumb]]:rounded-full [&_[data-navius-color-picker-hue-thumb]]:border-2 [&_[data-navius-color-picker-hue-thumb]]:border-white [&_[data-navius-color-picker-hue-thumb]]:shadow [&_[data-navius-color-picker-hue-thumb]]:outline-none [&_[data-navius-color-picker-hue-thumb]]:ring-1 [&_[data-navius-color-picker-hue-thumb]]:ring-black/20";
+
+    private const string AlphaClass =
+        "relative h-3 w-full cursor-pointer rounded-full touch-none [&_[data-navius-color-picker-alpha-thumb]]:h-4 [&_[data-navius-color-picker-alpha-thumb]]:w-4 [&_[data-navius-color-picker-alpha-thumb]]:rounded-full [&_[data-navius-color-picker-alpha-thumb]]:border-2 [&_[data-navius-color-picker-alpha-thumb]]:border-white [&_[data-navius-color-picker-alpha-thumb]]:shadow [&_[data-navius-color-picker-alpha-thumb]]:outline-none [&_[data-navius-color-picker-alpha-thumb]]:ring-1 [&_[data-navius-color-picker-alpha-thumb]]:ring-black/20";
+
+    private const string SwatchesClass =
+        "flex flex-wrap gap-1.5 [&_[data-navius-color-picker-swatch-item]]:h-6 [&_[data-navius-color-picker-swatch-item]]:w-6 [&_[data-navius-color-picker-swatch-item]]:rounded-md [&_[data-navius-color-picker-swatch-item]]:border [&_[data-navius-color-picker-swatch-item]]:border-border [&_[data-navius-color-picker-swatch-item]]:outline-none [&_[data-navius-color-picker-swatch-item]:focus-visible]:ring-2 [&_[data-navius-color-picker-swatch-item]:focus-visible]:ring-ring [&_[data-navius-color-picker-swatch-item][data-selected]]:ring-2 [&_[data-navius-color-picker-swatch-item][data-selected]]:ring-ring [&_[data-navius-color-picker-swatch-item][data-selected]]:ring-offset-2 [&_[data-navius-color-picker-swatch-item][data-selected]]:ring-offset-popover";
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueSet = parameters.TryGetValue<string?>(nameof(Value), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>(Cn.Merge(Attributes, Root));
+            if (_valueSet)
+            {
+                merged["Value"] = Value!;
+            }
+
+            return merged;
+        }
+    }
+}

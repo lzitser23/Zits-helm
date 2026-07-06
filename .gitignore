@@ -11,8 +11,13 @@ node_modules/
 
 # IDE
 .vs/
+.vscode/
 .idea/
 *.suo
+
+# Local config / secrets
+.env*
+*.local
 
 # OS
 Thumbs.db

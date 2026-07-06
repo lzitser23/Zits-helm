@@ -1,0 +1,114 @@
+@namespace Zits.Ui
+@typeparam TValue
+@using Navius.Primitives.Components.Tree
+
+@*
+    Styled tree over the headless NaviusTree (full WAI-APG tree contract: role=tree, roving
+    tabindex, arrow expand/collapse, typeahead, multi-select shortcuts). Presentational only;
+    all behaviour + ARIA come from the brain.
+
+    Controlled/uncontrolled follows the ZitsCalendar discipline: DefaultSelectedValue(s) /
+    DefaultExpandedValues are forwarded so the brain's uncontrolled path stays live, and the
+    controlled SelectedValue(s) / ExpandedValues are only forwarded when the consumer actually
+    set them (tracked in SetParametersAsync), so an unbound wrapper never freezes into a
+    permanently-controlled tree.
+*@
+
+<NaviusTree TValue="TValue"
+            SelectionMode="@SelectionMode"
+            FocusMode="@FocusMode"
+            DefaultSelectedValue="@DefaultSelectedValue"
+            DefaultSelectedValues="@DefaultSelectedValues"
+            DefaultExpandedValues="@DefaultExpandedValues"
+            SelectedValueChanged="@SelectedValueChanged"
+            SelectedValuesChanged="@SelectedValuesChanged"
+            ExpandedValuesChanged="@ExpandedValuesChanged"
+            OnSelectionChange="@OnSelectionChange"
+            OnExpandedChange="@OnExpandedChange"
+            Disabled="@Disabled"
+            Orientation="@Orientation"
+            Dir="@Dir"
+            Label="@Label"
+            LabelledBy="@LabelledBy"
+            @attributes="Forwarded">
+    @ChildContent
+</NaviusTree>
+
+@code {
+    /// <summary>"none" | "single" (default) | "multiple".</summary>
+    [Parameter] public string SelectionMode { get; set; } = "single";
+
+    /// <summary>"roving" (default) | "activedescendant".</summary>
+    [Parameter] public string FocusMode { get; set; } = "roving";
+
+    /// <summary>Controlled single-select value. Bind with <c>@bind-SelectedValue</c>.</summary>
+    [Parameter] public TValue? SelectedValue { get; set; }
+    [Parameter] public EventCallback<TValue?> SelectedValueChanged { get; set; }
+    /// <summary>Uncontrolled initial single-select value.</summary>
+    [Parameter] public TValue? DefaultSelectedValue { get; set; }
+
+    /// <summary>Controlled multi-select values. Bind with <c>@bind-SelectedValues</c>.</summary>
+    [Parameter] public IReadOnlyList<TValue>? SelectedValues { get; set; }
+    [Parameter] public EventCallback<IReadOnlyList<TValue>> SelectedValuesChanged { get; set; }
+    /// <summary>Uncontrolled initial multi-select values.</summary>
+    [Parameter] public IReadOnlyList<TValue>? DefaultSelectedValues { get; set; }
+
+    /// <summary>Controlled expanded values. Bind with <c>@bind-ExpandedValues</c>.</summary>
+    [Parameter] public IReadOnlyCollection<TValue>? ExpandedValues { get; set; }
+    [Parameter] public EventCallback<IReadOnlyCollection<TValue>> ExpandedValuesChanged { get; set; }
+    /// <summary>Uncontrolled initial expanded values.</summary>
+    [Parameter] public IReadOnlyCollection<TValue>? DefaultExpandedValues { get; set; }
+
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string Orientation { get; set; } = "vertical";
+    [Parameter] public string? Dir { get; set; }
+    [Parameter] public string? Label { get; set; }
+    [Parameter] public string? LabelledBy { get; set; }
+
+    [Parameter] public EventCallback<IReadOnlyList<TValue>> OnSelectionChange { get; set; }
+    [Parameter] public EventCallback<IReadOnlyList<TValue>> OnExpandedChange { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool _selValueSet;
+    private bool _selValuesSet;
+    private bool _expandedSet;
+
+    private const string Root = "block select-none text-sm";
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        // Controlled-ness = whether the consumer supplied the value parameter this render.
+        _selValueSet = parameters.TryGetValue<TValue?>(nameof(SelectedValue), out _);
+        _selValuesSet = parameters.TryGetValue<IReadOnlyList<TValue>?>(nameof(SelectedValues), out _);
+        _expandedSet = parameters.TryGetValue<IReadOnlyCollection<TValue>?>(nameof(ExpandedValues), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>(Cn.Merge(Attributes, Root));
+            if (_selValueSet && SelectedValue is not null)
+            {
+                merged["SelectedValue"] = SelectedValue;
+            }
+
+            if (_selValuesSet && SelectedValues is not null)
+            {
+                merged["SelectedValues"] = SelectedValues;
+            }
+
+            if (_expandedSet && ExpandedValues is not null)
+            {
+                merged["ExpandedValues"] = ExpandedValues;
+            }
+
+            return merged;
+        }
+    }
+}

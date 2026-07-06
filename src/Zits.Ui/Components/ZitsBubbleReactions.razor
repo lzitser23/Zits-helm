@@ -1,0 +1,28 @@
+@namespace Zits.Ui
+
+@* Overlapping reaction row anchored to a bubble edge (it overlaps the bubble, so leave
+   vertical gap between rows). Holds emoji spans or real action buttons. Docs recommend
+   role="img" + aria-label on an emoji row so it announces once. *@
+<div data-slot="bubble-reactions" data-side="@Side" data-align="@Align" @attributes="Attributes" class="@Css">@ChildContent</div>
+
+@code {
+    /// <summary>top | bottom (default).</summary>
+    [Parameter] public string Side { get; set; } = "bottom";
+
+    /// <summary>start | end (default).</summary>
+    [Parameter] public string Align { get; set; } = "end";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "absolute z-10 flex w-fit shrink-0 items-center justify-center gap-1 rounded-full bg-muted px-1.5 py-0.5 text-sm ring-3 ring-card has-[button]:p-0";
+
+    private string SideClass => Side == "top" ? "top-0 -translate-y-3/4" : "bottom-0 translate-y-3/4";
+
+    private string AlignClass => Align == "start" ? "left-3" : "right-3";
+
+    private string Css => Cn.Class(Base, SideClass, AlignClass, Cn.UserClass(Attributes));
+}

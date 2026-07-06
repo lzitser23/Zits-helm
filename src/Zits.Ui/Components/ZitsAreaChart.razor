@@ -6,8 +6,8 @@
    with var(--color-<key>) from the cascaded ChartConfig. Hovering a category drives
    the floating ZitsChartTooltip. *@
 <div class="flex h-full w-full flex-col gap-2" @onmouseleave="() => SetHover(null)">
-    <div class="relative flex-1">
-        <svg class="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <div class="relative min-h-0 flex-1">
+        <svg class="block h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             @if (ShowGrid)
             {
                 @foreach (var gy in GridLines())

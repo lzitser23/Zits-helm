@@ -6,6 +6,23 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>true</IsPackable>
     <RootNamespace>Zits.Ui</RootNamespace>
+    <PackageId>Zits.Ui</PackageId>
+    <Version>0.3.0-preview.1</Version>
+    <Authors>Navius contributors</Authors>
+    <Description>Styled Blazor components, theme tokens, and runtime theming built on Navius.Primitives.</Description>
+    <PackageProjectUrl>https://github.com/lzitser23/Zits-helm</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/lzitser23/Zits-helm</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>blazor;razor-components;design-system;tailwind;theme</PackageTags>
+    <PackageReleaseNotes>Preview release of zits/ui styled components and runtime theme assets.</PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EnablePackageValidation>true</EnablePackageValidation>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +31,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <!--

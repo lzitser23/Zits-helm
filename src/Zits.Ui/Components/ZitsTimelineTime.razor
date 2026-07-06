@@ -1,0 +1,17 @@
+@namespace Zits.Ui
+
+@* Timeline time stamp. Renders a semantic <time> element; a machine value can be passed
+   through as the datetime attribute via the @attributes splat. *@
+
+<time data-navius-timeline-time @attributes="Attributes" class="@TimeClass">@ChildContent</time>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "text-xs font-medium uppercase tracking-wide text-muted-foreground";
+
+    private string TimeClass => Cn.Class(Base, Cn.UserClass(Attributes));
+}

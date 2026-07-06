@@ -1,0 +1,103 @@
+@namespace Zits.Ui
+@using System.Globalization
+@using Navius.Primitives.Components.TimeInput
+
+@*
+    Styled segmented time field over the Navius TimeInput primitive. Mirrors ZitsDateInput: a
+    bordered focus-within row of hh : mm [: ss] [AM/PM] spinbutton segments with a trailing
+    clock glyph. Owns value state so @bind-Value and DefaultValue both work through the wrapper.
+*@
+
+<NaviusTimeInput Value="@CurrentValue"
+                 ValueChanged="OnValueChangedAsync"
+                 Granularity="@Granularity"
+                 HourCycle="HourCycle"
+                 MinuteStep="MinuteStep"
+                 SecondStep="SecondStep"
+                 MinValue="MinValue"
+                 MaxValue="MaxValue"
+                 PlaceholderValue="PlaceholderValue"
+                 Disabled="Disabled"
+                 ReadOnly="ReadOnly"
+                 Required="Required"
+                 Invalid="Invalid"
+                 ForceLeadingZeros="ForceLeadingZeros"
+                 Culture="Culture"
+                 Dir="@Dir"
+                 Name="@Name"
+                 @attributes="Cn.Merge(Attributes, FieldRow)">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="ml-auto size-4 shrink-0 text-muted-foreground" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+        </svg>
+    }
+</NaviusTimeInput>
+
+@code {
+    /// <summary>The time. Two-way bindable via <c>@bind-Value</c>.</summary>
+    [Parameter] public TimeOnly? Value { get; set; }
+    [Parameter] public EventCallback<TimeOnly?> ValueChanged { get; set; }
+    /// <summary>Uncontrolled initial value (works through this wrapper).</summary>
+    [Parameter] public TimeOnly? DefaultValue { get; set; }
+
+    [Parameter] public string Granularity { get; set; } = "minute";
+    [Parameter] public int? HourCycle { get; set; }
+    [Parameter] public int MinuteStep { get; set; } = 1;
+    [Parameter] public int SecondStep { get; set; } = 1;
+    [Parameter] public TimeOnly? MinValue { get; set; }
+    [Parameter] public TimeOnly? MaxValue { get; set; }
+    [Parameter] public TimeOnly? PlaceholderValue { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public bool Required { get; set; }
+    [Parameter] public bool Invalid { get; set; }
+    [Parameter] public bool ForceLeadingZeros { get; set; }
+    [Parameter] public CultureInfo? Culture { get; set; }
+    [Parameter] public string? Dir { get; set; }
+    [Parameter] public string? Name { get; set; }
+
+    /// <summary>Overrides the default trailing clock glyph.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private TimeOnly? _internal;
+    private bool _valueSet;
+
+    private TimeOnly? CurrentValue => _valueSet ? Value : _internal;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueSet = parameters.TryGetValue<TimeOnly?>(nameof(Value), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnInitialized() => _internal = DefaultValue;
+
+    private async Task OnValueChangedAsync(TimeOnly? value)
+    {
+        if (!_valueSet)
+        {
+            _internal = value;
+        }
+
+        await ValueChanged.InvokeAsync(value);
+    }
+
+    private const string FieldRow =
+        "inline-flex h-9 w-[180px] items-center gap-px rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm " +
+        "transition-colors focus-within:outline-none focus-within:ring-1 focus-within:ring-ring " +
+        "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 " +
+        "data-[invalid]:border-destructive data-[invalid]:focus-within:ring-destructive " +
+        "[&_[role=spinbutton]]:rounded [&_[role=spinbutton]]:px-0.5 [&_[role=spinbutton]]:tabular-nums [&_[role=spinbutton]]:outline-none " +
+        "[&_[role=spinbutton]:focus]:bg-accent [&_[role=spinbutton]:focus]:text-accent-foreground " +
+        "[&_[data-placeholder]]:text-muted-foreground [&_[data-segment=literal]]:text-muted-foreground";
+}

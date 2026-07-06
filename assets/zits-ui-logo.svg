@@ -1,0 +1,17 @@
+<svg viewBox="0 0 116 76" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">zits/ui mark</title>
+  <desc id="desc">A segmented red and paper-colored zits/ui mark.</desc>
+  <rect x="0" y="0" width="76" height="8" rx="4" fill="#F5484A"/>
+  <rect x="82" y="0" width="34" height="8" rx="4" fill="#F5484A"/>
+  <rect x="0" y="17" width="54" height="8" rx="4" fill="#F4F5F7"/>
+  <rect x="60" y="17" width="34" height="8" rx="4" fill="#F5484A"/>
+  <rect x="100" y="17" width="16" height="8" rx="4" fill="#F4F5F7"/>
+  <rect x="0" y="34" width="36" height="8" rx="4" fill="#F4F5F7"/>
+  <rect x="42" y="34" width="34" height="8" rx="4" fill="#F5484A"/>
+  <rect x="82" y="34" width="34" height="8" rx="4" fill="#F4F5F7"/>
+  <rect x="0" y="51" width="18" height="8" rx="4" fill="#F4F5F7"/>
+  <rect x="24" y="51" width="34" height="8" rx="4" fill="#F5484A"/>
+  <rect x="64" y="51" width="52" height="8" rx="4" fill="#F4F5F7"/>
+  <rect x="0" y="68" width="34" height="8" rx="4" fill="#F5484A"/>
+  <rect x="40" y="68" width="76" height="8" rx="4" fill="#F5484A"/>
+</svg>

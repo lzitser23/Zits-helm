@@ -1,0 +1,43 @@
+@namespace Zits.Ui
+
+@*
+    The chevron button that opens the menu. It IS the brain menu trigger (ZitsMenuTrigger →
+    NaviusMenuTrigger renders the button with aria-haspopup/aria-expanded), styled directly to
+    match the action (a button cannot nest a button). The seam divider is data-navius-split-divider.
+*@
+
+<ZitsMenuTrigger Disabled="Context.Disabled" @attributes="TriggerAttrs">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="m6 9 6 6 6-6" /></svg>
+    }
+</ZitsMenuTrigger>
+
+@code {
+    [CascadingParameter] private SplitButtonContext Context { get; set; } = default!;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private string ButtonClass => Cn.Class(
+        SplitButtonStyles.Base,
+        SplitButtonStyles.Variant(Context.Variant),
+        SplitButtonStyles.TriggerSize(Context.Size),
+        "rounded-l-none border-l border-black/10 dark:border-white/20");
+
+    private IReadOnlyDictionary<string, object> TriggerAttrs
+    {
+        get
+        {
+            var dict = new Dictionary<string, object>(Cn.Merge(Attributes, ButtonClass));
+            dict["data-navius-split-divider"] = "";
+            return dict;
+        }
+    }
+}

@@ -1,0 +1,17 @@
+@namespace Zits.Ui
+
+@* End-aligned action cluster (z-20, above the trigger overlay). Becomes absolutely
+   positioned in the top-end corner when the attachment is vertical. *@
+<div data-slot="attachment-actions" @attributes="Attributes" class="@Css">@ChildContent</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "relative z-20 flex shrink-0 items-center group-data-[orientation=vertical]/attachment:absolute group-data-[orientation=vertical]/attachment:top-3 group-data-[orientation=vertical]/attachment:right-3 group-data-[orientation=vertical]/attachment:gap-1";
+
+    private string Css => Cn.Class(Base, Cn.UserClass(Attributes));
+}

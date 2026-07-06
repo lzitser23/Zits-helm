@@ -1,10 +1,36 @@
 @namespace Zits.Ui
-@* Styled sheet (side-anchored dialog) over the Navius Dialog primitive (focus trap, scroll lock, portal). *@
-<NaviusDialog Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" Modal="Modal">@ChildContent</NaviusDialog>
+@* Styled sheet (side-anchored dialog) over the Navius Dialog primitive (focus trap, scroll lock, portal).
+   Open is forwarded to the primitive ONLY when the consumer set it, so the uncontrolled DefaultOpen /
+   trigger-driven open path stays live (the always-controlled wart fix). *@
+<NaviusDialog OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" Modal="Modal" @attributes="Forwarded">@ChildContent</NaviusDialog>
 @code {
     [Parameter] public bool Open { get; set; }
     [Parameter] public EventCallback<bool> OpenChanged { get; set; }
     [Parameter] public bool DefaultOpen { get; set; }
     [Parameter] public bool Modal { get; set; } = true;
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool _openSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    // Forward Open only when the consumer supplied it ("Open" is a real NaviusDialog parameter,
+    // so this splats cleanly without CaptureUnmatchedValues).
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>();
+            if (_openSet)
+            {
+                merged["Open"] = Open;
+            }
+
+            return merged;
+        }
+    }
 }

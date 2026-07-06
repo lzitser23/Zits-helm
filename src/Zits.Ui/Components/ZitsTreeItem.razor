@@ -1,0 +1,69 @@
+@namespace Zits.Ui
+@using System.Globalization
+@using Navius.Primitives.Components.Tree
+
+@*
+    A styled tree node over NaviusTreeItem. Bundles the row (a rotating chevron indicator + the
+    label trigger) and, when it has ChildContent, the NaviusTreeGroup that holds nested items.
+    Indentation is derived from the cascaded tree level; the chevron rotates on data-expanded and
+    is hidden on leaf nodes (data-leaf). Selection/focus/keyboard all come from the brain.
+*@
+
+<NaviusTreeItem Value="@Value" Disabled="@Disabled" TextValue="@Label" @attributes="Cn.Merge(Attributes, ItemClass)">
+    <NaviusTreeItemContent class="@RowClass" style="@RowStyle">
+        <NaviusTreeItemIndicator class="@IndicatorClass">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m9 18 6-6-6-6" />
+            </svg>
+        </NaviusTreeItemIndicator>
+        <NaviusTreeItemTrigger class="@TriggerClass">@Label</NaviusTreeItemTrigger>
+    </NaviusTreeItemContent>
+    @if (ChildContent is not null)
+    {
+        <NaviusTreeGroup>
+            @ChildContent
+        </NaviusTreeGroup>
+    }
+</NaviusTreeItem>
+
+@code {
+    /// <summary>The node's unique identity.</summary>
+    [Parameter] public string Value { get; set; } = "";
+
+    /// <summary>The node label (also the type-ahead match text).</summary>
+    [Parameter] public string? Label { get; set; }
+
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Nested ZitsTreeItem nodes; when present this node becomes an expandable parent.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    [CascadingParameter(Name = "NaviusTreeLevel")]
+    private int ParentLevel { get; set; }
+
+    private int MyLevel => ParentLevel + 1;
+
+    private string RowStyle
+    {
+        get
+        {
+            var indent = ((MyLevel - 1) * 1.25).ToString("0.###", CultureInfo.InvariantCulture);
+            return $"padding-inline-start: calc(0.5rem + {indent}rem)";
+        }
+    }
+
+    private const string ItemClass =
+        "outline-none [&:focus-visible>[data-navius-tree-item-content]]:ring-2 [&:focus-visible>[data-navius-tree-item-content]]:ring-ring [&:focus-visible>[data-navius-tree-item-content]]:ring-inset";
+
+    private const string RowClass =
+        "flex items-center gap-1 rounded-sm py-1 pr-2 cursor-pointer hover:bg-accent hover:text-accent-foreground data-[selected]:bg-accent data-[selected]:text-accent-foreground data-[selected]:font-medium data-[disabled]:opacity-50 data-[disabled]:pointer-events-none";
+
+    private const string IndicatorClass =
+        "inline-flex size-4 shrink-0 items-center justify-center text-muted-foreground transition-transform duration-150 data-[expanded]:rotate-90 data-[leaf]:invisible";
+
+    private const string TriggerClass = "flex-1 truncate";
+}

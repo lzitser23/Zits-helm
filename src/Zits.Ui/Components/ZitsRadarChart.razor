@@ -1,0 +1,141 @@
+@namespace Zits.Ui
+
+@* Hand-rolled radar chart (no recharts). A polar grid of concentric polygons plus
+   radial spokes, then one closed polygon per series, each stroked/filled with
+   var(--color-<key>) from the cascaded ChartConfig. Categories come from the data
+   Labels (the angle axis). Drawn into a square, centred sub-box so the grid stays
+   round under preserveAspectRatio="none". Hovering a category wedge drives the
+   floating ZitsChartTooltip. *@
+<div class="relative mx-auto aspect-square h-full min-h-0 max-h-full max-w-full" @onmouseleave="() => SetHover(null)">
+    <svg class="block h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        @if (ShowGrid && _count > 0)
+        {
+            @for (var t = 1; t <= _levels; t++)
+            {
+                <polygon class="grid-line" points="@RingPoints(_radius * t / _levels)"
+                         fill="none" stroke-width="0.5" vector-effect="non-scaling-stroke" />
+            }
+            @for (var i = 0; i < _count; i++)
+            {
+                <line class="grid-line" x1="@ChartMath.N(ChartMath.Cx)" y1="@ChartMath.N(ChartMath.Cy)"
+                      x2="@ChartMath.N(ChartMath.PolarX(ChartMath.Cx, _radius, Angle(i)))"
+                      y2="@ChartMath.N(ChartMath.PolarY(ChartMath.Cy, _radius, Angle(i)))"
+                      stroke-width="0.5" vector-effect="non-scaling-stroke" />
+            }
+        }
+        @foreach (var key in _keys)
+        {
+            <polygon data-series data-series-key="@key" points="@SeriesPoints(key)"
+                     fill="var(--color-@(key))" fill-opacity="@(FillArea ? ChartMath.N(FillOpacity) : "0")"
+                     stroke="var(--color-@(key))" stroke-width="2"
+                     stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+        }
+        @for (var i = 0; i < _count; i++)
+        {
+            var idx = i;
+            <polygon data-hit points="@WedgePoints(idx)" fill="transparent" pointer-events="all"
+                     @onmouseover="() => SetHover(idx)" @onmousemove="() => SetHover(idx)" />
+        }
+    </svg>
+
+    @for (var i = 0; i < _count; i++)
+    {
+        <div class="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-[10px] leading-none text-muted-foreground"
+             style="@LabelPos(i)">@_points[i].Label</div>
+    }
+
+    @if (ShowTooltip && _hover is int ht && ht < _count)
+    {
+        <ZitsChartTooltip data-chart-tooltip="true"
+                          Left="ChartMath.PolarX(ChartMath.Cx, _radius, Angle(ht))"
+                          Top="ChartMath.PolarY(ChartMath.Cy, _radius, Angle(ht))">
+            <ZitsChartTooltipContent Label="@_points[ht].Label" Payload="PayloadFor(ht)" />
+        </ZitsChartTooltip>
+    }
+</div>
+
+@code {
+    /// <summary>Rows of data: one category (angle-axis tick) per row, with a value per series key.</summary>
+    [Parameter] public IEnumerable<ChartDataPoint>? Data { get; set; }
+
+    /// <summary>Series keys to plot, in order. Defaults to the cascaded ChartConfig's keys.</summary>
+    [Parameter] public IReadOnlyList<string>? Series { get; set; }
+
+    /// <summary>Draw the concentric polar grid + spokes.</summary>
+    [Parameter] public bool ShowGrid { get; set; } = true;
+
+    /// <summary>Fill each series polygon (in addition to its stroke).</summary>
+    [Parameter] public bool FillArea { get; set; } = true;
+
+    /// <summary>Opacity of the series fill when <see cref="FillArea"/> is on.</summary>
+    [Parameter] public double FillOpacity { get; set; } = 0.2;
+
+    [Parameter] public bool ShowTooltip { get; set; } = true;
+
+    [CascadingParameter] private ZitsChartContainer? Chart { get; set; }
+
+    private const double _radius = 38;
+    private const int _levels = 4;
+
+    private List<ChartDataPoint> _points = new();
+    private IReadOnlyList<string> _keys = Array.Empty<string>();
+    private int _count;
+    private double _yMax = 1;
+    private int? _hover;
+
+    protected override void OnParametersSet()
+    {
+        _points = Data?.ToList() ?? new();
+        _keys = Series ?? Chart?.EffectiveConfig.Keys.ToList() ?? new List<string>();
+        _count = _points.Count;
+        _yMax = ChartMath.NiceMax(_points, _keys);
+    }
+
+    private void SetHover(int? i)
+    {
+        if (_hover != i) _hover = i;
+    }
+
+    private double Angle(int i) => _count <= 0 ? 0 : i * 360.0 / _count;
+
+    private string LabelPos(int i)
+        => $"left:{ChartMath.N(ChartMath.PolarX(ChartMath.Cx, _radius + 6, Angle(i)))}%;top:{ChartMath.N(ChartMath.PolarY(ChartMath.Cy, _radius + 6, Angle(i)))}%;";
+
+    private string SeriesPoints(string key)
+    {
+        var parts = new List<string>();
+        for (int i = 0; i < _count; i++)
+        {
+            _points[i].Values.TryGetValue(key, out var v);
+            double r = _yMax <= 0 ? 0 : v / _yMax * _radius;
+            parts.Add(Point(ChartMath.PolarX(ChartMath.Cx, r, Angle(i)), ChartMath.PolarY(ChartMath.Cy, r, Angle(i))));
+        }
+        return string.Join(" ", parts);
+    }
+
+    private string RingPoints(double r)
+    {
+        var parts = new List<string>();
+        for (int i = 0; i < _count; i++)
+            parts.Add(Point(ChartMath.PolarX(ChartMath.Cx, r, Angle(i)), ChartMath.PolarY(ChartMath.Cy, r, Angle(i))));
+        return string.Join(" ", parts);
+    }
+
+    private string WedgePoints(int i)
+    {
+        double half = _count <= 0 ? 180 : 180.0 / _count;
+        double a = Angle(i);
+        return string.Join(" ",
+            Point(ChartMath.Cx, ChartMath.Cy),
+            Point(ChartMath.PolarX(ChartMath.Cx, _radius, a - half), ChartMath.PolarY(ChartMath.Cy, _radius, a - half)),
+            Point(ChartMath.PolarX(ChartMath.Cx, _radius, a + half), ChartMath.PolarY(ChartMath.Cy, _radius, a + half)));
+    }
+
+    private static string Point(double x, double y)
+        => ChartMath.N(x) + "," + ChartMath.N(y);
+
+    private IReadOnlyList<ChartTooltipPayloadItem> PayloadFor(int i)
+        => _keys.Where(k => _points[i].Values.ContainsKey(k))
+                .Select(k => new ChartTooltipPayloadItem(k, _points[i].Values[k]))
+                .ToList();
+}

@@ -1,0 +1,90 @@
+name: publish-nuget
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package to publish
+        required: true
+        type: choice
+        options:
+          - Zits.Ui
+          - navius
+      nuget_user:
+        description: nuget.org username or organization with the trusted publishing policy
+        required: true
+        type: string
+      navius_ref:
+        description: Navius ref to checkout for the sibling project reference
+        required: false
+        default: main
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: zits-helm
+
+      - uses: actions/checkout@v4
+        with:
+          repository: lzitser23/Navius
+          path: navius
+          ref: ${{ inputs.navius_ref }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Select project
+        id: select
+        shell: bash
+        run: |
+          case "${{ inputs.package }}" in
+            Zits.Ui)
+              echo "project=zits-helm/src/Zits.Ui/Zits.Ui.csproj" >> "$GITHUB_OUTPUT"
+              ;;
+            navius)
+              echo "project=zits-helm/tools/Navius.Cli/Navius.Cli.csproj" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "Unknown package: ${{ inputs.package }}" >&2
+              exit 1
+              ;;
+          esac
+
+      - name: Build package project
+        run: dotnet build "${{ steps.select.outputs.project }}" -c Release
+
+      - name: Run unit tests
+        run: dotnet test zits-helm/tests/Zits.Ui.Tests/Zits.Ui.Tests.csproj -c Release
+
+      - name: Pack package
+        run: dotnet pack "${{ steps.select.outputs.project }}" -c Release --no-build -o "${{ runner.temp }}/nupkgs"
+
+      - name: Smoke test navius tool package
+        if: ${{ inputs.package == 'navius' }}
+        run: |
+          dotnet tool install --tool-path "${{ runner.temp }}/navius-tool" --add-source "${{ runner.temp }}/nupkgs" navius --version 0.3.0-preview.1
+          "${{ runner.temp }}/navius-tool/navius" list
+          mkdir -p "${{ runner.temp }}/navius-smoke"
+          "${{ runner.temp }}/navius-tool/navius" add button --to "${{ runner.temp }}/navius-smoke" --namespace Smoke.Ui
+          test -f "${{ runner.temp }}/navius-smoke/Zits/ZitsButton.razor"
+
+      - name: NuGet login
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ inputs.nuget_user }}
+
+      - name: Publish package
+        working-directory: ${{ runner.temp }}/nupkgs
+        run: dotnet nuget push "*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate

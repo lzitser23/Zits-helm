@@ -1,0 +1,16 @@
+@namespace Zits.Ui
+
+@* Timeline item title. *@
+
+<p data-navius-timeline-title @attributes="Attributes" class="@TitleClass">@ChildContent</p>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base = "text-sm font-semibold leading-none tracking-tight";
+
+    private string TitleClass => Cn.Class(Base, Cn.UserClass(Attributes));
+}

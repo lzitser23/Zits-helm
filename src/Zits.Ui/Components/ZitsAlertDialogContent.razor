@@ -3,13 +3,15 @@
 @* Portals + backdrops the panel (Base UI Portal > Backdrop + Popup). No close affordance — an alert dialog demands an explicit Action/Cancel. *@
 <NaviusAlertDialogPortal>
     <NaviusAlertDialogBackdrop class="@OverlayClass" />
-    <NaviusAlertDialogPopup @attributes="Cn.Merge(Attributes, ContentBase)">
+    <NaviusAlertDialogPopup @attributes="Cn.Merge(Attributes, ContentBase, Motion)">
         @ChildContent
     </NaviusAlertDialogPopup>
 </NaviusAlertDialogPortal>
 
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    /// <summary>Optional Navius.Motion presence class (e.g. "motion-pop") forwarded onto the popup. Inert unless the app links _content/Navius.Motion/navius-motion.css.</summary>
+    [Parameter] public string? Motion { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
 
     private const string OverlayClass =

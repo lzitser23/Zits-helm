@@ -1,0 +1,45 @@
+@namespace Zits.Ui
+
+@* A file / image card for composers, threads and upload lists. State drives styling and the
+   title shimmer: uploading / processing shimmer the title, error switches to a destructive
+   treatment (keep the reason in the description so state is not colour-only), idle shows a
+   dashed border. The overlay ZitsAttachmentTrigger (z-10) sits behind ZitsAttachmentActions
+   (z-20) so the whole card can open a link/dialog while action buttons stay clickable. *@
+<div data-slot="attachment"
+     data-state="@State"
+     data-size="@Size"
+     data-orientation="@Orientation"
+     @attributes="Attributes"
+     class="@Css">@ChildContent</div>
+
+@code {
+    /// <summary>idle | uploading | processing | error | done (default).</summary>
+    [Parameter] public string State { get; set; } = "done";
+
+    /// <summary>default | sm | xs.</summary>
+    [Parameter] public string Size { get; set; } = "default";
+
+    /// <summary>horizontal (default) | vertical.</summary>
+    [Parameter] public string Orientation { get; set; } = "horizontal";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "group/attachment relative flex w-fit max-w-full min-w-0 shrink-0 flex-wrap rounded-2xl border bg-card text-card-foreground transition-colors focus-within:ring-1 focus-within:ring-ring/30 has-[>a,>button]:hover:bg-muted/50 data-[state=error]:border-destructive/30 data-[state=idle]:border-dashed";
+
+    private string SizeClass => Size switch
+    {
+        "sm" => "gap-2.5 text-xs has-data-[slot=attachment-content]:px-2 has-data-[slot=attachment-content]:py-1.5 has-data-[slot=attachment-media]:p-1.5",
+        "xs" => "gap-1.5 rounded-xl text-xs has-data-[slot=attachment-content]:px-1.5 has-data-[slot=attachment-content]:py-1 has-data-[slot=attachment-media]:p-1",
+        _ => "gap-2 text-sm has-data-[slot=attachment-content]:px-2.5 has-data-[slot=attachment-content]:py-2 has-data-[slot=attachment-media]:p-2",
+    };
+
+    private string OrientationClass => Orientation == "vertical"
+        ? "w-24 flex-col has-data-[slot=attachment-content]:w-30"
+        : "min-w-40 items-center";
+
+    private string Css => Cn.Class(Base, SizeClass, OrientationClass, Cn.UserClass(Attributes));
+}

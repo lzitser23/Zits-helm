@@ -17,8 +17,9 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          repository: lzitser23/navius
+          repository: lzitser23/Navius
           path: navius
+          token: ${{ secrets.CROSS_REPO_READ_TOKEN || github.token }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -28,5 +29,23 @@ jobs:
       - name: Build helm (Zits.Ui)
         run: dotnet build zits-helm/src/Zits.Ui/Zits.Ui.csproj -c Debug
 
-      - name: Build navius CLI
-        run: dotnet build zits-helm/tools/Navius.Cli/Navius.Cli.csproj -c Debug
+      - name: Build release packages
+        run: |
+          dotnet build zits-helm/src/Zits.Ui/Zits.Ui.csproj -c Release
+          dotnet build zits-helm/tools/Navius.Cli/Navius.Cli.csproj -c Release
+
+      - name: Run unit tests
+        run: dotnet test zits-helm/tests/Zits.Ui.Tests/Zits.Ui.Tests.csproj -c Release
+
+      - name: Pack NuGet artifacts
+        run: |
+          dotnet pack zits-helm/src/Zits.Ui/Zits.Ui.csproj -c Release --no-build -o "${{ runner.temp }}/nupkgs"
+          dotnet pack zits-helm/tools/Navius.Cli/Navius.Cli.csproj -c Release --no-build -o "${{ runner.temp }}/nupkgs"
+
+      - name: Smoke test installed CLI
+        run: |
+          dotnet tool install --tool-path "${{ runner.temp }}/navius-tool" --add-source "${{ runner.temp }}/nupkgs" navius --version 0.3.0-preview.1
+          "${{ runner.temp }}/navius-tool/navius" list
+          mkdir -p "${{ runner.temp }}/navius-smoke"
+          "${{ runner.temp }}/navius-tool/navius" add button --to "${{ runner.temp }}/navius-smoke" --namespace Smoke.Ui
+          test -f "${{ runner.temp }}/navius-smoke/Zits/ZitsButton.razor"

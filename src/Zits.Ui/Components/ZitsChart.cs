@@ -5,7 +5,7 @@ namespace Zits.Ui;
 
 /// <summary>
 /// One series' presentation in a <see cref="ChartConfig"/>: a human <paramref name="Label"/>,
-/// a CSS <paramref name="Color"/> (any colour expression — a token like
+/// a CSS <paramref name="Color"/> (any colour expression: a token like
 /// <c>var(--chart-1)</c>, an <c>hsl(...)</c>, a hex), and an optional inline-SVG
 /// <see cref="Icon"/>. One per-key chart config entry.
 /// </summary>
@@ -93,5 +93,62 @@ internal static class ChartMath
         var f = rawMax / pow;
         double nf = f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10;
         return nf * pow;
+    }
+
+    // ---- Polar helpers (additive: Pie/Donut, Radar, RadialBar) -----------------
+    // The linear helpers above own the x-slot / y-band model of the three original
+    // chart types; the polar charts render into a square sub-box centred at (50,50)
+    // (so a circle stays round under preserveAspectRatio="none") and use these.
+
+    /// <summary>Centre of the square polar plot, in viewBox units.</summary>
+    public const double Cx = 50;
+
+    /// <summary>Centre of the square polar plot, in viewBox units.</summary>
+    public const double Cy = 50;
+
+    /// <summary>
+    /// x of a point <paramref name="r"/> from centre-x <paramref name="cx"/> at
+    /// <paramref name="angleDeg"/>, where 0° is 12 o'clock, growing clockwise (so
+    /// bars/slices read like a clock, not like maths degrees).
+    /// </summary>
+    public static double PolarX(double cx, double r, double angleDeg)
+        => cx + r * Math.Cos((angleDeg - 90) * Math.PI / 180);
+
+    /// <summary>y counterpart of <see cref="PolarX"/> (centre-y <paramref name="cy"/>).</summary>
+    public static double PolarY(double cy, double r, double angleDeg)
+        => cy + r * Math.Sin((angleDeg - 90) * Math.PI / 180);
+
+    /// <summary>
+    /// A filled pie slice (<paramref name="rInner"/> = 0) or donut ring segment
+    /// (<paramref name="rInner"/> &gt; 0), swept clockwise from <paramref name="a0"/> to
+    /// <paramref name="a1"/> degrees. Callers pass <c>a0 &lt; a1</c>.
+    /// </summary>
+    public static string SlicePath(double cx, double cy, double rOuter, double rInner, double a0, double a1)
+    {
+        if (a1 - a0 >= 359.999) a1 = a0 + 359.999; // keep a full ring's arc non-degenerate
+        var large = (a1 - a0) > 180 ? 1 : 0;
+        double ox0 = PolarX(cx, rOuter, a0), oy0 = PolarY(cy, rOuter, a0);
+        double ox1 = PolarX(cx, rOuter, a1), oy1 = PolarY(cy, rOuter, a1);
+        if (rInner <= 0)
+            return $"M {N(cx)} {N(cy)} L {N(ox0)} {N(oy0)} A {N(rOuter)} {N(rOuter)} 0 {large} 1 {N(ox1)} {N(oy1)} Z";
+        double ix1 = PolarX(cx, rInner, a1), iy1 = PolarY(cy, rInner, a1);
+        double ix0 = PolarX(cx, rInner, a0), iy0 = PolarY(cy, rInner, a0);
+        return $"M {N(ox0)} {N(oy0)} A {N(rOuter)} {N(rOuter)} 0 {large} 1 {N(ox1)} {N(oy1)} " +
+               $"L {N(ix1)} {N(iy1)} A {N(rInner)} {N(rInner)} 0 {large} 0 {N(ix0)} {N(iy0)} Z";
+    }
+
+    /// <summary>
+    /// An open arc along radius <paramref name="r"/> swept clockwise from
+    /// <paramref name="a0"/> to <paramref name="a1"/> degrees (the stroked RadialBar
+    /// segments and their background tracks). Empty when the sweep is zero.
+    /// </summary>
+    public static string ArcPath(double cx, double cy, double r, double a0, double a1)
+    {
+        if (a1 - a0 < 0.001) return string.Empty;
+        if (a1 - a0 >= 359.999) a1 = a0 + 359.999;
+        var large = (a1 - a0) > 180 ? 1 : 0;
+        double x0 = PolarX(cx, r, a0), y0 = PolarY(cy, r, a0);
+        double x1 = PolarX(cx, r, a1), y1 = PolarY(cy, r, a1);
+        return $"M {N(x0)} {N(y0)} A {N(r)} {N(r)} 0 {large} 1 {N(x1)} {N(y1)}";
     }
 }

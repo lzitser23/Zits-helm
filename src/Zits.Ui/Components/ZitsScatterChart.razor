@@ -1,0 +1,156 @@
+@namespace Zits.Ui
+
+@* Hand-rolled scatter chart (no recharts). Each row is one point positioned by its
+   XKey/YKey Values over 0-based nice-rounded axes, coloured with var(--color-<key>)
+   from the cascaded ChartConfig where <key> is the row Label (its series). An optional
+   ZKey scales the marker into a bubble. Drawn into a square, centred sub-box so the
+   markers stay round under preserveAspectRatio="none". Hovering a point drives the
+   floating ZitsChartTooltip. *@
+<div class="relative mx-auto aspect-square h-full min-h-0 max-h-full max-w-full" @onmouseleave="() => SetHover(null)">
+    <svg class="block h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        @if (ShowGrid)
+        {
+            @for (var t = 0; t <= 4; t++)
+            {
+                <line class="grid-line" x1="0" x2="100"
+                      y1="@ChartMath.N(ChartMath.Y(_yMax * t / 4, _yMax))" y2="@ChartMath.N(ChartMath.Y(_yMax * t / 4, _yMax))"
+                      stroke-width="0.5" vector-effect="non-scaling-stroke" />
+                <line class="grid-line" y1="@ChartMath.N(ChartMath.Top)" y2="@ChartMath.N(ChartMath.Bottom)"
+                      x1="@ChartMath.N(PlotX(_xMax * t / 4))" x2="@ChartMath.N(PlotX(_xMax * t / 4))"
+                      stroke-width="0.5" vector-effect="non-scaling-stroke" />
+            }
+        }
+        @foreach (var p in _plotted)
+        {
+            var idx = p.Index;
+            <g data-point data-point-key="@p.Key" fill="var(--color-@(p.Key))" pointer-events="all"
+               @onmouseover="() => SetHover(idx)" @onmousemove="() => SetHover(idx)">
+                @switch (Shape)
+                {
+                    case "square":
+                        <rect x="@ChartMath.N(p.X - p.R)" y="@ChartMath.N(p.Y - p.R)"
+                              width="@ChartMath.N(p.R * 2)" height="@ChartMath.N(p.R * 2)" />
+                        break;
+                    case "triangle":
+                        <polygon points="@Triangle(p)" />
+                        break;
+                    case "diamond":
+                        <polygon points="@Diamond(p)" />
+                        break;
+                    case "cross":
+                        <path d="@Cross(p)" fill="none" stroke="var(--color-@(p.Key))"
+                              stroke-width="1.2" stroke-linecap="round" vector-effect="non-scaling-stroke" />
+                        break;
+                    default:
+                        <circle cx="@ChartMath.N(p.X)" cy="@ChartMath.N(p.Y)" r="@ChartMath.N(p.R)" />
+                        break;
+                }
+                <circle data-hit cx="@ChartMath.N(p.X)" cy="@ChartMath.N(p.Y)" r="@ChartMath.N(_hitR)" fill="transparent" />
+            </g>
+        }
+    </svg>
+
+    @if (ShowTooltip && _hover is int ht && ht < _plotted.Count)
+    {
+        var p = _plotted[ht];
+        <ZitsChartTooltip data-chart-tooltip="true" Left="p.X" Top="@(p.Y - 2)">
+            <ZitsChartTooltipContent Label="@SeriesLabel(p.Key)" Payload="PayloadFor(ht)" />
+        </ZitsChartTooltip>
+    }
+</div>
+
+@code {
+    /// <summary>Rows of data: one point per row. The row Label is the ChartConfig key (its series colour).</summary>
+    [Parameter] public IEnumerable<ChartDataPoint>? Data { get; set; }
+
+    /// <summary>Which Values entry holds each point's x.</summary>
+    [Parameter] public string XKey { get; set; } = "x";
+
+    /// <summary>Which Values entry holds each point's y.</summary>
+    [Parameter] public string YKey { get; set; } = "y";
+
+    /// <summary>Optional Values entry that scales the marker into a bubble.</summary>
+    [Parameter] public string? ZKey { get; set; }
+
+    /// <summary>circle (default) | square | triangle | diamond | cross.</summary>
+    [Parameter] public string Shape { get; set; } = "circle";
+
+    /// <summary>Draw the x/y grid lines.</summary>
+    [Parameter] public bool ShowGrid { get; set; } = true;
+
+    [Parameter] public bool ShowTooltip { get; set; } = true;
+
+    [CascadingParameter] private ZitsChartContainer? Chart { get; set; }
+
+    private sealed record Pt(int Index, string Key, double X, double Y, double R, double XValue, double YValue);
+
+    private List<Pt> _plotted = new();
+    private double _xMax = 1;
+    private double _yMax = 1;
+    private double _hitR = 4;
+
+    protected override void OnParametersSet()
+    {
+        _plotted = new();
+        var points = Data?.ToList() ?? new();
+        if (points.Count == 0) return;
+
+        _xMax = ChartMath.Nice(points.Max(p => Val(p, XKey)));
+        _yMax = ChartMath.Nice(points.Max(p => Val(p, YKey)));
+        double zMax = ZKey is null ? 0 : points.Max(p => Val(p, ZKey));
+
+        for (int i = 0; i < points.Count; i++)
+        {
+            double r = 2;
+            if (ZKey is not null && zMax > 0)
+                r = 1.5 + Math.Sqrt(Val(points[i], ZKey) / zMax) * 3;
+            _plotted.Add(new Pt(
+                i, points[i].Label,
+                PlotX(Val(points[i], XKey)), ChartMath.Y(Val(points[i], YKey), _yMax), r,
+                Val(points[i], XKey), Val(points[i], YKey)));
+        }
+        _hitR = _plotted.Count == 0 ? 4 : Math.Max(4, _plotted.Max(p => p.R) + 1.5);
+    }
+
+    private static double Val(ChartDataPoint p, string key)
+        => p.Values.TryGetValue(key, out var v) ? v : 0;
+
+    // Horizontal counterpart of ChartMath.Y: value -> x, inset 6..94 so edge markers stay in frame.
+    private double PlotX(double v) => 6 + v / (_xMax <= 0 ? 1 : _xMax) * 88;
+
+    private int? _hover;
+
+    private void SetHover(int? i)
+    {
+        if (_hover != i) _hover = i;
+    }
+
+    private string Triangle(Pt p)
+        => $"{ChartMath.N(p.X)},{ChartMath.N(p.Y - p.R)} " +
+           $"{ChartMath.N(p.X - p.R)},{ChartMath.N(p.Y + p.R)} " +
+           $"{ChartMath.N(p.X + p.R)},{ChartMath.N(p.Y + p.R)}";
+
+    private string Diamond(Pt p)
+        => $"{ChartMath.N(p.X)},{ChartMath.N(p.Y - p.R)} " +
+           $"{ChartMath.N(p.X + p.R)},{ChartMath.N(p.Y)} " +
+           $"{ChartMath.N(p.X)},{ChartMath.N(p.Y + p.R)} " +
+           $"{ChartMath.N(p.X - p.R)},{ChartMath.N(p.Y)}";
+
+    private string Cross(Pt p)
+        => $"M {ChartMath.N(p.X - p.R)} {ChartMath.N(p.Y)} L {ChartMath.N(p.X + p.R)} {ChartMath.N(p.Y)} " +
+           $"M {ChartMath.N(p.X)} {ChartMath.N(p.Y - p.R)} L {ChartMath.N(p.X)} {ChartMath.N(p.Y + p.R)}";
+
+    private string SeriesLabel(string key)
+        => Chart is not null && Chart.EffectiveConfig.TryGetValue(key, out var s) && s.Label is not null ? s.Label : key;
+
+    private IReadOnlyList<ChartTooltipPayloadItem> PayloadFor(int i)
+    {
+        var p = _plotted[i];
+        var color = $"var(--color-{p.Key})";
+        return new[]
+        {
+            new ChartTooltipPayloadItem(XKey, p.XValue) { Label = XKey, Color = color },
+            new ChartTooltipPayloadItem(YKey, p.YValue) { Label = YKey, Color = color },
+        };
+    }
+}

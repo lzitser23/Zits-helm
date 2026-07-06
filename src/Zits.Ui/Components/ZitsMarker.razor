@@ -1,0 +1,30 @@
+@namespace Zits.Ui
+
+@* A transcript aside: status updates, tool activity, system notes, date breaks and labeled
+   separators. Presentational by default; set role="status" (via the attribute seam) with a
+   spinner + shimmer for live status. For an interactive marker the shadcn source renders
+   asChild over an a/button; Blazor has no Slot equivalent (ADR-0003), so render your own
+   anchor/button inside. Do NOT use role="separator" on a labeled divider (it hides the label). *@
+<div data-slot="marker" data-variant="@Variant" @attributes="Attributes" class="@Css">@ChildContent</div>
+
+@code {
+    /// <summary>default | border | separator.</summary>
+    [Parameter] public string Variant { get; set; } = "default";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "group/marker relative flex min-h-4 w-full items-center gap-2 text-left text-sm text-muted-foreground [&_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground";
+
+    private string VariantClass => Variant switch
+    {
+        "separator" => "before:mr-1 before:h-px before:min-w-0 before:flex-1 before:bg-border after:ml-1 after:h-px after:min-w-0 after:flex-1 after:bg-border",
+        "border" => "border-b border-border pb-2",
+        _ => "",
+    };
+
+    private string Css => Cn.Class(Base, VariantClass, Cn.UserClass(Attributes));
+}

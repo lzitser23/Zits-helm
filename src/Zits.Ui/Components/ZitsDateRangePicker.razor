@@ -1,0 +1,187 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Common
+@using Navius.Primitives.Components.DateRangePicker
+
+@*
+    Styled DateRangePicker over the Navius DateRangePicker primitive. A bordered group of
+    start / "–" / end segmented inputs and a calendar trigger that opens a popover holding the
+    existing range-mode ZitsCalendar (two months) plus an optional preset rail. The wrapper is
+    the single source of truth for the NaviusDateRange, feeding both the segmented inputs and
+    the calendar; it owns value + open state so @bind-Value / @bind-Open (controlled) and
+    DefaultValue / DefaultOpen (uncontrolled) all work through the wrapper. Selecting a complete
+    range in the calendar (or a preset) closes the popup.
+*@
+
+<NaviusDateRangePicker Value="@CurrentValue"
+                       ValueChanged="ApplyRangeAsync"
+                       Open="@CurrentOpen"
+                       OpenChanged="OnOpenChangedAsync"
+                       MinValue="MinValue"
+                       MaxValue="MaxValue"
+                       Granularity="@Granularity"
+                       Disabled="Disabled"
+                       ReadOnly="ReadOnly"
+                       Required="Required"
+                       Invalid="Invalid"
+                       StartName="@StartName"
+                       EndName="@EndName">
+    <NaviusDateRangePickerControl class="@FieldRow">
+        <NaviusDateRangePickerInput Part="start" class="@Segments" />
+        <NaviusDateRangePickerSeparator class="px-1 text-muted-foreground">@Separator</NaviusDateRangePickerSeparator>
+        <NaviusDateRangePickerInput Part="end" class="@Segments" />
+        <NaviusDateRangePickerTrigger class="@TriggerClass" aria-label="Open calendar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="size-4" aria-hidden="true">
+                <path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" />
+            </svg>
+        </NaviusDateRangePickerTrigger>
+    </NaviusDateRangePickerControl>
+    <NaviusDateRangePickerContent class="@PopupClass">
+        <div class="flex flex-col gap-2 p-2 sm:flex-row">
+            @if (Presets is { Count: > 0 })
+            {
+                <div class="flex flex-row flex-wrap gap-1 sm:flex-col sm:border-r sm:pr-2" role="group" aria-label="Presets">
+                    @foreach (var preset in Presets)
+                    {
+                        <button type="button" class="@PresetClass" @onclick="() => ApplyPresetAsync(preset)">@preset.Label</button>
+                    }
+                </div>
+            }
+            <ZitsCalendar Mode="range"
+                          SelectedRange="CalendarRange"
+                          SelectedRangeChanged="OnCalendarRangeChangedAsync"
+                          NumberOfMonths="NumberOfMonths"
+                          MinDate="MinValue"
+                          MaxDate="MaxValue"
+                          FirstDayOfWeek="FirstDayOfWeek"
+                          DisabledMatcher="IsDateUnavailable"
+                          class="border-0 p-1 shadow-none" />
+        </div>
+    </NaviusDateRangePickerContent>
+</NaviusDateRangePicker>
+
+@code {
+    /// <summary>The range. Two-way bindable via <c>@bind-Value</c>.</summary>
+    [Parameter] public NaviusDateRange Value { get; set; } = NaviusDateRange.Empty;
+    [Parameter] public EventCallback<NaviusDateRange> ValueChanged { get; set; }
+    /// <summary>Uncontrolled initial value.</summary>
+    [Parameter] public NaviusDateRange DefaultValue { get; set; } = NaviusDateRange.Empty;
+
+    /// <summary>Popup open state. Two-way bindable via <c>@bind-Open</c>.</summary>
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    /// <summary>Uncontrolled initial open state.</summary>
+    [Parameter] public bool DefaultOpen { get; set; }
+
+    [Parameter] public DateOnly? MinValue { get; set; }
+    [Parameter] public DateOnly? MaxValue { get; set; }
+    [Parameter] public string Granularity { get; set; } = "day";
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public bool Required { get; set; }
+    [Parameter] public bool Invalid { get; set; }
+    [Parameter] public string? StartName { get; set; }
+    [Parameter] public string? EndName { get; set; }
+
+    /// <summary>Months shown side by side in the popover calendar (default 2).</summary>
+    [Parameter] public int NumberOfMonths { get; set; } = 2;
+    [Parameter] public DayOfWeek FirstDayOfWeek { get; set; } = DayOfWeek.Sunday;
+    /// <summary>Predicate marking dates unavailable (mapped to the calendar's DisabledMatcher).</summary>
+    [Parameter] public Func<DateOnly, bool>? IsDateUnavailable { get; set; }
+    /// <summary>Optional quick-pick rail rendered beside the calendar.</summary>
+    [Parameter] public IReadOnlyList<ZitsDateRangePreset>? Presets { get; set; }
+    /// <summary>The glyph between the two inputs.</summary>
+    [Parameter] public string Separator { get; set; } = "–";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private NaviusDateRange _internalValue = NaviusDateRange.Empty;
+    private bool _internalOpen;
+    private bool _valueSet;
+    private bool _openSet;
+
+    private NaviusDateRange CurrentValue => _valueSet ? Value : _internalValue;
+    private bool CurrentOpen => _openSet ? Open : _internalOpen;
+    private (DateOnly? Start, DateOnly? End) CalendarRange => (CurrentValue.Start, CurrentValue.End);
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueSet = parameters.TryGetValue<NaviusDateRange>(nameof(Value), out _);
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnInitialized()
+    {
+        _internalValue = DefaultValue;
+        _internalOpen = DefaultOpen;
+    }
+
+    private async Task ApplyRangeAsync(NaviusDateRange range)
+    {
+        if (!_valueSet)
+        {
+            _internalValue = range;
+        }
+
+        await ValueChanged.InvokeAsync(range);
+    }
+
+    private async Task OnCalendarRangeChangedAsync((DateOnly? Start, DateOnly? End) range)
+    {
+        var next = new NaviusDateRange(range.Start, range.End);
+        await ApplyRangeAsync(next);
+
+        // Selecting the end date completes the range, so dismiss the popover (react-aria parity).
+        if (next.IsComplete)
+        {
+            await OnOpenChangedAsync(false);
+        }
+    }
+
+    private async Task ApplyPresetAsync(ZitsDateRangePreset preset)
+    {
+        await ApplyRangeAsync(preset.Range);
+        await OnOpenChangedAsync(false);
+    }
+
+    private async Task OnOpenChangedAsync(bool open)
+    {
+        if (!_openSet)
+        {
+            _internalOpen = open;
+        }
+
+        await OpenChanged.InvokeAsync(open);
+        StateHasChanged();
+    }
+
+    private const string FieldRow =
+        "inline-flex h-9 w-auto items-center gap-px rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm " +
+        "transition-colors focus-within:outline-none focus-within:ring-1 focus-within:ring-ring " +
+        "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 " +
+        "data-[invalid]:border-destructive data-[invalid]:focus-within:ring-destructive";
+
+    private const string Segments =
+        "inline-flex items-center gap-px " +
+        "[&_[role=spinbutton]]:rounded [&_[role=spinbutton]]:px-0.5 [&_[role=spinbutton]]:tabular-nums [&_[role=spinbutton]]:outline-none " +
+        "[&_[role=spinbutton]:focus]:bg-accent [&_[role=spinbutton]:focus]:text-accent-foreground " +
+        "[&_[data-placeholder]]:text-muted-foreground [&_[data-segment=literal]]:text-muted-foreground";
+
+    private const string TriggerClass =
+        "ml-1 grid size-7 shrink-0 place-items-center rounded text-muted-foreground outline-none " +
+        "transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-1 focus-visible:ring-ring " +
+        "disabled:pointer-events-none disabled:opacity-50";
+
+    private const string PopupClass =
+        "z-50 w-auto rounded-md border bg-popover p-0 text-popover-foreground shadow-md outline-none " +
+        "data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 " +
+        "data-[closed]:zoom-out-95 data-[open]:zoom-in-95 " +
+        "data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2";
+
+    private const string PresetClass =
+        "inline-flex h-8 items-center whitespace-nowrap rounded-md px-3 text-sm outline-none " +
+        "transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-1 focus-visible:ring-ring";
+}

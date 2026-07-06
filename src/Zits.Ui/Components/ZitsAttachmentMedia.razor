@@ -1,0 +1,24 @@
+@namespace Zits.Ui
+
+@* Icon or image preview slot. variant="image" renders an <img> (aspect-square, object-cover)
+   dimmed to 60% until the attachment state is done/idle. *@
+<div data-slot="attachment-media" data-variant="@Variant" @attributes="Attributes" class="@Css">@ChildContent</div>
+
+@code {
+    /// <summary>icon (default) | image.</summary>
+    [Parameter] public string Variant { get; set; } = "icon";
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private const string Base =
+        "relative flex aspect-square w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted text-foreground group-data-[orientation=vertical]/attachment:w-full group-data-[size=sm]/attachment:w-8 group-data-[size=xs]/attachment:w-7 group-data-[size=xs]/attachment:rounded-md group-data-[state=error]/attachment:bg-destructive/10 group-data-[state=error]/attachment:text-destructive [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 group-data-[orientation=vertical]/attachment:[&_svg:not([class*='size-'])]:size-6 group-data-[size=xs]/attachment:[&_svg:not([class*='size-'])]:size-3.5";
+
+    private string VariantClass => Variant == "image"
+        ? "opacity-60 group-data-[state=done]/attachment:opacity-100 group-data-[state=idle]/attachment:opacity-100 *:[img]:aspect-square *:[img]:w-full *:[img]:object-cover"
+        : "";
+
+    private string Css => Cn.Class(Base, VariantClass, Cn.UserClass(Attributes));
+}

@@ -1,0 +1,100 @@
+@namespace Zits.Ui
+@using System.Globalization
+@using Navius.Primitives.Components.DateInput
+
+@*
+    Styled segmented date field over the Navius DateInput primitive. A bordered focus-within
+    row of MM / DD / YYYY spinbutton segments (placeholders dimmed, invalid ring) with a
+    trailing calendar glyph. Owns value state so both @bind-Value (controlled) and DefaultValue
+    (uncontrolled) work through the wrapper: it tracks whether the consumer supplied Value and
+    only ever hands the primitive a correct current value (mirrors the NaviusInput/ZitsCalendar
+    discipline; never blindly forwards the raw Value param).
+*@
+
+<NaviusDateInput Value="@CurrentValue"
+                 ValueChanged="OnValueChangedAsync"
+                 Granularity="@Granularity"
+                 MinValue="MinValue"
+                 MaxValue="MaxValue"
+                 PlaceholderValue="PlaceholderValue"
+                 Disabled="Disabled"
+                 ReadOnly="ReadOnly"
+                 Required="Required"
+                 Invalid="Invalid"
+                 ForceLeadingZeros="ForceLeadingZeros"
+                 Culture="Culture"
+                 Dir="@Dir"
+                 Name="@Name"
+                 @attributes="Cn.Merge(Attributes, FieldRow)">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="ml-auto size-4 shrink-0 text-muted-foreground" aria-hidden="true">
+            <path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" />
+        </svg>
+    }
+</NaviusDateInput>
+
+@code {
+    /// <summary>The date. Two-way bindable via <c>@bind-Value</c>.</summary>
+    [Parameter] public DateOnly? Value { get; set; }
+    [Parameter] public EventCallback<DateOnly?> ValueChanged { get; set; }
+    /// <summary>Uncontrolled initial value (works through this wrapper).</summary>
+    [Parameter] public DateOnly? DefaultValue { get; set; }
+
+    [Parameter] public string Granularity { get; set; } = "day";
+    [Parameter] public DateOnly? MinValue { get; set; }
+    [Parameter] public DateOnly? MaxValue { get; set; }
+    [Parameter] public DateOnly? PlaceholderValue { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public bool Required { get; set; }
+    [Parameter] public bool Invalid { get; set; }
+    [Parameter] public bool ForceLeadingZeros { get; set; }
+    [Parameter] public CultureInfo? Culture { get; set; }
+    [Parameter] public string? Dir { get; set; }
+    [Parameter] public string? Name { get; set; }
+
+    /// <summary>Overrides the default trailing calendar glyph.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private DateOnly? _internal;
+    private bool _valueSet;
+
+    private DateOnly? CurrentValue => _valueSet ? Value : _internal;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueSet = parameters.TryGetValue<DateOnly?>(nameof(Value), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnInitialized() => _internal = DefaultValue;
+
+    private async Task OnValueChangedAsync(DateOnly? value)
+    {
+        if (!_valueSet)
+        {
+            _internal = value;
+        }
+
+        await ValueChanged.InvokeAsync(value);
+    }
+
+    private const string FieldRow =
+        "inline-flex h-9 w-[220px] items-center gap-px rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm " +
+        "transition-colors focus-within:outline-none focus-within:ring-1 focus-within:ring-ring " +
+        "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 " +
+        "data-[invalid]:border-destructive data-[invalid]:focus-within:ring-destructive " +
+        "[&_[role=spinbutton]]:rounded [&_[role=spinbutton]]:px-0.5 [&_[role=spinbutton]]:tabular-nums [&_[role=spinbutton]]:outline-none " +
+        "[&_[role=spinbutton]:focus]:bg-accent [&_[role=spinbutton]:focus]:text-accent-foreground " +
+        "[&_[data-placeholder]]:text-muted-foreground [&_[data-segment=literal]]:text-muted-foreground";
+}

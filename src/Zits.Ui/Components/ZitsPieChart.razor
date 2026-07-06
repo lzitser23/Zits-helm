@@ -1,0 +1,134 @@
+@namespace Zits.Ui
+
+@* Hand-rolled pie / donut chart (no recharts). Slices are SVG wedges over a fixed
+   0..100 viewBox drawn into a square, centred sub-box (preserveAspectRatio="none"
+   stays distortion-free while a circle stays round), each filled with
+   var(--color-<key>) from the cascaded ChartConfig where <key> is the slice's data
+   Label. InnerRadius > 0 turns the pie into a donut (with an optional CenterContent
+   overlay). Hovering a slice drives the floating ZitsChartTooltip. *@
+<div class="relative mx-auto aspect-square h-full min-h-0 max-h-full max-w-full" role="img" aria-label="@AriaSummary"
+     @onmouseleave="() => SetHover(null)">
+    <svg class="block h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        @foreach (var s in _slices)
+        {
+            var idx = s.Index;
+            <path data-slice data-slice-key="@s.Key" d="@s.Path" fill="var(--color-@(s.Key))"
+                  stroke="var(--background)" stroke-width="0.5" vector-effect="non-scaling-stroke"
+                  @onmouseover="() => SetHover(idx)" @onmousemove="() => SetHover(idx)" />
+        }
+    </svg>
+
+    @if (ShowLabels)
+    {
+        @foreach (var s in _slices)
+        {
+            <div class="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-[10px] leading-none text-muted-foreground"
+                 style="@LabelPos(s.Mid)">@ChartMath.N(s.Value)</div>
+        }
+    }
+
+    @if (InnerRadius > 0 && CenterContent is not null)
+    {
+        <div class="pointer-events-none absolute inset-0 flex items-center justify-center text-center">
+            @CenterContent
+        </div>
+    }
+
+    @if (ShowTooltip && _hover is int ht && ht < _slices.Count)
+    {
+        var s = _slices[ht];
+        <ZitsChartTooltip data-chart-tooltip="true"
+                          Left="ChartMath.PolarX(ChartMath.Cx, _labelRadius, s.Mid)"
+                          Top="ChartMath.PolarY(ChartMath.Cy, _labelRadius, s.Mid)">
+            <ZitsChartTooltipContent Payload="PayloadFor(ht)" />
+        </ZitsChartTooltip>
+    }
+</div>
+
+@code {
+    /// <summary>Rows of data: one slice per row. The row Label is the ChartConfig key that colours it.</summary>
+    [Parameter] public IEnumerable<ChartDataPoint>? Data { get; set; }
+
+    /// <summary>Which Values entry holds each slice's magnitude. Null uses the row's single value.</summary>
+    [Parameter] public string? DataKey { get; set; }
+
+    /// <summary>Hole radius in viewBox units (0 = pie, &gt; 0 = donut). Centre is at 50.</summary>
+    [Parameter] public double InnerRadius { get; set; }
+
+    /// <summary>Outer slice radius in viewBox units (centre at 50, so &le; ~48).</summary>
+    [Parameter] public double OuterRadius { get; set; } = 42;
+
+    /// <summary>Gap between slices, in degrees.</summary>
+    [Parameter] public double PaddingAngle { get; set; }
+
+    /// <summary>Render each slice's value at its midpoint.</summary>
+    [Parameter] public bool ShowLabels { get; set; }
+
+    /// <summary>Overlay rendered at the donut centre (ignored when InnerRadius is 0).</summary>
+    [Parameter] public RenderFragment? CenterContent { get; set; }
+
+    [Parameter] public bool ShowTooltip { get; set; } = true;
+
+    [CascadingParameter] private ZitsChartContainer? Chart { get; set; }
+
+    private sealed record Slice(int Index, string Key, double Value, double Mid, string Path);
+
+    private List<Slice> _slices = new();
+    private double _labelRadius = 21;
+    private int? _hover;
+
+    protected override void OnParametersSet()
+    {
+        _slices = new();
+        var points = Data?.ToList() ?? new();
+        double total = points.Sum(ValueOf);
+        _labelRadius = (OuterRadius + InnerRadius) / 2;
+        if (total <= 0) return;
+
+        double cursor = 0;
+        for (int i = 0; i < points.Count; i++)
+        {
+            double value = ValueOf(points[i]);
+            double sweep = value / total * 360;
+            double a0 = cursor + PaddingAngle / 2;
+            double a1 = cursor + sweep - PaddingAngle / 2;
+            if (a1 > a0)
+            {
+                var path = ChartMath.SlicePath(ChartMath.Cx, ChartMath.Cy, OuterRadius, InnerRadius, a0, a1);
+                _slices.Add(new Slice(i, points[i].Label, value, (a0 + a1) / 2, path));
+            }
+            cursor += sweep;
+        }
+    }
+
+    private double ValueOf(ChartDataPoint p)
+        => DataKey is not null && p.Values.TryGetValue(DataKey, out var v) ? v : p.Values.Values.FirstOrDefault();
+
+    private string LabelPos(double mid)
+        => $"left:{ChartMath.N(ChartMath.PolarX(ChartMath.Cx, _labelRadius, mid))}%;top:{ChartMath.N(ChartMath.PolarY(ChartMath.Cy, _labelRadius, mid))}%;";
+
+    private void SetHover(int? i)
+    {
+        if (_hover != i) _hover = i;
+    }
+
+    private IReadOnlyList<ChartTooltipPayloadItem> PayloadFor(int i)
+        => new[] { new ChartTooltipPayloadItem(_slices[i].Key, _slices[i].Value) };
+
+    // Screen-reader summary for the chart (role="img"): the kind plus every slice's label and value,
+    // so the per-slice figures the tooltip shows visually are also exposed non-visually.
+    private string AriaSummary
+    {
+        get
+        {
+            var kind = InnerRadius > 0 ? "Donut chart" : "Pie chart";
+            if (_slices.Count == 0)
+            {
+                return kind;
+            }
+
+            var parts = string.Join(", ", _slices.Select(s => $"{s.Key} {ChartMath.N(s.Value)}"));
+            return $"{kind}: {parts}";
+        }
+    }
+}

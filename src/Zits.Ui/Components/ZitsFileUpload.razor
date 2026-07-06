@@ -1,0 +1,114 @@
+@namespace Zits.Ui
+@using Microsoft.AspNetCore.Components.Forms
+@using Navius.Primitives.Components.FileUpload
+
+@*
+    Styled file upload over the Navius FileUpload primitive. A dashed dropzone
+    (data-dragging accent) wraps a real hidden input; dropped or picked files
+    render as rows with name, size and a remove button. Controlled via @bind-Files
+    or uncontrolled: Files is forwarded to the primitive ONLY when the consumer set
+    it (the always-controlled wart fix).
+*@
+
+<NaviusFileUpload FilesChanged="FilesChanged"
+                  Accept="@Accept"
+                  Multiple="Multiple"
+                  MaxFiles="MaxFiles"
+                  MaxSize="MaxSize"
+                  Directory="Directory"
+                  Capture="@Capture"
+                  Disabled="Disabled"
+                  Name="@Name"
+                  OnAccepted="OnAccepted"
+                  OnRejected="OnRejected"
+                  @attributes="Forwarded">
+    <NaviusFileUploadInput />
+    <NaviusFileUploadDropzone class="@DropzoneClass">
+        <div class="pointer-events-none flex flex-col items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-muted-foreground">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" x2="12" y1="3" y2="15" />
+            </svg>
+            <p class="text-sm text-muted-foreground"><span class="font-medium text-foreground">Click to browse</span> or drag &amp; drop</p>
+            @if (Hint is not null)
+            {
+                <p class="text-xs text-muted-foreground">@Hint</p>
+            }
+        </div>
+    </NaviusFileUploadDropzone>
+
+    <NaviusFileUploadList class="flex flex-col gap-2" ItemTemplate="FileRow" />
+
+    <div class="flex justify-end">
+        <NaviusFileUploadClear class="text-xs text-muted-foreground underline-offset-2 hover:underline disabled:cursor-not-allowed disabled:no-underline disabled:opacity-40">
+            Clear all
+        </NaviusFileUploadClear>
+    </div>
+</NaviusFileUpload>
+
+@code {
+    /// <summary>Controlled file list. Bind with <c>@bind-Files</c>.</summary>
+    [Parameter] public IReadOnlyList<IBrowserFile>? Files { get; set; }
+    [Parameter] public EventCallback<IReadOnlyList<IBrowserFile>> FilesChanged { get; set; }
+    [Parameter] public string? Accept { get; set; }
+    [Parameter] public bool Multiple { get; set; }
+    [Parameter] public int? MaxFiles { get; set; }
+    [Parameter] public long MaxSize { get; set; }
+    [Parameter] public bool Directory { get; set; }
+    [Parameter] public string? Capture { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? Name { get; set; }
+    /// <summary>Optional hint line under the dropzone prompt.</summary>
+    [Parameter] public string? Hint { get; set; }
+    [Parameter] public EventCallback<IReadOnlyList<IBrowserFile>> OnAccepted { get; set; }
+    [Parameter] public EventCallback<IReadOnlyList<NaviusFileRejection>> OnRejected { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool _filesSet;
+
+    private const string Root = "flex w-full flex-col gap-3";
+
+    private const string DropzoneClass =
+        "flex min-h-[8rem] w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-input bg-transparent p-6 text-center outline-none transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring data-[dragging]:border-primary data-[dragging]:bg-primary/5 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50";
+
+    private RenderFragment<IBrowserFile> FileRow => file =>
+        @<div class="flex items-center gap-3 rounded-md border border-border bg-card p-2 text-card-foreground">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 shrink-0 text-muted-foreground">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                <polyline points="14 2 14 8 20 8" />
+            </svg>
+            <div class="min-w-0 flex-1">
+                <NaviusFileUploadItemName class="block truncate text-sm font-medium" />
+                <NaviusFileUploadItemSize class="text-xs text-muted-foreground" />
+            </div>
+            <NaviusFileUploadItemDelete class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                </svg>
+            </NaviusFileUploadItemDelete>
+        </div>;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _filesSet = parameters.TryGetValue<IReadOnlyList<IBrowserFile>?>(nameof(Files), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>(Cn.Merge(Attributes, Root));
+            if (_filesSet)
+            {
+                merged["Files"] = Files!;
+            }
+
+            return merged;
+        }
+    }
+}

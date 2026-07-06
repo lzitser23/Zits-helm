@@ -1,0 +1,145 @@
+@namespace Zits.Ui
+@using Navius.Primitives.Components.TimePicker
+
+@*
+    Styled TimePicker over the Navius TimePicker primitive: a bordered segmented time row with a
+    trailing clock trigger that opens a popover of scrollable listbox columns (hours, minutes,
+    optional seconds, AM/PM for 12h). Owns value + open state so @bind-Value / @bind-Open
+    (controlled) and DefaultValue / DefaultOpen (uncontrolled) all work through the wrapper.
+*@
+
+<NaviusTimePicker Value="@CurrentValue"
+                  ValueChanged="OnValueChangedAsync"
+                  Open="@CurrentOpen"
+                  OpenChanged="OnOpenChangedAsync"
+                  Granularity="@Granularity"
+                  HourCycle="HourCycle"
+                  MinuteStep="MinuteStep"
+                  SecondStep="SecondStep"
+                  Disabled="Disabled">
+    <div @attributes="Cn.Merge(Attributes, OuterRow)">
+        <NaviusTimePickerInput class="@InputSegments" />
+        <NaviusTimePickerTrigger class="@TriggerClass" aria-label="Open time picker">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="size-4" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+            </svg>
+        </NaviusTimePickerTrigger>
+    </div>
+    <NaviusTimePickerContent class="@PopupClass">
+        <div class="flex h-56 gap-1">
+            <NaviusTimePickerColumn Unit="hour" class="@ColumnClass" OptionClass="@OptionClass" />
+            @if (Granularity != "hour")
+            {
+                <NaviusTimePickerColumn Unit="minute" class="@ColumnClass" OptionClass="@OptionClass" />
+            }
+            @if (Granularity == "second")
+            {
+                <NaviusTimePickerColumn Unit="second" class="@ColumnClass" OptionClass="@OptionClass" />
+            }
+            @if (Is12Hour)
+            {
+                <NaviusTimePickerColumn Unit="dayPeriod" class="@ColumnClass" OptionClass="@OptionClass" />
+            }
+        </div>
+    </NaviusTimePickerContent>
+</NaviusTimePicker>
+
+@code {
+    /// <summary>The time. Two-way bindable via <c>@bind-Value</c>.</summary>
+    [Parameter] public TimeOnly? Value { get; set; }
+    [Parameter] public EventCallback<TimeOnly?> ValueChanged { get; set; }
+    /// <summary>Uncontrolled initial value.</summary>
+    [Parameter] public TimeOnly? DefaultValue { get; set; }
+
+    /// <summary>Popup open state. Two-way bindable via <c>@bind-Open</c>.</summary>
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    /// <summary>Uncontrolled initial open state.</summary>
+    [Parameter] public bool DefaultOpen { get; set; }
+
+    [Parameter] public string Granularity { get; set; } = "minute";
+    [Parameter] public int? HourCycle { get; set; }
+    [Parameter] public int MinuteStep { get; set; } = 1;
+    [Parameter] public int SecondStep { get; set; } = 1;
+    [Parameter] public bool Disabled { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    private TimeOnly? _internalValue;
+    private bool _internalOpen;
+    private bool _valueSet;
+    private bool _openSet;
+
+    private TimeOnly? CurrentValue => _valueSet ? Value : _internalValue;
+    private bool CurrentOpen => _openSet ? Open : _internalOpen;
+    private bool Is12Hour => (HourCycle ?? (System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern.Contains('H') ? 24 : 12)) == 12;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueSet = parameters.TryGetValue<TimeOnly?>(nameof(Value), out _);
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    protected override void OnInitialized()
+    {
+        _internalValue = DefaultValue;
+        _internalOpen = DefaultOpen;
+    }
+
+    private async Task OnValueChangedAsync(TimeOnly? value)
+    {
+        if (!_valueSet)
+        {
+            _internalValue = value;
+        }
+
+        await ValueChanged.InvokeAsync(value);
+    }
+
+    private async Task OnOpenChangedAsync(bool open)
+    {
+        if (!_openSet)
+        {
+            _internalOpen = open;
+        }
+
+        await OpenChanged.InvokeAsync(open);
+    }
+
+    private const string OuterRow =
+        "inline-flex h-9 w-[200px] items-center rounded-md border border-input bg-transparent pl-3 pr-1 text-sm shadow-sm " +
+        "transition-colors focus-within:outline-none focus-within:ring-1 focus-within:ring-ring " +
+        "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50";
+
+    private const string InputSegments =
+        "inline-flex grow items-center gap-px " +
+        "[&_[role=spinbutton]]:rounded [&_[role=spinbutton]]:px-0.5 [&_[role=spinbutton]]:tabular-nums [&_[role=spinbutton]]:outline-none " +
+        "[&_[role=spinbutton]:focus]:bg-accent [&_[role=spinbutton]:focus]:text-accent-foreground " +
+        "[&_[data-placeholder]]:text-muted-foreground [&_[data-segment=literal]]:text-muted-foreground";
+
+    private const string TriggerClass =
+        "grid size-7 shrink-0 place-items-center rounded text-muted-foreground outline-none " +
+        "transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-1 focus-visible:ring-ring " +
+        "disabled:pointer-events-none disabled:opacity-50";
+
+    private const string PopupClass =
+        "z-50 w-auto rounded-md border bg-popover p-2 text-popover-foreground shadow-md outline-none " +
+        "data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 " +
+        "data-[closed]:zoom-out-95 data-[open]:zoom-in-95 " +
+        "data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2";
+
+    private const string ColumnClass =
+        "flex min-w-[3.25rem] flex-col gap-1 overflow-y-auto scroll-py-1 pr-1 outline-none " +
+        "[scrollbar-width:thin]";
+
+    private const string OptionClass =
+        "flex h-8 w-full shrink-0 items-center justify-center rounded px-2 text-sm tabular-nums outline-none " +
+        "transition-colors hover:bg-accent hover:text-accent-foreground " +
+        "data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground " +
+        "data-[selected]:bg-primary data-[selected]:text-primary-foreground " +
+        "data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground";
+}

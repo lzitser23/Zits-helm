@@ -1,12 +1,36 @@
 @namespace Zits.Ui
 
-@* Styled radio group over the Navius RadioGroup primitive (role=radiogroup, roving tabindex, arrow navigation). *@
-<NaviusRadioGroup Value="@Value" ValueChanged="ValueChanged" DefaultValue="@DefaultValue"
+@* Styled radio group over the Navius RadioGroup primitive (role=radiogroup, roving tabindex, arrow navigation).
+   Value is forwarded to the primitive ONLY when the consumer set it, so the uncontrolled DefaultValue path stays live. *@
+<NaviusRadioGroup ValueChanged="ValueChanged" DefaultValue="@DefaultValue"
                   Disabled="Disabled" Required="Required" Name="@Name" Orientation="@Orientation"
-                  Loop="Loop" Dir="@Dir" @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusRadioGroup>
+                  Loop="Loop" Dir="@Dir" @attributes="Forwarded">@ChildContent</NaviusRadioGroup>
 
 @code {
     private const string Base = "grid gap-3";
+
+    private bool _valueSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueSet = parameters.TryGetValue<string?>(nameof(Value), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    // Merge the styled classes and forward Value only for controlled usage.
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>(Cn.Merge(Attributes, Base));
+            if (_valueSet)
+            {
+                merged["Value"] = Value!;
+            }
+
+            return merged;
+        }
+    }
 
     [Parameter] public string? Value { get; set; }
     [Parameter] public EventCallback<string?> ValueChanged { get; set; }
