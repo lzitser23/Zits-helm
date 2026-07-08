@@ -8,7 +8,7 @@
     <AssemblyName>navius</AssemblyName>
     <RootNamespace>Navius.Cli</RootNamespace>
     <PackageId>navius</PackageId>
-    <Version>0.3.0-preview.1</Version>
+    <Version>0.3.0-preview.2</Version>
     <Authors>Navius contributors</Authors>
     <Description>Copy-paste component registry CLI for Blazor and zits/ui.</Description>
     <PackageProjectUrl>https://github.com/lzitser23/Zits-helm</PackageProjectUrl>

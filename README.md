@@ -58,14 +58,14 @@ path: it copies registry items into an app so consumers own the component code.
   `ZitsThemeScope`, and generated `zits-theme.css` switch mode, gray scale, primary,
   radius, font, and style recipe through `data-zits-*` attributes.
 - **Package-ready metadata** — `Zits.Ui` and `navius` are both locked to
-  `0.3.0-preview.1` with MIT license metadata, package readmes, SourceLink, symbols,
+  `0.3.0-preview.2` with MIT license metadata, package readmes, SourceLink, symbols,
   and repository URLs.
 
 ---
 
 ## Installation
 
-Preview packages are published to NuGet as `0.3.0-preview.1`. Install the styled
+Preview packages are published to NuGet as `0.3.0-preview.2`. Install the styled
 layer and CLI with:
 
 ```bash

@@ -11,6 +11,7 @@ namespace Zits.Ui.Tests;
 /// 82-item registry was audited once by hand; this keeps the load-bearing paths honest.
 /// </summary>
 [Trait("Category", "VendorCompile")]
+[Collection("cli-vendor")]
 public class VendorCompileTests
 {
     private static string CliProject => Path.Combine(RepoPaths.Root, "tools", "Navius.Cli", "Navius.Cli.csproj");

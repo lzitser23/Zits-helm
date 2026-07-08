@@ -7,6 +7,7 @@ namespace Zits.Ui.Tests;
 /// zits/ui (+ lib) files and leave the headless Navius brain to the published
 /// Navius.Primitives package, and the vendored styled set must compile against it.
 /// </summary>
+[Collection("cli-vendor")]
 public class StyledOnlyVendorTests
 {
     [Fact]
