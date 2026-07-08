@@ -37,12 +37,27 @@
     <None Include="..\..\registry\**\*"
           Pack="true"
           PackagePath="tools\$(TargetFramework)\any\registry\%(RecursiveDir)%(Filename)%(Extension)" />
-    <None Include="..\..\src\Zits.Ui\**\*.cs;..\..\src\Zits.Ui\**\*.razor;..\..\src\Zits.Ui\wwwroot\**\*"
+    <!--
+      wwwroot trees get their own None entries so PackagePath keeps the wwwroot\ segment.
+      Folding wwwroot\**\* into the .cs/.razor globs below would flatten it: %(RecursiveDir)
+      is measured from each pattern's first wildcard, so wwwroot\**\* strips wwwroot\ and
+      the copied files (e.g. navius-interop.js, zits-theme.css) would never match the
+      registry targets, which say .../wwwroot/....
+    -->
+    <None Include="..\..\src\Zits.Ui\**\*.cs;..\..\src\Zits.Ui\**\*.razor"
+          Exclude="..\..\src\Zits.Ui\wwwroot\**\*"
           Pack="true"
           PackagePath="tools\$(TargetFramework)\any\registry-source\zits-helm\src\Zits.Ui\%(RecursiveDir)%(Filename)%(Extension)" />
-    <None Include="..\..\..\navius\src\Navius.Primitives\**\*.cs;..\..\..\navius\src\Navius.Primitives\**\*.razor;..\..\..\navius\src\Navius.Primitives\wwwroot\**\*"
+    <None Include="..\..\src\Zits.Ui\wwwroot\**\*"
+          Pack="true"
+          PackagePath="tools\$(TargetFramework)\any\registry-source\zits-helm\src\Zits.Ui\wwwroot\%(RecursiveDir)%(Filename)%(Extension)" />
+    <None Include="..\..\..\navius\src\Navius.Primitives\**\*.cs;..\..\..\navius\src\Navius.Primitives\**\*.razor"
+          Exclude="..\..\..\navius\src\Navius.Primitives\wwwroot\**\*"
           Pack="true"
           PackagePath="tools\$(TargetFramework)\any\registry-source\navius\src\Navius.Primitives\%(RecursiveDir)%(Filename)%(Extension)" />
+    <None Include="..\..\..\navius\src\Navius.Primitives\wwwroot\**\*"
+          Pack="true"
+          PackagePath="tools\$(TargetFramework)\any\registry-source\navius\src\Navius.Primitives\wwwroot\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

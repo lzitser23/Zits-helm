@@ -26,6 +26,13 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Validate registry manifest
+        # Schema-validates registry.json against registry.schema.json and runs the
+        # structural checks a schema cannot express (file paths exist, registryDependencies
+        # resolve, no duplicate names, no clashing targets). The brain repo is a sibling,
+        # so ../navius/ sources resolve with --root pointed at the helm checkout.
+        run: dotnet run --project zits-helm/tools/RegistryLint/RegistryLint.csproj -c Release -- --root zits-helm
+
       - name: Build helm (Zits.Ui)
         run: dotnet build zits-helm/src/Zits.Ui/Zits.Ui.csproj -c Debug
 
@@ -48,4 +55,4 @@ jobs:
           "${{ runner.temp }}/navius-tool/navius" list
           mkdir -p "${{ runner.temp }}/navius-smoke"
           "${{ runner.temp }}/navius-tool/navius" add button --to "${{ runner.temp }}/navius-smoke" --namespace Smoke.Ui
-          test -f "${{ runner.temp }}/navius-smoke/Zits/ZitsButton.razor"
+          test -f "${{ runner.temp }}/navius-smoke/Zits/Button/ZitsButton.razor"

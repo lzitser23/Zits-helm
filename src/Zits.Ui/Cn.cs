@@ -1,14 +1,21 @@
+using TailwindMerge;
+
 namespace Zits.Ui;
 
 /// <summary>
-/// The class-merge helper (the styled layer's <c>cn()</c>). clsx-style: joins non-empty
-/// class groups and de-duplicates tokens, so a component's base classes combine
-/// with consumer-supplied <c>class</c> overrides. For full Tailwind conflict
-/// resolution (e.g. a later <c>p-4</c> beating an earlier <c>p-2</c>), add the
-/// <c>TailwindMerge.NET</c> package and pipe the result through <c>TwMerge.Merge</c>.
+/// The class-merge helper (the styled layer's <c>cn()</c>). shadcn parity (clsx + tailwind-merge):
+/// joins non-empty class groups, de-duplicates tokens, then resolves Tailwind conflicts through
+/// <c>TailwindMerge.NET</c> so a consumer-supplied <c>class</c> reliably beats a component's base
+/// classes (e.g. a later <c>p-4</c> beating an earlier <c>p-2</c>, or <c>w-36</c> beating
+/// <c>w-[280px]</c>). The last conflicting token wins, and <see cref="Merge"/> appends the
+/// consumer class last, so the consumer override wins.
 /// </summary>
 public static class Cn
 {
+    // TwMerge holds no per-call state and guards its LRU cache for concurrent use, so a single
+    // shared instance backs every call site. A parameterless construction uses the default config.
+    private static readonly TwMerge Tw = new();
+
     public static string Class(params string?[] groups)
     {
         var seen = new HashSet<string>();
@@ -30,7 +37,9 @@ public static class Cn
             }
         }
 
-        return string.Join(' ', tokens);
+        // De-dupe keeps non-conflicting tokens stable; TwMerge then drops the losing side of any
+        // Tailwind conflict (last token wins). Merge returns null for an empty input.
+        return Tw.Merge(string.Join(' ', tokens)) ?? string.Empty;
     }
 
     /// <summary>
