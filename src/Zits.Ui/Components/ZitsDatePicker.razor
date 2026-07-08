@@ -10,7 +10,7 @@
 *@
 
 <ZitsPopover Open="_open" OpenChanged="OnOpenChanged">
-    <ZitsPopoverTrigger class="@TriggerClass" data-empty="@(Value is null ? "true" : null)">
+    <ZitsPopoverTrigger @attributes="Cn.Merge(Attributes, TriggerClass)" data-empty="@(Value is null ? "true" : null)">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-4 w-4">
             <path d="M8 2v4" />
@@ -95,6 +95,9 @@
 
     /// <summary>Custom .NET date format for the trigger label (the default renders a long date).</summary>
     [Parameter] public string Format { get; set; } = "MMMM d, yyyy";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object>? Attributes { get; set; }
 
     private bool _open;
     private DateOnly _value0 = DateOnly.FromDateTime(DateTime.Today);

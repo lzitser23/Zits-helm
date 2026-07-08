@@ -25,7 +25,7 @@
                        Invalid="Invalid"
                        StartName="@StartName"
                        EndName="@EndName">
-    <NaviusDateRangePickerControl class="@FieldRow">
+    <NaviusDateRangePickerControl @attributes="Cn.Merge(Attributes, FieldRow)">
         <NaviusDateRangePickerInput Part="start" class="@Segments" />
         <NaviusDateRangePickerSeparator class="px-1 text-muted-foreground">@Separator</NaviusDateRangePickerSeparator>
         <NaviusDateRangePickerInput Part="end" class="@Segments" />

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://navius.dev/schema/registry.json",
+  "$schema": "./registry.schema.json",
   "name": "navius",
   "homepage": "https://github.com/lzitser23/Zits-helm",
   "items": [
@@ -7,13 +7,20 @@
       "name": "cn",
       "type": "registry:lib",
       "title": "cn() class-merge helper",
-      "dependencies": [],
+      "dependencies": [
+        "TailwindMerge.NET"
+      ],
       "registryDependencies": [],
       "files": [
         {
-          "path": "registry/lib/Cn.cs",
+          "path": "src/Zits.Ui/Cn.cs",
           "type": "registry:lib",
-          "target": "Navius/Cn.cs"
+          "target": "Zits/Cn.cs"
+        },
+        {
+          "path": "registry/templates/ZitsImports.razor",
+          "type": "registry:file",
+          "target": "Zits/_Imports.razor"
         }
       ]
     },
@@ -88,6 +95,41 @@
           "path": "../navius/src/Navius.Primitives/Common/SegmentFieldContext.cs",
           "type": "registry:lib",
           "target": "Navius/Common/SegmentFieldContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Overlays/OverlayPositionerBase.cs",
+          "type": "registry:lib",
+          "target": "Navius/Overlays/OverlayPositionerBase.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Portal/NaviusPortal.razor",
+          "type": "registry:lib",
+          "target": "Navius/Portal/NaviusPortal.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Portal/NaviusPortalOutlet.razor",
+          "type": "registry:lib",
+          "target": "Navius/Portal/NaviusPortalOutlet.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Portal/PortalService.cs",
+          "type": "registry:lib",
+          "target": "Navius/Portal/PortalService.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/KeyboardShortcutService.cs",
+          "type": "registry:lib",
+          "target": "Navius/KeyboardShortcutService.cs"
+        },
+        {
+          "path": "registry/templates/NaviusImports.razor",
+          "type": "registry:file",
+          "target": "Navius/_Imports.razor"
+        },
+        {
+          "path": "registry/templates/NaviusServiceCollectionExtensions.cs",
+          "type": "registry:lib",
+          "target": "Navius/ServiceCollectionExtensions.cs"
         }
       ]
     },
@@ -353,7 +395,7 @@
         {
           "path": "src/Zits.Ui/Components/ZitsButton.razor",
           "type": "registry:ui",
-          "target": "Zits/ZitsButton.razor"
+          "target": "Zits/Button/ZitsButton.razor"
         }
       ]
     },
@@ -1881,7 +1923,8 @@
       "dependencies": [],
       "registryDependencies": [
         "cn",
-        "core"
+        "core",
+        "field"
       ],
       "files": [
         {
@@ -1921,7 +1964,9 @@
       "registryDependencies": [
         "cn",
         "calendar",
-        "core"
+        "core",
+        "date-input",
+        "popover"
       ],
       "files": [
         {
@@ -1992,7 +2037,7 @@
           "target": "Zits/DialogService/ZitsDialogOutlet.razor"
         },
         {
-          "path": "src/Zits.Ui/ServiceCollectionExtensions.cs",
+          "path": "registry/templates/ZitsDialogServiceCollectionExtensions.cs",
           "type": "registry:ui",
           "target": "Zits/DialogService/ServiceCollectionExtensions.cs"
         }
@@ -2398,6 +2443,26 @@
           "path": "src/Zits.Ui/Components/ZitsFieldLabel.razor",
           "type": "registry:ui",
           "target": "Zits/Field/ZitsFieldLabel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/FieldContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Field/FieldContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/FieldValidity.cs",
+          "type": "registry:ui",
+          "target": "Navius/Field/FieldValidity.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/FieldValidationMode.cs",
+          "type": "registry:ui",
+          "target": "Navius/Field/FieldValidationMode.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/FieldStatePayload.cs",
+          "type": "registry:ui",
+          "target": "Navius/Field/FieldStatePayload.cs"
         }
       ]
     },
@@ -2951,155 +3016,10 @@
       "title": "Multi Select",
       "dependencies": [],
       "registryDependencies": [
-        "core",
+        "combobox",
         "cn"
       ],
       "files": [
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxChipContext.cs",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/ComboboxChipContext.cs"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxContext.cs",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/ComboboxContext.cs"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxGroupContext.cs",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/ComboboxGroupContext.cs"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxItemContext.cs",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/ComboboxItemContext.cs"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/ComboboxPart.cs",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/ComboboxPart.cs"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusCombobox.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusCombobox.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxArrow.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxArrow.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxBackdrop.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxBackdrop.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxChip.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxChip.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxChipRemove.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxChipRemove.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxChips.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxChips.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxClear.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxClear.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxCollection.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxCollection.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxEmpty.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxEmpty.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxGroup.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxGroup.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxGroupLabel.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxGroupLabel.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxIcon.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxIcon.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxInput.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxInput.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxItem.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxItem.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxItemIndicator.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxItemIndicator.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxList.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxList.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxPopup.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxPopup.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxPortal.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxPortal.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxPositioner.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxPositioner.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxRow.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxRow.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxSeparator.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxSeparator.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxStatus.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxStatus.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxTrigger.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxTrigger.razor"
-        },
-        {
-          "path": "../navius/src/Navius.Primitives/Components/Combobox/NaviusComboboxValue.razor",
-          "type": "registry:ui",
-          "target": "Navius/Combobox/NaviusComboboxValue.razor"
-        },
         {
           "path": "src/Zits.Ui/Components/ZitsMultiSelect.razor",
           "type": "registry:ui",
@@ -4354,7 +4274,8 @@
       "dependencies": [],
       "registryDependencies": [
         "cn",
-        "core"
+        "core",
+        "field"
       ],
       "files": [
         {
@@ -4376,7 +4297,9 @@
       "dependencies": [],
       "registryDependencies": [
         "cn",
-        "core"
+        "core",
+        "time-input",
+        "popover"
       ],
       "files": [
         {
@@ -4992,8 +4915,322 @@
           "path": "src/Zits.Ui/wwwroot/zits-theme.css",
           "type": "registry:file",
           "target": "wwwroot/zits-theme.css"
+        },
+        {
+          "path": "src/Zits.Ui/wwwroot/zits-ui.css",
+          "type": "registry:file",
+          "target": "wwwroot/zits-ui.css"
         }
       ]
+    },
+    {
+      "name": "fieldset",
+      "type": "registry:ui",
+      "title": "Fieldset",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Fieldset/FieldsetContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Fieldset/FieldsetContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Fieldset/NaviusFieldset.razor",
+          "type": "registry:ui",
+          "target": "Navius/Fieldset/NaviusFieldset.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Fieldset/NaviusFieldsetLegend.razor",
+          "type": "registry:ui",
+          "target": "Navius/Fieldset/NaviusFieldsetLegend.razor"
+        }
+      ]
+    },
+    {
+      "name": "form",
+      "type": "registry:ui",
+      "title": "Form (with Field primitives)",
+      "dependencies": [],
+      "registryDependencies": [
+        "core",
+        "field",
+        "fieldset"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Form/FormContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Form/FormContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Form/FormData.cs",
+          "type": "registry:ui",
+          "target": "Navius/Form/FormData.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Form/NaviusForm.razor",
+          "type": "registry:ui",
+          "target": "Navius/Form/NaviusForm.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Form/NaviusFormSubmit.razor",
+          "type": "registry:ui",
+          "target": "Navius/Form/NaviusFormSubmit.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/ControlProps.cs",
+          "type": "registry:ui",
+          "target": "Navius/Field/ControlProps.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/FieldPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/Field/FieldPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/NaviusField.razor",
+          "type": "registry:ui",
+          "target": "Navius/Field/NaviusField.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/NaviusFieldControl.razor",
+          "type": "registry:ui",
+          "target": "Navius/Field/NaviusFieldControl.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/NaviusFieldDescription.razor",
+          "type": "registry:ui",
+          "target": "Navius/Field/NaviusFieldDescription.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/NaviusFieldError.razor",
+          "type": "registry:ui",
+          "target": "Navius/Field/NaviusFieldError.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/NaviusFieldItem.razor",
+          "type": "registry:ui",
+          "target": "Navius/Field/NaviusFieldItem.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/NaviusFieldLabel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Field/NaviusFieldLabel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/NaviusFieldValidity.razor",
+          "type": "registry:ui",
+          "target": "Navius/Field/NaviusFieldValidity.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Field/NaviusInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/Field/NaviusInput.razor"
+        }
+      ]
+    },
+    {
+      "name": "number-field",
+      "type": "registry:ui",
+      "title": "Number Field",
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NumberField/NumberFieldContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/NumberField/NumberFieldContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NumberField/NumberFieldPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/NumberField/NumberFieldPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NumberField/NaviusNumberField.razor",
+          "type": "registry:ui",
+          "target": "Navius/NumberField/NaviusNumberField.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NumberField/NaviusNumberFieldGroup.razor",
+          "type": "registry:ui",
+          "target": "Navius/NumberField/NaviusNumberFieldGroup.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NumberField/NaviusNumberFieldInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/NumberField/NaviusNumberFieldInput.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NumberField/NaviusNumberFieldIncrement.razor",
+          "type": "registry:ui",
+          "target": "Navius/NumberField/NaviusNumberFieldIncrement.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/NumberField/NaviusNumberFieldDecrement.razor",
+          "type": "registry:ui",
+          "target": "Navius/NumberField/NaviusNumberFieldDecrement.razor"
+        }
+      ]
+    },
+    {
+      "name": "meter",
+      "type": "registry:ui",
+      "title": "Meter",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Meter/MeterContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/Meter/MeterContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Meter/NaviusMeter.razor",
+          "type": "registry:ui",
+          "target": "Navius/Meter/NaviusMeter.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Meter/NaviusMeterTrack.razor",
+          "type": "registry:ui",
+          "target": "Navius/Meter/NaviusMeterTrack.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Meter/NaviusMeterIndicator.razor",
+          "type": "registry:ui",
+          "target": "Navius/Meter/NaviusMeterIndicator.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Meter/NaviusMeterLabel.razor",
+          "type": "registry:ui",
+          "target": "Navius/Meter/NaviusMeterLabel.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Meter/NaviusMeterValue.razor",
+          "type": "registry:ui",
+          "target": "Navius/Meter/NaviusMeterValue.razor"
+        }
+      ]
+    },
+    {
+      "name": "password-toggle-field",
+      "type": "registry:ui",
+      "title": "Password Toggle Field",
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PasswordToggleField/PasswordToggleFieldContext.cs",
+          "type": "registry:ui",
+          "target": "Navius/PasswordToggleField/PasswordToggleFieldContext.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PasswordToggleField/PasswordToggleFieldPart.cs",
+          "type": "registry:ui",
+          "target": "Navius/PasswordToggleField/PasswordToggleFieldPart.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PasswordToggleField/NaviusPasswordToggleField.razor",
+          "type": "registry:ui",
+          "target": "Navius/PasswordToggleField/NaviusPasswordToggleField.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PasswordToggleField/NaviusPasswordToggleFieldInput.razor",
+          "type": "registry:ui",
+          "target": "Navius/PasswordToggleField/NaviusPasswordToggleFieldInput.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PasswordToggleField/NaviusPasswordToggleFieldToggle.razor",
+          "type": "registry:ui",
+          "target": "Navius/PasswordToggleField/NaviusPasswordToggleFieldToggle.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PasswordToggleField/NaviusPasswordToggleFieldIcon.razor",
+          "type": "registry:ui",
+          "target": "Navius/PasswordToggleField/NaviusPasswordToggleFieldIcon.razor"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/PasswordToggleField/NaviusPasswordToggleFieldSlot.razor",
+          "type": "registry:ui",
+          "target": "Navius/PasswordToggleField/NaviusPasswordToggleFieldSlot.razor"
+        }
+      ]
+    },
+    {
+      "name": "visually-hidden",
+      "type": "registry:ui",
+      "title": "Visually Hidden",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/VisuallyHidden/NaviusVisuallyHidden.razor",
+          "type": "registry:ui",
+          "target": "Navius/VisuallyHidden/NaviusVisuallyHidden.razor"
+        }
+      ]
+    },
+    {
+      "name": "accessible-icon",
+      "type": "registry:ui",
+      "title": "Accessible Icon",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/AccessibleIcon/NaviusAccessibleIcon.razor",
+          "type": "registry:ui",
+          "target": "Navius/AccessibleIcon/NaviusAccessibleIcon.razor"
+        }
+      ]
+    },
+    {
+      "name": "csp-provider",
+      "type": "registry:ui",
+      "title": "CSP Provider",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/CspProvider/NaviusCspProvider.razor",
+          "type": "registry:ui",
+          "target": "Navius/CspProvider/NaviusCspProvider.razor"
+        }
+      ]
+    },
+    {
+      "name": "slot",
+      "type": "registry:ui",
+      "title": "Slot (asChild approximation)",
+      "dependencies": [],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Slot/SlotMerge.cs",
+          "type": "registry:ui",
+          "target": "Navius/Slot/SlotMerge.cs"
+        },
+        {
+          "path": "../navius/src/Navius.Primitives/Components/Slot/NaviusSlot.razor",
+          "type": "registry:ui",
+          "target": "Navius/Slot/NaviusSlot.razor"
+        }
+      ]
+    },
+    {
+      "name": "portal",
+      "type": "registry:ui",
+      "title": "Portal (alias: the portal engine ships in core)",
+      "dependencies": [],
+      "registryDependencies": [
+        "core"
+      ],
+      "files": []
     }
   ]
 }

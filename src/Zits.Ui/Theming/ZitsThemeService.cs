@@ -11,6 +11,7 @@ namespace Zits.Ui.Theming;
 public sealed class ZitsThemeService : IAsyncDisposable
 {
     private const string ModulePath = "./_content/Zits.Ui/zits-theme.js";
+    private const string VendoredModulePath = "./zits-theme.js";
 
     private readonly IJSRuntime _js;
     private readonly Lazy<Task<IJSObjectReference>> _module;
@@ -23,8 +24,35 @@ public sealed class ZitsThemeService : IAsyncDisposable
     public ZitsThemeService(IJSRuntime js)
     {
         _js = js;
-        _module = new Lazy<Task<IJSObjectReference>>(
-            () => _js.InvokeAsync<IJSObjectReference>("import", ModulePath).AsTask());
+        _module = new Lazy<Task<IJSObjectReference>>(() => ImportModuleAsync(_js));
+    }
+
+    // Package mode serves zits-theme.js under _content/Zits.Ui/ (the RCL static web
+    // assets). Vendored mode (the registry CLI) copies it into the consumer's own
+    // wwwroot, served at the app root, with no package reference. Try the package path
+    // first and fall back to the vendored path only when the import itself fails, so a
+    // real error from an imported module is never mistaken for a missing one.
+    private static async Task<IJSObjectReference> ImportModuleAsync(IJSRuntime js)
+    {
+        try
+        {
+            return await js.InvokeAsync<IJSObjectReference>("import", ModulePath);
+        }
+        catch (JSException packageImportFailed)
+        {
+            try
+            {
+                return await js.InvokeAsync<IJSObjectReference>("import", VendoredModulePath);
+            }
+            catch (JSException)
+            {
+                throw new InvalidOperationException(
+                    $"Zits.Ui could not import its theme engine from '{ModulePath}' " +
+                    $"(package mode) or '{VendoredModulePath}' (vendored mode). Reference the " +
+                    "Zits.Ui package, or vendor zits-theme.js into the app's wwwroot.",
+                    packageImportFailed);
+            }
+        }
     }
 
     /// <summary>The current normalized theme selection.</summary>

@@ -22,7 +22,7 @@
   <img src="https://img.shields.io/badge/license-MIT-171614" alt="MIT license" />
   <img src="https://img.shields.io/badge/.NET-8.0-171614" alt=".NET 8" />
   <img src="https://img.shields.io/badge/Blazor-Razor%20Class%20Library-737270" alt="Blazor Razor Class Library" />
-  <img src="https://img.shields.io/badge/registry-82%20items-737270" alt="82 registry items" />
+  <img src="https://img.shields.io/badge/registry-92%20items-737270" alt="92 registry items" />
 </p>
 
 ---
@@ -51,21 +51,21 @@ path: it copies registry items into an app so consumers own the component code.
 - **Self-contained registry CLI** — `tools/Navius.Cli` packs as the `navius` dotnet
   tool and bundles `registry/` plus `registry-source/`, so `navius add <item>` works
   without a local checkout after install.
-- **82 registry items** — `registry/registry.json` includes `cn`, `core`, the styled
+- **92 registry items** — `registry/registry.json` includes `cn`, `core`, the styled
   component catalog, brain-vendoring primitives, `chat`, `button`, and the `theme`
   engine.
 - **Runtime theming engine** — `ZitsThemeService`, `ZitsThemeSwitcher`,
   `ZitsThemeScope`, and generated `zits-theme.css` switch mode, gray scale, primary,
   radius, font, and style recipe through `data-zits-*` attributes.
 - **Package-ready metadata** — `Zits.Ui` and `navius` are both locked to
-  `0.3.0-preview.1` with MIT license metadata, package readmes, SourceLink, symbols,
+  `0.3.0-preview.2` with MIT license metadata, package readmes, SourceLink, symbols,
   and repository URLs.
 
 ---
 
 ## Installation
 
-Preview packages are published to NuGet as `0.3.0-preview.1`. Install the styled
+Preview packages are published to NuGet as `0.3.0-preview.2`. Install the styled
 layer and CLI with:
 
 ```bash
@@ -97,11 +97,23 @@ builder.Services.AddNavius();
 builder.Services.AddZitsUi();
 ```
 
-2. Link the base zits/ui stylesheet in the host page:
+2. Style with Tailwind v4. The components render Tailwind utility classes keyed to the
+   OKLCH tokens, so the base stylesheet is not the whole story: build Tailwind once
+   (standalone CLI, no Node) over an input stylesheet that scans your markup and imports
+   the token theme, whose `@theme inline` bridge maps the tokens so utilities like
+   `bg-primary` resolve.
 
-```html
-<link href="_content/Zits.Ui/zits-ui.css" rel="stylesheet" />
+```css
+@import "tailwindcss";
+
+/* Scan your markup for utility classes (add ./Zits and ./Navius when you vendor with the CLI). */
+@source "./Components/**/*.razor";
+
+/* Tokens + the @theme inline bridge: from the package here, or /zits-ui.css after `navius add theme`. */
+@import "_content/Zits.Ui/zits-ui.css";
 ```
+
+   Compile it to `wwwroot/app.css` and link that one file in the host page.
 
 3. Add the theme registry item when you want runtime theme switching:
 
@@ -127,7 +139,7 @@ navius add theme --to <dir> --namespace <ns>
 | Component package | `src/Zits.Ui` Razor Class Library |
 | Brain dependency | Sibling `ProjectReference` to `../navius/src/Navius.Primitives` during repo development |
 | CLI | `tools/Navius.Cli`, packed as the `navius` dotnet tool |
-| Registry | `registry/registry.json`, 82 items |
+| Registry | `registry/registry.json`, 92 items |
 | Styling | Tailwind utility classes and OKLCH tokens in `wwwroot/zits-ui.css` |
 | Theming | `src/Zits.Ui/Theming` plus `src/Zits.Ui.CssGen` generated CSS |
 | Tests | `tests/Zits.Ui.Tests` xUnit tests for theme CSS generation and contrast coverage |

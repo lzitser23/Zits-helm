@@ -73,11 +73,17 @@ jobs:
       - name: Smoke test navius tool package
         if: ${{ inputs.package == 'navius' }}
         run: |
-          dotnet tool install --tool-path "${{ runner.temp }}/navius-tool" --add-source "${{ runner.temp }}/nupkgs" navius --version 0.3.0-preview.1
+          # Install the version we just packed, never a published one from nuget.org.
+          VERSION=$(grep -oP '(?<=<Version>)[^<]+' zits-helm/tools/Navius.Cli/Navius.Cli.csproj)
+          dotnet tool install --tool-path "${{ runner.temp }}/navius-tool" --add-source "${{ runner.temp }}/nupkgs" navius --version "$VERSION"
           "${{ runner.temp }}/navius-tool/navius" list
           mkdir -p "${{ runner.temp }}/navius-smoke"
-          "${{ runner.temp }}/navius-tool/navius" add button --to "${{ runner.temp }}/navius-smoke" --namespace Smoke.Ui
-          test -f "${{ runner.temp }}/navius-smoke/Zits/ZitsButton.razor"
+          # `dialog` pulls the `core` item, which copies the brain plus its wwwroot interop
+          # JS - the path that exercises the bundled wwwroot pack layout. `set -e` (the
+          # default for shell: bash) already fails the step on a non-zero exit code.
+          "${{ runner.temp }}/navius-tool/navius" add dialog --to "${{ runner.temp }}/navius-smoke" --namespace Smoke.Ui
+          test -f "${{ runner.temp }}/navius-smoke/Zits/Dialog/ZitsDialog.razor"
+          test -f "${{ runner.temp }}/navius-smoke/wwwroot/navius-interop.js"
 
       - name: NuGet login
         uses: NuGet/login@v1

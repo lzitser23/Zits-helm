@@ -31,7 +31,7 @@ homepage fields.
 
 ## Packaging
 
-Preview package IDs are locked at `0.3.0-preview.1`:
+Preview package IDs are locked at `0.3.0-preview.2`:
 
 - `Zits.Ui` - compiled styled component and static-asset package.
 - `navius` - self-contained dotnet tool package.

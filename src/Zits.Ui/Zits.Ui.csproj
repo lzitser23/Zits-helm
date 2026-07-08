@@ -7,7 +7,7 @@
     <IsPackable>true</IsPackable>
     <RootNamespace>Zits.Ui</RootNamespace>
     <PackageId>Zits.Ui</PackageId>
-    <Version>0.3.0-preview.1</Version>
+    <Version>0.3.0-preview.2</Version>
     <Authors>Navius contributors</Authors>
     <Description>Styled Blazor components, theme tokens, and runtime theming built on Navius.Primitives.</Description>
     <PackageProjectUrl>https://github.com/lzitser23/Zits-helm</PackageProjectUrl>
@@ -32,6 +32,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="TailwindMerge.NET" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
