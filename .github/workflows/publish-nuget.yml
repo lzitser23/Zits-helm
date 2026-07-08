@@ -73,7 +73,9 @@ jobs:
       - name: Smoke test navius tool package
         if: ${{ inputs.package == 'navius' }}
         run: |
-          dotnet tool install --tool-path "${{ runner.temp }}/navius-tool" --add-source "${{ runner.temp }}/nupkgs" navius --version 0.3.0-preview.1
+          # Install the version we just packed, never a published one from nuget.org.
+          VERSION=$(grep -oP '(?<=<Version>)[^<]+' zits-helm/tools/Navius.Cli/Navius.Cli.csproj)
+          dotnet tool install --tool-path "${{ runner.temp }}/navius-tool" --add-source "${{ runner.temp }}/nupkgs" navius --version "$VERSION"
           "${{ runner.temp }}/navius-tool/navius" list
           mkdir -p "${{ runner.temp }}/navius-smoke"
           # `dialog` pulls the `core` item, which copies the brain plus its wwwroot interop

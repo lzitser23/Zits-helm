@@ -51,7 +51,9 @@ jobs:
 
       - name: Smoke test installed CLI
         run: |
-          dotnet tool install --tool-path "${{ runner.temp }}/navius-tool" --add-source "${{ runner.temp }}/nupkgs" navius --version 0.3.0-preview.1
+          # Install the version we just packed, never a published one from nuget.org.
+          VERSION=$(grep -oP '(?<=<Version>)[^<]+' zits-helm/tools/Navius.Cli/Navius.Cli.csproj)
+          dotnet tool install --tool-path "${{ runner.temp }}/navius-tool" --add-source "${{ runner.temp }}/nupkgs" navius --version "$VERSION"
           "${{ runner.temp }}/navius-tool/navius" list
           mkdir -p "${{ runner.temp }}/navius-smoke"
           "${{ runner.temp }}/navius-tool/navius" add button --to "${{ runner.temp }}/navius-smoke" --namespace Smoke.Ui
