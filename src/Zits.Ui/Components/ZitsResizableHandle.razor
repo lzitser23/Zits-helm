@@ -17,6 +17,11 @@
      data-resize-handle-active="@(_dragging ? "pointer" : null)"
      role="separator"
      tabindex="0"
+     aria-orientation="@(IsVertical ? "horizontal" : "vertical")"
+     aria-label="Resize panels"
+     aria-valuemin="0"
+     aria-valuemax="100"
+     aria-valuenow="@ValueNow"
      @onpointerdown="OnPointerDown"
      @onkeydown="OnKeyDown"
      @attributes="Attributes"
@@ -68,6 +73,20 @@
     private IJSObjectReference? _module;
 
     private bool IsVertical => Group?.IsVertical == true;
+
+    // The preceding panel's size (% of the group's main axis) surfaced as the splitter's
+    // aria-valuenow, so assistive tech can announce the position and hear it update on each
+    // resize (the handle re-renders after its own pointer/key handlers). Null (attribute
+    // omitted) when the pair is unresolved, e.g. a leading handle with no panel before it.
+    private int? ValueNow
+    {
+        get
+        {
+            if (Group is null) return null;
+            var (before, _) = Group.PairAroundHandle(this);
+            return before is null ? null : (int)Math.Round(before.Size);
+        }
+    }
 
     protected override void OnInitialized() => Group?.RegisterHandle(this);
 
