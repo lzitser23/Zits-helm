@@ -45,6 +45,10 @@ path: it copies registry items into an app so consumers own the component code.
 
 - **[zitsui.dev](https://zitsui.dev)**: the zits/ui documentation and showcase site,
   live styled component demos and a theming playground.
+- **[docs.zitsui.dev](https://docs.zitsui.dev)**: agent-first documentation for the
+  styled components in this repo, one structured markdown manifest per component
+  (registry install command, composed Navius parts, styling surface, `data-*`
+  hooks), served as raw markdown with an `llms.txt` index.
 - **[naviusui.dev](https://naviusui.dev)**: documentation for the underlying Navius
   primitives, anatomy, API reference, `data-*` attribute contracts, and keyboard
   tables.
