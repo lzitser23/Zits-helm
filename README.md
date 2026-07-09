@@ -197,8 +197,9 @@ zits-helm/
 ## Architecture
 
 The helm is intentionally thin over the brain. Components such as `ZitsDialogContent`
-compose Navius parts and apply class strings; the accessibility, focus, positioning,
-field-state, and dismissal behavior stays in `Navius.Primitives`. Registry items point
+compose Navius parts and apply class strings; the ARIA wiring, focus management,
+positioning, keyboard behavior, field-state, and dismissal logic stays in
+`Navius.Primitives`. Registry items point
 at the source files users should own after copy-paste, while the packed CLI also
 embeds those files under `registry-source/`.
 
