@@ -10,6 +10,7 @@
 
 <p align="center">
   <a href="#overview">Overview</a> |
+  <a href="#documentation">Documentation</a> |
   <a href="#features">Features</a> |
   <a href="#installation">Installation</a> |
   <a href="#quick-start">Quick Start</a> |
@@ -37,6 +38,20 @@ to Blazor as `Zits*` Razor components, built on top of the headless
 The repo has two distribution paths. `Zits.Ui` is the packable reference Razor Class
 Library and static-asset package. The `navius` dotnet tool is the source-distribution
 path: it copies registry items into an app so consumers own the component code.
+
+---
+
+## Documentation
+
+- **[zitsui.dev](https://zitsui.dev)**: the zits/ui documentation and showcase site,
+  live styled component demos and a theming playground.
+- **[naviusui.dev](https://naviusui.dev)**: documentation for the underlying Navius
+  primitives, anatomy, API reference, `data-*` attribute contracts, and keyboard
+  tables.
+- **[docs.naviusui.dev](https://docs.naviusui.dev)**: agent-first documentation for
+  the primitives, one structured markdown manifest per component (frontmatter
+  contract, API/data/keyboard tables, ARIA mechanism), served as raw markdown with an
+  `llms.txt` index.
 
 ---
 
