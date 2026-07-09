@@ -1,8 +1,9 @@
 @namespace Zits.Ui
 
-@* A divider between command groups. *@
+@* A divider between command groups. aria-hidden, not role="separator": a separator
+   is not a permitted child of the role="listbox" list, so it stays visual-only. *@
 
-<div @attributes="Attributes" class="@Css" role="separator"></div>
+<div @attributes="Attributes" class="@Css" aria-hidden="true"></div>
 
 @code {
     [Parameter(CaptureUnmatchedValues = true)]
