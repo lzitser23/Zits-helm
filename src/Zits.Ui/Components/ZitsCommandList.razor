@@ -2,12 +2,17 @@
 
 @* Scrollable list region holding groups, items, and the empty state. *@
 
-<div @attributes="Attributes" class="@Css" role="listbox">
+<div @attributes="Attributes" class="@Css" role="listbox" id="@(_command?.ListId)" aria-label="@AriaLabel">
     @ChildContent
 </div>
 
 @code {
+    [CascadingParameter] private ZitsCommand? _command { get; set; }
+
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Accessible name for the listbox (cmdk parity). Override per instance.</summary>
+    [Parameter] public string AriaLabel { get; set; } = "Suggestions";
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IDictionary<string, object>? Attributes { get; set; }

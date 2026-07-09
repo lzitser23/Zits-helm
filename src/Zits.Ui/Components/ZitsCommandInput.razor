@@ -20,6 +20,7 @@
            value="@(_command?.CurrentQuery ?? string.Empty)"
            role="combobox"
            aria-expanded="true"
+           aria-controls="@(_command?.ListId)"
            aria-activedescendant="@(_command?.ActiveDescendantId)"
            @oninput="OnInput"
            @onkeydown="OnKeyDownAsync"

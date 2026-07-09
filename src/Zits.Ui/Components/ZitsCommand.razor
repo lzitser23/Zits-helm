@@ -106,6 +106,10 @@
 
     internal string? ActiveDescendantId => ActiveItem?.Id;
 
+    // Stable id for the list so the input's aria-controls can target it (ARIA 1.2
+    // requires aria-controls on an expanded combobox).
+    internal string ListId { get; } = $"zits-command-list-{Guid.NewGuid():N}";
+
     internal bool IsActive(ZitsCommandItem item) => ReferenceEquals(ActiveItem, item);
 
     /// <summary>Mouse hover sets the active item (no scroll — the pointer is already there).</summary>

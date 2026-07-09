@@ -158,7 +158,9 @@
     private const string DayRangeMiddle =
         "bg-accent text-accent-foreground rounded-none hover:bg-accent hover:text-accent-foreground";
     private const string DayToday = "bg-accent text-accent-foreground";
-    private const string DayOutside = "text-muted-foreground opacity-50";
+    // Outside days are enabled controls, so contrast rules apply: muted-foreground
+    // alone passes AA (4.5+:1 both modes); with opacity-50 it fell to ~2:1.
+    private const string DayOutside = "text-muted-foreground";
     private const string DayDisabled = "text-muted-foreground opacity-50 pointer-events-none";
 
     private string RootCss => Cn.Class(Base, Cn.UserClass(Attributes));
