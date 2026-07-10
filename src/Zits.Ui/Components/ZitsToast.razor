@@ -5,16 +5,18 @@
     A single toast over the unified Navius Toast.Root (manager- or manually-driven; auto-close
     timer, swipe-to-dismiss, pause-on-hover, a11y announcer, discrete enter/exit attrs), with
     default | destructive author variants plus manager-driven data-[type] styling.
+    Open is forwarded to the primitive ONLY when the consumer set it, so the uncontrolled
+    DefaultOpen path (which defaults open) stays live for manually-driven toasts (the
+    always-controlled wart fix).
 *@
 <NaviusToastRoot Toast="Toast"
-                 Open="Open"
                  OpenChanged="OpenChanged"
                  DefaultOpen="DefaultOpen"
                  Timeout="Timeout"
                  Priority="Priority"
                  Type="Type"
                  ForceMount="ForceMount"
-                 @attributes="Cn.Merge(Attributes, Css)">
+                 @attributes="Forwarded">
     @ChildContent
 </NaviusToastRoot>
 
@@ -43,6 +45,31 @@
     [Parameter] public bool ForceMount { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool _openSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    // Merge the styled classes and forward Open only when the consumer supplied it. Open
+    // defaults to true on the wrapper, and an unconditional forward would pin a manually-driven
+    // toast into controlled mode, so swipe/timer dismissal never updates the primitive's state.
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>(Cn.Merge(Attributes, Css));
+            if (_openSet)
+            {
+                merged["Open"] = Open;
+            }
+
+            return merged;
+        }
+    }
 
     private const string Base =
         "group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swiping]:translate-x-[var(--toast-swipe-movement-x)] data-[swiping]:transition-none data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-80 data-[closed]:slide-out-to-right-full data-[open]:slide-in-from-top-full data-[open]:sm:slide-in-from-bottom-full data-[limited]:hidden data-[type=success]:border-green-500/40 data-[type=error]:border-destructive data-[type=loading]:opacity-90";

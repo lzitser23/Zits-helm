@@ -4,10 +4,12 @@
     timing, portal, collision-aware positioning). The root wraps its
     own provider with a 0ms delay so a lone <ZitsTooltip> works without an explicit
     <ZitsTooltipProvider>.
+    Open is forwarded to the primitive ONLY when the consumer set it, so the uncontrolled
+    DefaultOpen path stays live (the always-controlled wart fix).
 *@
 <NaviusTooltipProvider DelayDuration="DelayDuration">
-    <NaviusTooltip Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen"
-                   DelayDuration="DelayDuration">@ChildContent</NaviusTooltip>
+    <NaviusTooltip OpenChanged="OpenChanged" DefaultOpen="DefaultOpen"
+                   DelayDuration="DelayDuration" @attributes="Forwarded">@ChildContent</NaviusTooltip>
 </NaviusTooltipProvider>
 @code {
     [Parameter] public bool Open { get; set; }
@@ -15,4 +17,26 @@
     [Parameter] public bool DefaultOpen { get; set; }
     [Parameter] public int DelayDuration { get; set; } = 0;
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool _openSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>();
+            if (_openSet)
+            {
+                merged["Open"] = Open;
+            }
+
+            return merged;
+        }
+    }
 }

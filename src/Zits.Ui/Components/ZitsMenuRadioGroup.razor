@@ -1,6 +1,9 @@
 @namespace Zits.Ui
-@* Cascades a selected value to its radio items. Renders a role="group" wrapper. *@
-<NaviusMenuRadioGroup Value="@Value" ValueChanged="ValueChanged" DefaultValue="@DefaultValue" @attributes="Attributes">
+@* Cascades a selected value to its radio items. Renders a role="group" wrapper.
+   Value is forwarded to the primitive ONLY when the consumer set it, so the uncontrolled
+   DefaultValue path stays live. The primitive treats a present Value (even null) as
+   controlled, so it must be withheld unless explicitly set (the always-controlled wart fix). *@
+<NaviusMenuRadioGroup ValueChanged="ValueChanged" DefaultValue="@DefaultValue" @attributes="Forwarded">
     @ChildContent
 </NaviusMenuRadioGroup>
 @code {
@@ -9,4 +12,28 @@
     [Parameter] public string? DefaultValue { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool _valueSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueSet = parameters.TryGetValue<string?>(nameof(Value), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = Attributes is null
+                ? new Dictionary<string, object>()
+                : new Dictionary<string, object>(Attributes);
+            if (_valueSet)
+            {
+                merged["Value"] = Value!;
+            }
+
+            return merged;
+        }
+    }
 }

@@ -1,8 +1,12 @@
 @namespace Zits.Ui
-@* A styled menuitemcheckbox with a left-aligned check indicator. *@
-<NaviusMenuCheckboxItem Checked="Checked" CheckedChanged="CheckedChanged" DefaultChecked="DefaultChecked"
+@* A styled menuitemcheckbox with a left-aligned check indicator.
+   Checked (bool?, tri-state) is forwarded to the primitive ONLY when the consumer set it,
+   so the uncontrolled DefaultChecked path stays live (the always-controlled wart fix). The
+   primitive treats a present Checked (even null) as controlled, so it must be withheld
+   unless explicitly set. *@
+<NaviusMenuCheckboxItem CheckedChanged="CheckedChanged" DefaultChecked="DefaultChecked"
                                 OnSelect="OnSelect" Disabled="Disabled" TextValue="@TextValue"
-                                @attributes="Cn.Merge(Attributes, Base)">
+                                @attributes="Forwarded">
     <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
         <NaviusMenuItemIndicator>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -22,6 +26,29 @@
     [Parameter] public string? TextValue { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool _checkedSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _checkedSet = parameters.TryGetValue<bool?>(nameof(Checked), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    // Merge the styled classes and forward Checked only when the consumer supplied it.
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>(Cn.Merge(Attributes, Base));
+            if (_checkedSet)
+            {
+                merged["Checked"] = Checked!;
+            }
+
+            return merged;
+        }
+    }
 
     private const string Base =
         "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground";
