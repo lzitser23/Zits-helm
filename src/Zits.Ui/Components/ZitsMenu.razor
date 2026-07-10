@@ -1,6 +1,8 @@
 @namespace Zits.Ui
-@* Root of the styled menu over the Navius Menu primitive. Renders no DOM. *@
-<NaviusMenu Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" Modal="Modal" Dir="@Dir">
+@* Root of the styled menu over the Navius Menu primitive. Renders no DOM.
+   Open is forwarded to the primitive ONLY when the consumer set it, so the uncontrolled
+   DefaultOpen path stays live (the always-controlled wart fix). *@
+<NaviusMenu OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" Modal="Modal" Dir="@Dir" @attributes="Forwarded">
     @ChildContent
 </NaviusMenu>
 @code {
@@ -10,4 +12,26 @@
     [Parameter] public bool Modal { get; set; } = true;
     [Parameter] public string? Dir { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool _openSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>();
+            if (_openSet)
+            {
+                merged["Open"] = Open;
+            }
+
+            return merged;
+        }
+    }
 }

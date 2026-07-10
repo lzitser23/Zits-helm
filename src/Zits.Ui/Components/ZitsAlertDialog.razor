@@ -1,9 +1,33 @@
 @namespace Zits.Ui
-@* Styled alert dialog over the Navius AlertDialog primitive (focus trap, scroll lock, portal; outside-click never closes). *@
-<NaviusAlertDialog Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen">@ChildContent</NaviusAlertDialog>
+@* Styled alert dialog over the Navius AlertDialog primitive (focus trap, scroll lock, portal; outside-click never closes).
+   Open is forwarded to the primitive ONLY when the consumer set it, so the uncontrolled
+   DefaultOpen path stays live (the always-controlled wart fix). *@
+<NaviusAlertDialog OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" @attributes="Forwarded">@ChildContent</NaviusAlertDialog>
 @code {
     [Parameter] public bool Open { get; set; }
     [Parameter] public EventCallback<bool> OpenChanged { get; set; }
     [Parameter] public bool DefaultOpen { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool _openSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>();
+            if (_openSet)
+            {
+                merged["Open"] = Open;
+            }
+
+            return merged;
+        }
+    }
 }
