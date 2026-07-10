@@ -2,9 +2,11 @@
 
 @using Navius.Primitives.Components.Toggle
 
-@* Styled two-state toggle over the Navius Toggle primitive (aria-pressed, data-state). *@
-<NaviusToggle Pressed="Pressed" PressedChanged="PressedChanged" DefaultPressed="DefaultPressed"
-              Disabled="Disabled" @attributes="Cn.Merge(Attributes, Base, VariantClass, SizeClass)">
+@* Styled two-state toggle over the Navius Toggle primitive (aria-pressed, data-state).
+   Pressed is forwarded to the primitive ONLY when the consumer set it, so the uncontrolled
+   DefaultPressed path stays live (the always-controlled wart fix). *@
+<NaviusToggle PressedChanged="PressedChanged" DefaultPressed="DefaultPressed"
+              Disabled="Disabled" @attributes="Forwarded">
     @ChildContent
 </NaviusToggle>
 
@@ -23,6 +25,29 @@
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool _pressedSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _pressedSet = parameters.TryGetValue<bool>(nameof(Pressed), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    // Merge the styled classes and forward Pressed only when the consumer supplied it.
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>(Cn.Merge(Attributes, Base, VariantClass, SizeClass));
+            if (_pressedSet)
+            {
+                merged["Pressed"] = Pressed;
+            }
+
+            return merged;
+        }
+    }
 
     private const string Base =
         "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[pressed]:bg-accent data-[pressed]:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0";
