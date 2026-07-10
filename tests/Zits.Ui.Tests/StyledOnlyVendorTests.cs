@@ -46,14 +46,15 @@ public class StyledOnlyVendorTests
         // --- 3. Compile-correctness against the brain package -----------------------
         // A scratch Razor class library holding the vendored styled files (which include
         // Zits/Cn.cs), referencing the Navius.Primitives project (equivalent to the NuGet
-        // package, no network). The authored _Imports.razor supplies the brain-component
-        // usings the styled files need (mirroring src/Zits.Ui/_Imports.razor), which the
-        // vendored Zits/_Imports.razor does not yet enumerate for every component.
+        // package, no network). No hand-authored _Imports.razor: the vendored
+        // Zits/_Imports.razor (from registry/templates/ZitsImports.razor) must supply every
+        // brain-component using the styled files need. RZ10012 is promoted to an error
+        // because an unresolved <NaviusX> tag silently renders as literal HTML.
         File.WriteAllText(Path.Combine(scratch.Path, "ScratchStyled.csproj"), ScratchCsproj);
-        File.WriteAllText(Path.Combine(scratch.Path, "_Imports.razor"), ScratchImports);
 
-        var (buildExit, buildLog) = Run("dotnet", "build -c Debug -v q --nologo", scratch.Path);
+        var (buildExit, buildLog) = Run("dotnet", "build -c Debug -v q --nologo -warnaserror:RZ10012", scratch.Path);
         Assert.True(buildExit == 0, "vendored styled-only project failed to compile:\n" + Tail(buildLog));
+        Assert.DoesNotContain("RZ10012", buildLog, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -93,18 +94,6 @@ public class StyledOnlyVendorTests
           </ItemGroup>
         </Project>
         """;
-
-    // The usings the styled date-picker layer needs, drawn from src/Zits.Ui/_Imports.razor:
-    // the popover brain namespaces (from the package) plus Zits.Ui (styled components + cn).
-    // global:: prefixes are required because a vendored Zits/ folder makes bare "Zits.Ui" /
-    // "Navius.Primitives" resolve under the scratch root namespace first.
-    private const string ScratchImports =
-        "@using System.Threading.Tasks\n" +
-        "@using Microsoft.AspNetCore.Components\n" +
-        "@using Microsoft.AspNetCore.Components.Web\n" +
-        "@using Microsoft.JSInterop\n" +
-        "@using global::Navius.Primitives.Portal\n" +
-        "@using global::Navius.Primitives.Components.Popover\n";
 
     private static (int ExitCode, string Output) RunCli(string args)
         => Run("dotnet", $"run --project \"{CliProject}\" -c Debug -- {args}", RepoPaths.Root);
