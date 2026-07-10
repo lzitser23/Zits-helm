@@ -93,8 +93,9 @@ export function readTheme() {
 }
 
 /**
- * Remove the persisted selection and all data-zits-* attributes. The `.dark` class
- * is left untouched, so the host markup's own default wins again on the next load.
+ * Remove the persisted selection and all data-zits-* attributes. Pure removal:
+ * the service follows up with syncModeClass so the `.dark` class immediately
+ * reflects the reset (System) state instead of the previous selection.
  */
 export function clearTheme() {
   const root = document.documentElement;
@@ -106,6 +107,16 @@ export function clearTheme() {
   } catch {
     /* storage unavailable; nothing to remove */
   }
+}
+
+/**
+ * Toggle the `.dark` class to match a mode ('light' | 'dark' | 'system'), without
+ * touching the data-zits-* attributes or storage. Used after clearTheme so a reset
+ * to System recomputes the class from prefers-color-scheme right away.
+ * @param {string} mode
+ */
+export function syncModeClass(mode) {
+  document.documentElement.classList.toggle('dark', resolveDark({ mode }));
 }
 
 /** @returns {boolean} whether the OS currently prefers a dark color scheme. */
