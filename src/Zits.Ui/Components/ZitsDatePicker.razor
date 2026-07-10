@@ -3,10 +3,13 @@
 @*
     DatePicker for Blazor.
 
-    Composes ZitsPopover: the trigger is an outline ZitsButton showing the
-    formatted date (or "Pick a date") plus a calendar icon; the content holds a
-    self-contained month calendar. Picking a day sets the value and closes the
-    popover. Open state is controlled so day-select can dismiss it.
+    Composes ZitsPopover + ZitsCalendar (shadcn's DatePicker = Popover + Calendar):
+    the trigger is an outline button showing the formatted date (or "Pick a date")
+    plus a calendar icon; the content is ZitsCalendar in single mode, which owns
+    the full ARIA grid keyboard pattern (roving tabindex with one tab stop,
+    ArrowLeft/Right by day, ArrowUp/Down by week, Home/End to week start/end,
+    PageUp/Down by month). Picking a day sets the value and closes the popover.
+    Open state is controlled so day-select can dismiss it.
 *@
 
 <ZitsPopover Open="_open" OpenChanged="OnOpenChanged">
@@ -21,67 +24,8 @@
         @(Value is { } d ? d.ToString(Format) : Placeholder)
     </ZitsPopoverTrigger>
     <ZitsPopoverContent class="w-auto p-0" Align="start">
-        <div class="p-3">
-            <div class="flex flex-col gap-4">
-                @* Caption row: month label + prev/next nav. *@
-                <div class="relative flex items-center justify-center pt-1">
-                    <button type="button" @onclick="PrevMonth"
-                            class="absolute left-1 inline-flex h-7 w-7 items-center justify-center rounded-md border border-input bg-transparent p-0 text-sm opacity-50 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                            aria-label="Go to previous month">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
-                            <path d="m15 18-6-6 6-6" />
-                        </svg>
-                    </button>
-                    <div class="text-sm font-medium">@_view.ToString("MMMM yyyy")</div>
-                    <button type="button" @onclick="NextMonth"
-                            class="absolute right-1 inline-flex h-7 w-7 items-center justify-center rounded-md border border-input bg-transparent p-0 text-sm opacity-50 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                            aria-label="Go to next month">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
-                            <path d="m9 18 6-6-6-6" />
-                        </svg>
-                    </button>
-                </div>
-
-                @* Month grid. *@
-                <table class="w-full border-collapse space-y-1" role="grid">
-                    <thead>
-                        <tr class="flex">
-                            @foreach (var name in DayHeaders)
-                            {
-                                <th scope="col" class="w-8 rounded-md text-[0.8rem] font-normal text-muted-foreground" aria-label="@name.Full">@name.Short</th>
-                            }
-                        </tr>
-                    </thead>
-                    <tbody role="rowgroup">
-                        @foreach (var week in Weeks())
-                        {
-                            <tr class="mt-2 flex w-full">
-                                @foreach (var day in week)
-                                {
-                                    <td class="relative h-8 w-8 p-0 text-center text-sm focus-within:relative focus-within:z-20" role="gridcell">
-                                        @if (day is { } cell)
-                                        {
-                                            var selected = Value == cell;
-                                            var today = cell == DateOnly.FromDateTime(DateTime.Today);
-                                            <button type="button"
-                                                    @onclick="() => SelectDay(cell)"
-                                                    data-selected="@(selected ? "true" : null)"
-                                                    data-today="@(today ? "true" : null)"
-                                                    aria-selected="@(selected ? "true" : "false")"
-                                                    class="@DayClass(selected, today)">
-                                                @cell.Day
-                                            </button>
-                                        }
-                                    </td>
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        @* The popover already draws the border; the calendar drops its own. *@
+        <ZitsCalendar Mode="single" Selected="Value" SelectedChanged="OnSelected" class="border-0" />
     </ZitsPopoverContent>
 </ZitsPopover>
 
@@ -100,70 +44,19 @@
     public IDictionary<string, object>? Attributes { get; set; }
 
     private bool _open;
-    private DateOnly _value0 = DateOnly.FromDateTime(DateTime.Today);
-    private DateOnly _view;
-
-    protected override void OnParametersSet()
-    {
-        // Keep the visible month anchored to the selection (or today when empty).
-        _view = new DateOnly((Value ?? _value0).Year, (Value ?? _value0).Month, 1);
-    }
 
     private Task OnOpenChanged(bool open)
     {
         _open = open;
-        if (open)
-        {
-            _view = new DateOnly((Value ?? _value0).Year, (Value ?? _value0).Month, 1);
-        }
         return Task.CompletedTask;
     }
 
-    private async Task SelectDay(DateOnly day)
+    private async Task OnSelected(DateOnly? day)
     {
         await ValueChanged.InvokeAsync(day);
         _open = false;
     }
 
-    private void PrevMonth() => _view = _view.AddMonths(-1);
-    private void NextMonth() => _view = _view.AddMonths(1);
-
-    private static readonly (string Short, string Full)[] DayHeaders =
-    {
-        ("Su", "Sunday"), ("Mo", "Monday"), ("Tu", "Tuesday"), ("We", "Wednesday"),
-        ("Th", "Thursday"), ("Fr", "Friday"), ("Sa", "Saturday"),
-    };
-
-    // Weeks of the current view, Sunday-first, with leading/trailing nulls so the
-    // first row aligns under the correct weekday (matches react-day-picker default).
-    private IEnumerable<DateOnly?[]> Weeks()
-    {
-        var first = _view;
-        var lead = (int)first.DayOfWeek; // Sunday = 0
-        var days = DateTime.DaysInMonth(first.Year, first.Month);
-
-        var cells = new List<DateOnly?>();
-        for (var i = 0; i < lead; i++) cells.Add(null);
-        for (var d = 1; d <= days; d++) cells.Add(new DateOnly(first.Year, first.Month, d));
-        while (cells.Count % 7 != 0) cells.Add(null);
-
-        for (var i = 0; i < cells.Count; i += 7)
-        {
-            yield return cells.GetRange(i, 7).ToArray();
-        }
-    }
-
     private const string TriggerClass =
         "inline-flex h-9 w-[280px] items-center justify-start whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-left text-sm font-normal shadow-sm ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[empty=true]:text-muted-foreground";
-
-    private const string DayBase =
-        "inline-flex h-8 w-8 items-center justify-center rounded-md p-0 text-sm font-normal ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 aria-selected:opacity-100";
-
-    private static string DayClass(bool selected, bool today) => Cn.Class(
-        DayBase,
-        selected
-            ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground"
-            : today
-                ? "bg-accent text-accent-foreground hover:bg-accent hover:text-accent-foreground"
-                : "hover:bg-accent hover:text-accent-foreground");
 }

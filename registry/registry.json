@@ -1946,6 +1946,7 @@
       "dependencies": [],
       "registryDependencies": [
         "popover",
+        "calendar",
         "cn"
       ],
       "files": [
