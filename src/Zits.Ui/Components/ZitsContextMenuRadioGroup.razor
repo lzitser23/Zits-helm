@@ -1,9 +1,12 @@
 @namespace Zits.Ui
 @using Navius.Primitives.Components.ContextMenu
 
-@* A group of mutually-exclusive radio items. *@
-<NaviusContextMenuRadioGroup Value="@Value" ValueChanged="ValueChanged" DefaultValue="@DefaultValue"
-                             @attributes="Attributes">@ChildContent</NaviusContextMenuRadioGroup>
+@* A group of mutually-exclusive radio items.
+   Value is forwarded to the primitive ONLY when the consumer set it, so the uncontrolled
+   DefaultValue path stays live. The primitive treats a present Value (even null) as
+   controlled, so it must be withheld unless explicitly set (the always-controlled wart fix). *@
+<NaviusContextMenuRadioGroup ValueChanged="ValueChanged" DefaultValue="@DefaultValue"
+                             @attributes="Forwarded">@ChildContent</NaviusContextMenuRadioGroup>
 
 @code {
     [Parameter] public string? Value { get; set; }
@@ -11,4 +14,28 @@
     [Parameter] public string? DefaultValue { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool _valueSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueSet = parameters.TryGetValue<string?>(nameof(Value), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = Attributes is null
+                ? new Dictionary<string, object>()
+                : new Dictionary<string, object>(Attributes);
+            if (_valueSet)
+            {
+                merged["Value"] = Value!;
+            }
+
+            return merged;
+        }
+    }
 }

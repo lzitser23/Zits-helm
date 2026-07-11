@@ -1,7 +1,9 @@
 @namespace Zits.Ui
 @using Navius.Primitives.Components.PreviewCard
-@* Root of the styled preview card over the Navius PreviewCard primitive (hover-intent timing, non-modal). *@
-<NaviusPreviewCard OpenDelay="OpenDelay" CloseDelay="CloseDelay" Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen">@ChildContent</NaviusPreviewCard>
+@* Root of the styled preview card over the Navius PreviewCard primitive (hover-intent timing, non-modal).
+   Open is forwarded to the primitive ONLY when the consumer set it, so the uncontrolled
+   DefaultOpen path stays live (the always-controlled wart fix). *@
+<NaviusPreviewCard OpenDelay="OpenDelay" CloseDelay="CloseDelay" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" @attributes="Forwarded">@ChildContent</NaviusPreviewCard>
 @code {
     [Parameter] public int OpenDelay { get; set; } = 600;
     [Parameter] public int CloseDelay { get; set; } = 300;
@@ -9,4 +11,26 @@
     [Parameter] public EventCallback<bool> OpenChanged { get; set; }
     [Parameter] public bool DefaultOpen { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool _openSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>();
+            if (_openSet)
+            {
+                merged["Open"] = Open;
+            }
+
+            return merged;
+        }
+    }
 }

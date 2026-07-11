@@ -1,7 +1,9 @@
 @namespace Zits.Ui
 @using Navius.Primitives.Components.Drawer
-@* Styled drawer (Vaul-pattern sliding sheet) over the Navius Drawer primitive (focus trap, scroll lock, portal, native drag-to-dismiss). *@
-<NaviusDrawer Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" Modal="Modal" Side="@Direction">
+@* Styled drawer (Vaul-pattern sliding sheet) over the Navius Drawer primitive (focus trap, scroll lock, portal, native drag-to-dismiss).
+   Open is forwarded to the primitive ONLY when the consumer set it, so the uncontrolled
+   DefaultOpen path stays live (the always-controlled wart fix). *@
+<NaviusDrawer OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" Modal="Modal" Side="@Direction" @attributes="Forwarded">
     @ChildContent
 </NaviusDrawer>
 @code {
@@ -14,4 +16,26 @@
     [Parameter] public string Direction { get; set; } = "bottom";
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool _openSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>();
+            if (_openSet)
+            {
+                merged["Open"] = Open;
+            }
+
+            return merged;
+        }
+    }
 }

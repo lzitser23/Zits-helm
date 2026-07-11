@@ -14,13 +14,12 @@
 
 <NaviusCombobox Items="Items"
                 Multiple="Multiple"
-                Value="Value"
                 ValueChanged="ValueChanged"
-                Values="Values"
                 ValuesChanged="ValuesChanged"
                 ItemToString="ItemToString"
                 Placeholder="@Placeholder"
-                TItem="TItem">
+                TItem="TItem"
+                @attributes="Forwarded">
     <ItemTemplate Context="item">
         <NaviusComboboxItem class="@Option">
             <NaviusComboboxItemIndicator class="absolute left-2 inline-flex items-center">
@@ -78,6 +77,38 @@
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IDictionary<string, object>? Attributes { get; set; }
+
+    private bool _valueSet;
+    private bool _valuesSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _valueSet = parameters.TryGetValue<TItem?>(nameof(Value), out _);
+        _valuesSet = parameters.TryGetValue<IReadOnlyList<TItem>>(nameof(Values), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    // Forward the committed value only when the consumer supplied it. Values defaults to a
+    // non-null empty list, which the primitive would otherwise read as a controlled (frozen)
+    // empty selection; withholding it unless explicitly set keeps multi-select uncontrolled.
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>();
+            if (_valueSet)
+            {
+                merged["Value"] = Value!;
+            }
+
+            if (_valuesSet)
+            {
+                merged["Values"] = Values;
+            }
+
+            return merged;
+        }
+    }
 
     private const string Root = "relative w-[240px]";
 

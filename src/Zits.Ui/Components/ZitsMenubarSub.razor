@@ -1,10 +1,34 @@
 @namespace Zits.Ui
 @using Navius.Primitives.Components.Menubar
-@* A nested submenu. Renders no DOM; owns its own open state. *@
-<NaviusMenubarSub Open="Open" OpenChanged="OpenChanged" DefaultOpen="DefaultOpen">@ChildContent</NaviusMenubarSub>
+@* A nested submenu. Renders no DOM; owns its own open state.
+   Open is forwarded to the primitive ONLY when the consumer set it, so the uncontrolled
+   DefaultOpen path stays live (the always-controlled wart fix). *@
+<NaviusMenubarSub OpenChanged="OpenChanged" DefaultOpen="DefaultOpen" @attributes="Forwarded">@ChildContent</NaviusMenubarSub>
 @code {
     [Parameter] public bool Open { get; set; }
     [Parameter] public EventCallback<bool> OpenChanged { get; set; }
     [Parameter] public bool DefaultOpen { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool _openSet;
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        _openSet = parameters.TryGetValue<bool>(nameof(Open), out _);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private IReadOnlyDictionary<string, object> Forwarded
+    {
+        get
+        {
+            var merged = new Dictionary<string, object>();
+            if (_openSet)
+            {
+                merged["Open"] = Open;
+            }
+
+            return merged;
+        }
+    }
 }
