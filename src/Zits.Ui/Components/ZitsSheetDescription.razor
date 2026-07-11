@@ -1,4 +1,5 @@
 @namespace Zits.Ui
+@using Navius.Primitives.Components.Dialog
 <NaviusDialogDescription @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusDialogDescription>
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }

@@ -19,10 +19,14 @@ public class VendorCompileTests
     // date-picker: styled + popover -> core (portal / overlay / _Imports).
     // toggle-group: brain roving-focus primitive + styled + its own variant type.
     // dialog: the canonical overlay closure (portal, focus trap, styled wrappers, cn).
+    // popover: a styled wrapper whose <NaviusPopover*> tags resolve purely through the
+    //          vendored Zits/_Imports.razor (no local @using in the .razor files), so it
+    //          regresses first when the ZitsImports template drops a Navius namespace.
     [Theory]
     [InlineData("date-picker")]
     [InlineData("toggle-group")]
     [InlineData("dialog")]
+    [InlineData("popover")]
     public void Vendored_closure_compiles(string item)
     {
         var work = Path.Combine(Path.GetTempPath(), "navius-vendor-" + Guid.NewGuid().ToString("N"));
@@ -38,10 +42,17 @@ public class VendorCompileTests
                 $"navius add {item} reported a missing source:\n{Tail(add.Output)}");
             Assert.True(add.ExitCode == 0, $"navius add {item} failed:\n{Tail(add.Output)}");
 
-            var build = Run("dotnet", $"build \"{work}\" -c Debug -v q");
+            // RZ10012 ("Found markup element with unexpected name") is only a warning, but for
+            // a vendored wrapper it means a <NaviusX> tag did not resolve to the brain component
+            // and will render as literal HTML at runtime: a silent, shipping-grade failure.
+            // Promote it to an error so the exit-code assert below actually guards against it.
+            var build = Run("dotnet", $"build \"{work}\" -c Debug -v q -warnaserror:RZ10012");
             Assert.True(
                 build.ExitCode == 0,
                 $"Vendored '{item}' failed to compile:\n{Tail(build.Output)}");
+            Assert.False(
+                build.Output.Contains("RZ10012", StringComparison.Ordinal),
+                $"Vendored '{item}' produced RZ10012 (unresolved component tag renders as literal HTML):\n{Tail(build.Output)}");
         }
         finally
         {

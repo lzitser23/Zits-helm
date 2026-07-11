@@ -86,6 +86,11 @@ public sealed class ZitsThemeService : IAsyncDisposable
             if (stored is not null)
             {
                 Current = Normalize(stored);
+                // Reapply the normalized selection: the pre-paint init script restored
+                // the RAW stored values, so any dimension normalization just corrected
+                // (an invalid base/primary/... falling back to the default) would
+                // otherwise stay live on the DOM and in storage.
+                await module.InvokeVoidAsync("applyTheme", ToJs(Current));
             }
 
             _selfRef = DotNetObjectReference.Create(this);
@@ -115,7 +120,12 @@ public sealed class ZitsThemeService : IAsyncDisposable
     public Task SetFontAsync(string value) => SetThemeAsync(Current with { Font = Pick(value, ZitsThemePresets.Fonts, ZitsTheme.Default.Font) });
     public Task SetStyleAsync(string value) => SetThemeAsync(Current with { Style = Pick(value, ZitsThemePresets.Styles, ZitsTheme.Default.Style) });
 
-    /// <summary>Remove persisted theme data and data-zits-* attributes from the document.</summary>
+    /// <summary>
+    /// Remove persisted theme data and data-zits-* attributes from the document, then
+    /// resync the mode class: the reset state reports System, so the document must
+    /// follow the OS preference now instead of keeping the previous selection's
+    /// <c>.dark</c> class until the next load.
+    /// </summary>
     public async Task ResetAsync()
     {
         Current = ZitsTheme.Default;
@@ -124,6 +134,7 @@ public sealed class ZitsThemeService : IAsyncDisposable
         {
             var module = await _module.Value;
             await module.InvokeVoidAsync("clearTheme");
+            await module.InvokeVoidAsync("syncModeClass", ModeSlug(Current.Mode));
         }
         catch (JSDisconnectedException)
         {

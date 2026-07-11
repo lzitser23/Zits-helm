@@ -1,4 +1,5 @@
 @namespace Zits.Ui
+@using Navius.Primitives.Components.Tabs
 <NaviusTabsPanel Value="@Value" KeepMounted="KeepMounted" @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusTabsPanel>
 @code {
     [Parameter] public string Value { get; set; } = "";

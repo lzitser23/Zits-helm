@@ -1,4 +1,5 @@
 @namespace Zits.Ui
+@using Navius.Primitives.Components.Accordion
 <NaviusAccordionItem Value="@Value" Disabled="Disabled" @attributes="Cn.Merge(Attributes, Base)">@ChildContent</NaviusAccordionItem>
 @code {
     [Parameter] public string Value { get; set; } = "";
