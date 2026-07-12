@@ -12,7 +12,7 @@
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    /// <summary>default | destructive</summary>
+    /// <summary>default | warning | destructive</summary>
     [Parameter] public string Variant { get; set; } = "default";
 
     [Parameter(CaptureUnmatchedValues = true)]
@@ -23,6 +23,7 @@
 
     private string VariantClass => Variant switch
     {
+        "warning" => "border-warning/50 text-warning dark:border-warning [&>svg]:text-warning",
         "destructive" => "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
         _ => "bg-background text-foreground",
     };
