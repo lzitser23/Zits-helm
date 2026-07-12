@@ -32,6 +32,9 @@
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
+  /* Warning matches the cross-platform Navius semantic role (#9A6700 / white). */
+  --warning: oklch(0.554191 0.116908 75.008);
+  --warning-foreground: oklch(1 0 0);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
@@ -76,6 +79,9 @@
      upstream 0.704 red only reached 2.8:1. */
   --destructive: oklch(0.55 0.22 22.216);
   --destructive-foreground: oklch(0.985 0 0);
+  /* Dark warning matches the cross-platform Navius role (#D7A653 / #161513). */
+  --warning: oklch(0.754289 0.11595 78.624);
+  --warning-foreground: oklch(0.196091 0.004248 84.591);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
@@ -115,6 +121,8 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -137,6 +145,17 @@
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+}
+
+/* Forced colors has no warning-specific system color. Preserve the semantic role
+   through text/iconography while deferring its palette to the user's system. */
+@media (forced-colors: active) {
+  :root,
+  .dark,
+  [data-zits-theme] {
+    --warning: CanvasText;
+    --warning-foreground: Canvas;
+  }
 }
 
 /* Animations the helm components drive off the Base UI data-open/data-closed
