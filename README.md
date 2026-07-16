@@ -140,8 +140,8 @@ builder.Services.AddZitsUi();
 navius add theme --to <dir> --namespace <ns>
 ```
 
-4. Include the no-flash theme init script and generated theme stylesheet before the
-   app stylesheet:
+4. Include the no-flash theme init script (it also re-applies the theme after Blazor
+   enhanced navigation) and generated theme stylesheet before the app stylesheet:
 
 ```html
 <script src="_content/Zits.Ui/zits-theme-init.js"></script>
