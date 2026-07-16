@@ -56,7 +56,9 @@ The `theme` registry item ships the generated token engine:
 - `ZitsThemeService` persists the active theme and mirrors it to the DOM.
 - `ZitsThemeSwitcher` is the styled customizer.
 - `ZitsThemeScope` applies scoped theme attributes to a subtree.
-- `zits-theme-init.js` restores theme choice before first paint.
+- `zits-theme-init.js` restores theme choice before first paint and re-applies it
+  after Blazor enhanced navigation, which otherwise resets `<html>` to the
+  server-rendered markup and discards the client-applied theme.
 
 Base tokens live in `src/Zits.Ui/wwwroot/zits-ui.css` as OKLCH `:root` and `.dark`
 blocks plus Tailwind v4 `@theme inline` mapping. Components consume tokens through
