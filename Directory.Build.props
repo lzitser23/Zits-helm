@@ -1,0 +1,22 @@
+<Project>
+
+  <!--
+    Brain (Navius.Primitives) dependency switch.
+
+    By default Zits.Ui depends on the PUBLISHED Navius.Primitives package pinned to
+    $(NaviusPrimitivesVersion), so a fresh solo clone (no sibling checkout) restores
+    and builds, and a publish never floats the sibling's in-development main <Version>
+    into the packed Zits.Ui nuspec dependency.
+
+    Contributors editing both repos side by side get the local source automatically:
+    UseLocalProjectReferences auto-enables when the sibling navius checkout is present.
+    CI publish forces it off (see .github/workflows/publish-nuget.yml) so the packed
+    dependency is always the pinned, existing-on-nuget.org version.
+  -->
+  <PropertyGroup>
+    <NaviusPrimitivesVersion>0.3.0-preview.4</NaviusPrimitivesVersion>
+    <UseLocalProjectReferences Condition="'$(UseLocalProjectReferences)' == '' and Exists('$(MSBuildThisFileDirectory)..\navius\src\Navius.Primitives\Navius.Primitives.csproj')">true</UseLocalProjectReferences>
+    <UseLocalProjectReferences Condition="'$(UseLocalProjectReferences)' == ''">false</UseLocalProjectReferences>
+  </PropertyGroup>
+
+</Project>
