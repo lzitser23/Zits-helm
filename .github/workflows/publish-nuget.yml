@@ -103,13 +103,21 @@ jobs:
       matrix:
         package: ${{ fromJSON(needs.detect.outputs.packages) }}
     runs-on: ubuntu-latest
+    # Force the pinned Navius.Primitives PackageReference (Directory.Build.props) so
+    # the packed Zits.Ui nuspec dependency is always the published, existing-on-nuget
+    # version and never floats the sibling's in-development main <Version>. The navius
+    # checkout below still supplies the CLI's vendored registry source.
+    env:
+      UseLocalProjectReferences: false
     steps:
-      # The brain is a sibling path reference (see src/Zits.Ui/Zits.Ui.csproj):
-      # both repos must be checked out side by side.
       - uses: actions/checkout@v4
         with:
           path: zits-helm
 
+      # The navius CLI vendors the brain's registry SOURCE (None globs in
+      # Navius.Cli.csproj), so its source tree is still checked out side by side.
+      # This checkout no longer affects the packed Zits.Ui dependency (that is the
+      # pinned PackageReference above), only the copy-paste source the CLI bundles.
       - uses: actions/checkout@v4
         with:
           repository: lzitser23/Navius
