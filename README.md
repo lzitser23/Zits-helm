@@ -76,15 +76,15 @@ path: it copies registry items into an app so consumers own the component code.
 - **Runtime theming engine** — `ZitsThemeService`, `ZitsThemeSwitcher`,
   `ZitsThemeScope`, and generated `zits-theme.css` switch mode, gray scale, primary,
   radius, font, and style recipe through `data-zits-*` attributes.
-- **Package-ready metadata** — `Zits.Ui` and `navius` are both locked to
-  `0.3.0-preview.2` with MIT license metadata, package readmes, SourceLink, symbols,
+- **Package-ready metadata** — `Zits.Ui` and `navius` ship as independently versioned
+  preview packages with MIT license metadata, package readmes, SourceLink, symbols,
   and repository URLs.
 
 ---
 
 ## Installation
 
-Preview packages are published to NuGet as `0.3.0-preview.2`. Install the styled
+Preview packages are published to NuGet. Install the current preview of the styled
 layer and CLI with:
 
 ```bash
@@ -156,7 +156,7 @@ navius add theme --to <dir> --namespace <ns>
 | --- | --- |
 | Runtime | .NET 8 |
 | Component package | `src/Zits.Ui` Razor Class Library |
-| Brain dependency | Sibling `ProjectReference` to `../navius/src/Navius.Primitives` during repo development |
+| Brain dependency | Pinned `Navius.Primitives` NuGet package by default; auto-switches to a sibling `ProjectReference` to `../navius/src/Navius.Primitives` when that checkout is present |
 | CLI | `tools/Navius.Cli`, packed as the `navius` dotnet tool |
 | Registry | `registry/registry.json`, 92 items |
 | Styling | Tailwind utility classes and OKLCH tokens in `wwwroot/zits-ui.css` |
@@ -170,8 +170,11 @@ navius add theme --to <dir> --namespace <ns>
 ### Prerequisites
 
 - .NET 8 SDK.
-- A sibling checkout of [Navius](https://github.com/lzitser23/Navius), because
-  `src/Zits.Ui/Zits.Ui.csproj` references the brain by project path.
+- Optionally, a sibling checkout of [Navius](https://github.com/lzitser23/Navius). A
+  solo clone builds against the pinned `Navius.Primitives` package; when the sibling
+  checkout is present, `Directory.Build.props` auto-switches `src/Zits.Ui` to a project
+  reference so you can edit the brain and helm together. Set
+  `UseLocalProjectReferences=false` to force the package even with the checkout present.
 
 ### Commands
 
