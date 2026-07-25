@@ -179,3 +179,32 @@ jobs:
       - name: Publish package
         working-directory: ${{ runner.temp }}/nupkgs
         run: dotnet nuget push "*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      # Create the matching git tag + GitHub release for the version just published, so
+      # the tag/release history no longer drifts behind nuget.org. Runs after the push,
+      # is a no-op when the release already exists, and never fails the job (the package
+      # is already public by this point).
+      - name: Tag and release published version
+        continue-on-error: true
+        working-directory: zits-helm
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          case "${{ matrix.package }}" in
+            Zits.Ui) csproj="src/Zits.Ui/Zits.Ui.csproj" ;;
+            navius)  csproj="tools/Navius.Cli/Navius.Cli.csproj" ;;
+          esac
+          version=$(sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p' "$csproj" | tr -d '\r')
+          tag="${{ matrix.package }}-v${version}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists; nothing to do."
+            exit 0
+          fi
+          prerelease=
+          case "$version" in *-*) prerelease=--prerelease ;; esac
+          gh release create "$tag" \
+            --title "${{ matrix.package }} $version" \
+            --notes "Published ${{ matrix.package }} $version to nuget.org. See the repository for details." \
+            --target "$GITHUB_SHA" \
+            $prerelease
