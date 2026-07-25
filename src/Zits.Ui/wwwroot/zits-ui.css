@@ -271,6 +271,26 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .shimmer { animation: none; -webkit-text-fill-color: currentColor; background-image: none; }
+
+  /* Skeleton pulse is a placeholder affordance, not essential feedback: a static
+     muted box reads the same. */
+  .animate-pulse { animation: none; }
+
+  /* Accordion/Collapsible open/close: skip the height transition, jump to the final
+     state. These are the utility classes ZitsAccordionContent applies; !important
+     wins over the Tailwind-generated data-[open]/data-[closed] rule regardless of
+     its specificity, and leaves the brain's mount/unmount presence logic untouched. */
+  .data-\[open\]\:animate-accordion-down,
+  .data-\[closed\]\:animate-accordion-up { animation: none !important; }
+
+  /* Scroll-driven edge fades: drop the scroll-timeline animation and keep the static
+     mask fallback (the both-edge fade defined above). */
+  .scroll-fade, .scroll-fade-y, .scroll-fade-x,
+  .scroll-fade-t, .scroll-fade-b, .scroll-fade-l, .scroll-fade-r,
+  .scroll-fade-s, .scroll-fade-e { animation: none; }
+
+  /* The spinner's rotation (animate-spin) is the sole "loading" affordance; a frozen
+     partial arc reads as a stuck UI, so its motion is preserved by design. */
 }
 
 /* ---------------------------------------------------------------------------
