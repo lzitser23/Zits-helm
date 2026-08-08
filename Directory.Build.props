@@ -14,7 +14,7 @@
     dependency is always the pinned, existing-on-nuget.org version.
   -->
   <PropertyGroup>
-    <NaviusPrimitivesVersion>0.3.0-preview.4</NaviusPrimitivesVersion>
+    <NaviusPrimitivesVersion>0.3.0-preview.6</NaviusPrimitivesVersion>
     <UseLocalProjectReferences Condition="'$(UseLocalProjectReferences)' == '' and Exists('$(MSBuildThisFileDirectory)..\navius\src\Navius.Primitives\Navius.Primitives.csproj')">true</UseLocalProjectReferences>
     <UseLocalProjectReferences Condition="'$(UseLocalProjectReferences)' == ''">false</UseLocalProjectReferences>
   </PropertyGroup>
