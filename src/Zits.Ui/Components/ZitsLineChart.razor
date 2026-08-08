@@ -5,7 +5,8 @@
    0..100 viewBox (preserveAspectRatio="none"; strokes kept crisp with
    vector-effect="non-scaling-stroke"), coloured with var(--color-<key>) from the
    cascaded ChartConfig. Hovering a category drives the floating ZitsChartTooltip. *@
-<div class="flex h-full w-full flex-col gap-2" @onmouseleave="() => SetHover(null)">
+<div class="flex h-full w-full flex-col gap-2" data-chart-active="@(_hover is not null ? "" : null)"
+     @onmouseleave="() => SetHover(null)">
     <div class="relative min-h-0 flex-1">
         <svg class="block h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             @if (ShowGrid)
@@ -24,8 +25,20 @@
             }
             @foreach (var key in _keys)
             {
-                <path d="@LinePath(key)" fill="none" stroke="var(--color-@(key))" stroke-width="2"
+                <path @key="Chart?.AnimationKey(key)" class="chart-series chart-reveal-cartesian"
+                      d="@LinePath(key)" fill="none" stroke="var(--color-@(key))" stroke-width="2"
+                      data-series-key="@key"
+                      stroke-opacity="@SeriesOpacity(key)" style="--chart-series-color:var(--color-@(key))"
+                      @onclick="() => ToggleSeriesAsync(key)"
                       stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" />
+            }
+            @for (var i = 0; i < _keys.Count; i++)
+            {
+                var key = _keys[i];
+                if (SparklePoint(key) is { } sparkle)
+                {
+                    <ZitsChartSparkle X="sparkle.X" Y="sparkle.Y" SeriesKey="key" Delay="@(i * 370)" />
+                }
             }
             @for (var i = 0; i < _count; i++)
             {
@@ -87,6 +100,9 @@
         if (_hover != i) _hover = i;
     }
 
+    private string SeriesOpacity(string key) => Chart?.SeriesOpacity(key) ?? "1";
+    private Task ToggleSeriesAsync(string key) => Chart?.ToggleSeriesAsync(key) ?? Task.CompletedTask;
+
     private string LinePath(string key)
     {
         var sb = new StringBuilder();
@@ -100,6 +116,18 @@
             first = false;
         }
         return sb.ToString();
+    }
+
+    private (double X, double Y)? SparklePoint(string key)
+    {
+        (double X, double Y)? best = null;
+        for (var i = 0; i < _count; i++)
+        {
+            if (!_points[i].Values.TryGetValue(key, out var value)) continue;
+            var point = (ChartMath.SlotCenter(i, _count), ChartMath.Y(value, _yMax));
+            if (best is null || point.Item2 < best.Value.Y) best = point;
+        }
+        return best;
     }
 
     private IEnumerable<double> GridLines()

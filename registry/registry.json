@@ -1190,6 +1190,16 @@
           "target": "Zits/Chart/ZitsChartLegendContent.razor"
         },
         {
+          "path": "src/Zits.Ui/Components/ZitsChartPatterns.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsChartPatterns.razor"
+        },
+        {
+          "path": "src/Zits.Ui/Components/ZitsChartSparkle.razor",
+          "type": "registry:ui",
+          "target": "Zits/Chart/ZitsChartSparkle.razor"
+        },
+        {
           "path": "src/Zits.Ui/Components/ZitsChartTooltip.razor",
           "type": "registry:ui",
           "target": "Zits/Chart/ZitsChartTooltip.razor"

@@ -13,6 +13,27 @@ public sealed record ChartSeries(string? Label = null, string? Color = null)
 {
     /// <summary>Optional inline-SVG icon rendered beside the label in the legend/tooltip.</summary>
     public RenderFragment? Icon { get; init; }
+
+    /// <summary>Fill treatment for area, bar, pie, and radar shapes.</summary>
+    public ChartFillVariant FillVariant { get; init; } = ChartFillVariant.Solid;
+}
+
+/// <summary>Fill treatments inspired by Dither Kit's ordered-pattern chart renderer.</summary>
+public enum ChartFillVariant
+{
+    Solid,
+    Gradient,
+    Dotted,
+    Hatched,
+}
+
+/// <summary>Optional glow strength for chart series.</summary>
+public enum ChartBloom
+{
+    Off,
+    Low,
+    High,
+    Aura,
 }
 
 /// <summary>

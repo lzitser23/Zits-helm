@@ -5,9 +5,17 @@
    ChartStyle behaviour) onto a scoped `data-chart` id so descendants colour
    themselves with `var(--color-<key>)`, keeps the aspect-video frame + SVG
    typography resets, and cascades the ChartConfig to the tooltip/legend/plot
-   children. Pure layout + tokens — no charting runtime. *@
-<CascadingValue Value="this" IsFixed="true">
-    <div data-chart="@ChartId" @attributes="Attributes" class="@Cn.Class(_base, Cn.UserClass(Attributes))">
+   children. Pure layout + tokens — no charting runtime.
+
+   The cascade is deliberately NOT IsFixed: this component IS the selection state, so a
+   locked series has to reach the sibling parts (a click on a slice repaints the legend,
+   and vice versa). Fixing it skips that notification and leaves them out of sync. *@
+<CascadingValue Value="this">
+    <div data-chart="@ChartId"
+         data-animate="@(Animate ? "" : null)"
+         data-bloom="@Bloom.ToString().ToLowerInvariant()"
+         data-bloom-on-hover="@(BloomOnHover ? "" : null)"
+         @attributes="Attributes" class="@Cn.Class(_base, Cn.UserClass(Attributes))">
         <style>@((MarkupString)StyleCss)</style>
         @ChildContent
     </div>
@@ -21,6 +29,29 @@
     /// <summary>Per-series Key → { Label, Color, Icon }. Drives the injected colour vars + tooltip/legend.</summary>
     [Parameter] public ChartConfig? Config { get; set; }
 
+    /// <summary>
+    /// Whether a series can be locked, dimming the others. Clicking a plotted shape is a
+    /// pointer shortcut; the keyboard/screen-reader surface is the legend, which turns
+    /// into a row of toggle buttons whenever this is set.
+    /// </summary>
+    [Parameter] public bool Selectable { get; set; }
+
+    /// <summary>Controlled selected series key.</summary>
+    [Parameter] public string? SelectedSeries { get; set; }
+    [Parameter] public EventCallback<string?> SelectedSeriesChanged { get; set; }
+
+    /// <summary>Initial selected series key when uncontrolled.</summary>
+    [Parameter] public string? DefaultSelectedSeries { get; set; }
+
+    /// <summary>Reveal series on first render and whenever ReplayToken changes.</summary>
+    [Parameter] public bool Animate { get; set; }
+    [Parameter] public int AnimationDuration { get; set; } = 700;
+    [Parameter] public int ReplayToken { get; set; }
+
+    [Parameter] public ChartBloom Bloom { get; set; } = ChartBloom.Off;
+    [Parameter] public bool BloomOnHover { get; set; }
+    [Parameter] public bool Sparkles { get; set; }
+
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
 
@@ -29,26 +60,117 @@
 
     private static readonly ChartConfig _empty = new();
     internal ChartConfig EffectiveConfig => Config ?? _empty;
+    private bool _selectedControlled;
+    private bool _selectionInitialized;
+    private string? _internalSelectedSeries;
+
+    internal string? EffectiveSelectedSeries
+        => _selectedControlled ? SelectedSeries : _internalSelectedSeries;
+
+    internal ChartFillVariant FillVariant(string key)
+        => EffectiveConfig.TryGetValue(key, out var series)
+            ? series.FillVariant
+            : ChartFillVariant.Solid;
+
+    internal string Fill(string key)
+    {
+        var variant = FillVariant(key);
+        return variant == ChartFillVariant.Solid
+            ? $"var(--color-{key})"
+            : $"url(#{PatternId(key, variant)})";
+    }
+
+    internal string PatternId(string key, ChartFillVariant variant)
+        => $"{ChartId}-{SvgIdPart(key)}-{variant.ToString().ToLowerInvariant()}";
+
+    internal object AnimationKey(string key) => $"{key}:{ReplayToken}";
+
+    internal string SeriesOpacity(string key, double normal = 1)
+        => EffectiveSelectedSeries is not null && EffectiveSelectedSeries != key
+            ? ChartMath.N(normal * 0.3)
+            : ChartMath.N(normal);
+
+    internal async Task ToggleSeriesAsync(string key)
+    {
+        if (!Selectable) return;
+        var next = EffectiveSelectedSeries == key ? null : key;
+        if (!_selectedControlled) _internalSelectedSeries = next;
+        await SelectedSeriesChanged.InvokeAsync(next);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        _selectedControlled |= parameters.TryGetValue<string?>(nameof(SelectedSeries), out _);
+        await base.SetParametersAsync(parameters);
+        if (!_selectionInitialized)
+        {
+            _internalSelectedSeries = DefaultSelectedSeries;
+            _selectionInitialized = true;
+        }
+    }
 
     protected override void OnInitialized()
         => ChartId = "chart-" + Guid.NewGuid().ToString("N")[..8];
+
+    private static string SvgIdPart(string value)
+    {
+        var chars = value.Select(c => char.IsLetterOrDigit(c) || c is '-' or '_' ? c : '-').ToArray();
+        return new string(chars);
+    }
 
     // ChartStyle: a `[data-chart="id"] { --color-key: <color>; }` block scoped to this container.
     private string StyleCss
     {
         get
         {
-            if (Config is null || Config.Count == 0) return string.Empty;
-
             var sb = new StringBuilder();
             sb.Append("[data-chart=\"").Append(ChartId).Append("\"]{");
-            foreach (var (key, series) in Config)
+            if (Config is not null)
             {
-                if (!string.IsNullOrWhiteSpace(series.Color))
-                    sb.Append("--color-").Append(key).Append(':').Append(series.Color).Append(';');
+                foreach (var (key, series) in Config)
+                {
+                    if (!string.IsNullOrWhiteSpace(series.Color))
+                        sb.Append("--color-").Append(key).Append(':').Append(series.Color).Append(';');
+                }
             }
-            sb.Append('}');
+            sb.Append("--chart-animation-duration:").Append(Math.Max(0, AnimationDuration)).Append("ms;")
+              .Append('}');
+            sb.Append("[data-chart=\"").Append(ChartId).Append("\"] .chart-series{")
+              .Append("transition:opacity 180ms ease-out,filter 180ms ease-out;")
+              .Append("}");
+            AppendBloomCss(sb, "low", "3px", "65%");
+            AppendBloomCss(sb, "high", "6px", "78%");
+            AppendBloomCss(sb, "aura", "14px", "28%");
+            sb.Append("@keyframes ").Append(ChartId).Append("-cartesian{")
+              .Append("from{opacity:.35;transform:scaleY(.12)}to{transform:scaleY(1)}}")
+              .Append("@keyframes ").Append(ChartId).Append("-polar{")
+              .Append("from{opacity:.35;transform:scale(.2)}to{transform:scale(1)}}")
+              .Append("[data-chart=\"").Append(ChartId).Append("\"][data-animate] .chart-reveal-cartesian{")
+              .Append("transform-box:fill-box;transform-origin:center bottom;")
+              .Append("animation:").Append(ChartId).Append("-cartesian var(--chart-animation-duration) cubic-bezier(.16,1,.3,1) both}")
+              .Append("[data-chart=\"").Append(ChartId).Append("\"][data-animate] .chart-reveal-polar{")
+              .Append("transform-box:fill-box;transform-origin:center;")
+              .Append("animation:").Append(ChartId).Append("-polar var(--chart-animation-duration) cubic-bezier(.16,1,.3,1) both}")
+              .Append("@keyframes ").Append(ChartId).Append("-sparkle{")
+              .Append("0%,28%,100%{opacity:.28;transform:scale(.72)}38%,52%{opacity:1;transform:scale(1)}}")
+              .Append("[data-chart=\"").Append(ChartId).Append("\"] .chart-sparkle{")
+              .Append("transform-box:fill-box;transform-origin:center;animation:")
+              .Append(ChartId).Append("-sparkle 2600ms ease-in-out infinite}")
+              .Append("@media(prefers-reduced-motion:reduce){[data-chart=\"").Append(ChartId)
+              .Append("\"] .chart-series,[data-chart=\"").Append(ChartId)
+              .Append("\"] .chart-sparkle{transition:none!important;animation:none!important}}");
             return sb.ToString();
         }
+    }
+
+    private void AppendBloomCss(StringBuilder sb, string level, string radius, string opacity)
+    {
+        var root = $"[data-chart=\"{ChartId}\"][data-bloom=\"{level}\"]";
+        sb.Append(root).Append(":not([data-bloom-on-hover]) .chart-series,")
+          .Append(root).Append(" [data-chart-active] .chart-series{")
+          .Append("filter:drop-shadow(0 0 ").Append(radius)
+          .Append(" color-mix(in oklch,var(--chart-series-color) ").Append(opacity)
+          .Append(",transparent))}");
     }
 }

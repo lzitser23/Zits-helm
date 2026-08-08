@@ -1,0 +1,22 @@
+@namespace Zits.Ui
+
+@if (Chart?.Sparkles == true)
+{
+    <g class="chart-sparkle pointer-events-none" aria-hidden="true"
+       transform="translate(@ChartMath.N(X) @ChartMath.N(Y))"
+       style="--chart-series-color:var(--color-@(SeriesKey));animation-delay:@(Delay)ms">
+        <path d="M -2.5 0 H 2.5 M 0 -2.5 V 2.5"
+              style="stroke:var(--color-@(SeriesKey));stroke-width:1.15"
+              stroke-linecap="round" vector-effect="non-scaling-stroke" />
+        <circle r="0.75" fill="var(--color-@(SeriesKey))" />
+    </g>
+}
+
+@code {
+    [Parameter] public double X { get; set; }
+    [Parameter] public double Y { get; set; }
+    [Parameter, EditorRequired] public string SeriesKey { get; set; } = string.Empty;
+    [Parameter] public int Delay { get; set; }
+
+    [CascadingParameter] private ZitsChartContainer? Chart { get; set; }
+}

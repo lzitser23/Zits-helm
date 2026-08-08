@@ -76,6 +76,9 @@ path: it copies registry items into an app so consumers own the component code.
 - **Runtime theming engine** — `ZitsThemeService`, `ZitsThemeSwitcher`,
   `ZitsThemeScope`, and generated `zits-theme.css` switch mode, gray scale, primary,
   radius, font, and style recipe through `data-zits-*` attributes.
+- **Dithered charts** — area, line, bar, pie, donut, and radar charts support solid,
+  Bayer-gradient, dotted, and hatched fills with opt-in bloom, sparkles, reveal motion,
+  and keyboard-operable series selection.
 - **Package-ready metadata** — `Zits.Ui` and `navius` ship as independently versioned
   preview packages with MIT license metadata, package readmes, SourceLink, symbols,
   and repository URLs.
@@ -238,6 +241,7 @@ embeds those files under `registry-source/`.
 - [Base UI](https://base-ui.com) for the behavior contract Navius mirrors.
 - [shadcn/ui](https://ui.shadcn.com) for the copy-paste component model.
 - [Tailwind CSS](https://tailwindcss.com) for the utility-class styling model.
+- [Dither Kit](https://github.com/lzitser23/dither-kit) for the ordered-pattern chart fill language.
 
 ---
 
