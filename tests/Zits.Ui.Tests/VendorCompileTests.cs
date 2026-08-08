@@ -27,6 +27,7 @@ public class VendorCompileTests
     [InlineData("toggle-group")]
     [InlineData("dialog")]
     [InlineData("popover")]
+    [InlineData("chart")]
     public void Vendored_closure_compiles(string item)
     {
         var work = Path.Combine(Path.GetTempPath(), "navius-vendor-" + Guid.NewGuid().ToString("N"));

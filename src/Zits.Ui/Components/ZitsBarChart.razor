@@ -4,9 +4,11 @@
    fixed 0..100 viewBox (stretched with preserveAspectRatio="none" so a unit == a
    percent), bars are filled with var(--color-<key>) from the cascaded ChartConfig,
    and hovering a category drives the floating ZitsChartTooltip. *@
-<div class="flex h-full w-full flex-col gap-2" @onmouseleave="() => SetHover(null)">
+<div class="flex h-full w-full flex-col gap-2" data-chart-active="@(_hover is not null ? "" : null)"
+     @onmouseleave="() => SetHover(null)">
     <div class="relative min-h-0 flex-1">
         <svg class="block h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <ZitsChartPatterns Keys="_keys" />
             @if (ShowGrid)
             {
                 @foreach (var gy in GridLines())
@@ -22,8 +24,20 @@
             }
             @foreach (var b in Bars())
             {
-                <rect x="@ChartMath.N(b.X)" y="@ChartMath.N(b.Y)" width="@ChartMath.N(b.W)" height="@ChartMath.N(b.H)"
-                      rx="0.75" fill="var(--color-@(b.Key))" />
+                <rect @key="BarAnimationKey(b)" class="chart-series chart-reveal-cartesian"
+                      x="@ChartMath.N(b.X)" y="@ChartMath.N(b.Y)" width="@ChartMath.N(b.W)" height="@ChartMath.N(b.H)"
+                      data-series-key="@b.Key"
+                      rx="0.75" fill="@Fill(b.Key)" opacity="@SeriesOpacity(b.Key)"
+                      style="--chart-series-color:var(--color-@(b.Key))"
+                      @onclick="() => ToggleSeriesAsync(b.Key)" />
+            }
+            @for (var i = 0; i < _keys.Count; i++)
+            {
+                var key = _keys[i];
+                if (SparklePoint(key) is { } sparkle)
+                {
+                    <ZitsChartSparkle X="sparkle.X" Y="sparkle.Y" SeriesKey="key" Delay="@(i * 370)" />
+                }
             }
             @for (var i = 0; i < _count; i++)
             {
@@ -85,6 +99,14 @@
         if (_hover != i) _hover = i;
     }
 
+    private string Fill(string key) => Chart?.Fill(key) ?? $"var(--color-{key})";
+
+    private object? BarAnimationKey(BarRect bar)
+        => Chart?.AnimationKey($"{bar.Key}:{ChartMath.N(bar.X)}");
+
+    private string SeriesOpacity(string key) => Chart?.SeriesOpacity(key) ?? "1";
+    private Task ToggleSeriesAsync(string key) => Chart?.ToggleSeriesAsync(key) ?? Task.CompletedTask;
+
     private record BarRect(double X, double Y, double W, double H, string Key);
 
     private IEnumerable<BarRect> Bars()
@@ -105,6 +127,12 @@
                 yield return new BarRect(gx + j * bw, y, bw * 0.9, h, _keys[j]);
             }
         }
+    }
+
+    private (double X, double Y)? SparklePoint(string key)
+    {
+        var bar = Bars().Where(candidate => candidate.Key == key).MinBy(candidate => candidate.Y);
+        return bar is null ? null : (bar.X + bar.W / 2, bar.Y);
     }
 
     private IEnumerable<double> GridLines()

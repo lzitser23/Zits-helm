@@ -6,17 +6,36 @@
 <div @attributes="Attributes" class="@Cn.Class(_base, AlignClass, Cn.UserClass(Attributes))">
     @foreach (var (key, series) in Entries)
     {
-        <div class="flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground">
-            @if (!HideIcon && series.Icon is not null)
-            {
-                @series.Icon
-            }
-            else
-            {
-                <div class="h-2 w-2 shrink-0 rounded-[2px]" style="@($"background:{ColorFor(key, series)}")"></div>
-            }
-            <span>@(series.Label ?? key)</span>
-        </div>
+        @if (Clickable)
+        {
+            <button type="button" aria-pressed="@Pressed(key)" @onclick="() => ToggleSeriesAsync(key)"
+                    class="flex items-center gap-1.5 rounded-sm outline-none transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground"
+                    style="@($"opacity:{Chart?.SeriesOpacity(key) ?? "1"}")">
+                @if (!HideIcon && series.Icon is not null)
+                {
+                    @series.Icon
+                }
+                else
+                {
+                    <div class="h-2 w-2 shrink-0 rounded-[2px]" style="@($"background:{ColorFor(key, series)}")"></div>
+                }
+                <span>@(series.Label ?? key)</span>
+            </button>
+        }
+        else
+        {
+            <div class="flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground">
+                @if (!HideIcon && series.Icon is not null)
+                {
+                    @series.Icon
+                }
+                else
+                {
+                    <div class="h-2 w-2 shrink-0 rounded-[2px]" style="@($"background:{ColorFor(key, series)}")"></div>
+                }
+                <span>@(series.Label ?? key)</span>
+            </div>
+        }
     }
 </div>
 
@@ -28,6 +47,8 @@
 
     /// <summary>Render the colour swatch even when a series defines an icon.</summary>
     [Parameter] public bool HideIcon { get; set; }
+    /// <summary>Force the toggle-button legend. A Selectable container turns it on by itself.</summary>
+    [Parameter] public bool IsClickable { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)] public IDictionary<string, object>? Attributes { get; set; }
 
@@ -39,4 +60,13 @@
     private string AlignClass => VerticalAlign == "top" ? "pb-3" : "pt-3";
 
     private static string ColorFor(string key, ChartSeries series) => series.Color ?? $"var(--color-{key})";
+
+    // The plotted shapes take a click but are not controls, so the legend is the
+    // keyboard + screen-reader surface for selection whenever the chart is selectable.
+    private bool Clickable => IsClickable || Chart?.Selectable == true;
+
+    private string? Pressed(string key)
+        => Clickable ? (Chart?.EffectiveSelectedSeries == key ? "true" : "false") : null;
+
+    private Task ToggleSeriesAsync(string key) => Chart?.ToggleSeriesAsync(key) ?? Task.CompletedTask;
 }

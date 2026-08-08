@@ -1,0 +1,49 @@
+@namespace Zits.Ui
+
+@* Shared SVG patterns for the filled chart types. The 4x4 gradient pattern uses
+   Bayer ordering to keep the texture stable at every size and in both themes. *@
+<defs aria-hidden="true">
+    @foreach (var key in Keys)
+    {
+        <pattern id="@PatternId(key, ChartFillVariant.Gradient)" width="4" height="4"
+                 patternUnits="userSpaceOnUse">
+            @for (var y = 0; y < 4; y++)
+            {
+                @for (var x = 0; x < 4; x++)
+                {
+                    <rect x="@x" y="@y" width="1" height="1"
+                          fill="var(--color-@(key))" fill-opacity="@CellOpacity(x, y)" />
+                }
+            }
+        </pattern>
+        <pattern id="@PatternId(key, ChartFillVariant.Dotted)" width="4" height="4"
+                 patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="0.72" fill="var(--color-@(key))" />
+        </pattern>
+        <pattern id="@PatternId(key, ChartFillVariant.Hatched)" width="6" height="6"
+                 patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="6"
+                  style="stroke:var(--color-@(key));stroke-width:1.25" />
+        </pattern>
+    }
+</defs>
+
+@code {
+    private static readonly int[,] Bayer =
+    {
+        { 0, 8, 2, 10 },
+        { 12, 4, 14, 6 },
+        { 3, 11, 1, 9 },
+        { 15, 7, 13, 5 },
+    };
+
+    [Parameter, EditorRequired] public IReadOnlyList<string> Keys { get; set; } = Array.Empty<string>();
+
+    [CascadingParameter] private ZitsChartContainer? Chart { get; set; }
+
+    private string PatternId(string key, ChartFillVariant variant)
+        => Chart?.PatternId(key, variant) ?? string.Empty;
+
+    private static string CellOpacity(int x, int y)
+        => ChartMath.N(0.24 + (15 - Bayer[y, x]) / 15.0 * 0.7);
+}

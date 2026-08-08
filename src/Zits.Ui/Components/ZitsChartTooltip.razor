@@ -14,7 +14,7 @@
 }
 
 @code {
-    private const string _base = "pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full pb-1";
+    private const string _base = "pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full pb-1 transition-[left,top] duration-150 ease-out motion-reduce:transition-none";
 
     /// <summary>When false the layer renders nothing.</summary>
     [Parameter] public bool Visible { get; set; } = true;

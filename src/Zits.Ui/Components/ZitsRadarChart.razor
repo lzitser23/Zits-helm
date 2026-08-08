@@ -6,8 +6,10 @@
    Labels (the angle axis). Drawn into a square, centred sub-box so the grid stays
    round under preserveAspectRatio="none". Hovering a category wedge drives the
    floating ZitsChartTooltip. *@
-<div class="relative mx-auto aspect-square h-full min-h-0 max-h-full max-w-full" @onmouseleave="() => SetHover(null)">
+<div class="relative mx-auto aspect-square h-full min-h-0 max-h-full max-w-full"
+     data-chart-active="@(_hover is not null ? "" : null)" @onmouseleave="() => SetHover(null)">
     <svg class="block h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <ZitsChartPatterns Keys="_keys" />
         @if (ShowGrid && _count > 0)
         {
             @for (var t = 1; t <= _levels; t++)
@@ -25,10 +27,20 @@
         }
         @foreach (var key in _keys)
         {
-            <polygon data-series data-series-key="@key" points="@SeriesPoints(key)"
-                     fill="var(--color-@(key))" fill-opacity="@(FillArea ? ChartMath.N(FillOpacity) : "0")"
-                     stroke="var(--color-@(key))" stroke-width="2"
+            <polygon @key="Chart?.AnimationKey(key)" class="chart-series chart-reveal-polar"
+                     data-series data-series-key="@key" points="@SeriesPoints(key)"
+                     fill="@Fill(key)" fill-opacity="@SeriesFillOpacity(key)"
+                     stroke="var(--color-@(key))" stroke-opacity="@SeriesOpacity(key)" stroke-width="2"
+                     style="--chart-series-color:var(--color-@(key))" @onclick="() => ToggleSeriesAsync(key)"
                      stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+        }
+        @for (var i = 0; i < _keys.Count; i++)
+        {
+            var key = _keys[i];
+            if (SparklePoint(key) is { } sparkle)
+            {
+                <ZitsChartSparkle X="sparkle.X" Y="sparkle.Y" SeriesKey="key" Delay="@(i * 370)" />
+            }
         }
         @for (var i = 0; i < _count; i++)
         {
@@ -83,6 +95,17 @@
     private double _yMax = 1;
     private int? _hover;
 
+    private string Fill(string key) => Chart?.Fill(key) ?? $"var(--color-{key})";
+
+    private string SeriesFillOpacity(string key)
+        => !FillArea ? "0"
+            : SeriesOpacity(key, Chart?.FillVariant(key) == ChartFillVariant.Solid ? FillOpacity : 1);
+
+    private string SeriesOpacity(string key, double normal = 1)
+        => Chart?.SeriesOpacity(key, normal) ?? ChartMath.N(normal);
+
+    private Task ToggleSeriesAsync(string key) => Chart?.ToggleSeriesAsync(key) ?? Task.CompletedTask;
+
     protected override void OnParametersSet()
     {
         _points = Data?.ToList() ?? new();
@@ -111,6 +134,24 @@
             parts.Add(Point(ChartMath.PolarX(ChartMath.Cx, r, Angle(i)), ChartMath.PolarY(ChartMath.Cy, r, Angle(i))));
         }
         return string.Join(" ", parts);
+    }
+
+    private (double X, double Y)? SparklePoint(string key)
+    {
+        if (_count == 0) return null;
+        var bestIndex = -1;
+        var bestValue = double.MinValue;
+        for (var i = 0; i < _count; i++)
+        {
+            if (!_points[i].Values.TryGetValue(key, out var value) || value <= bestValue) continue;
+            bestIndex = i;
+            bestValue = value;
+        }
+        if (bestIndex < 0) return null;
+        var radius = _radius * bestValue / _yMax;
+        return (
+            ChartMath.PolarX(ChartMath.Cx, radius, Angle(bestIndex)),
+            ChartMath.PolarY(ChartMath.Cy, radius, Angle(bestIndex)));
     }
 
     private string RingPoints(double r)

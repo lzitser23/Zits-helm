@@ -5,9 +5,11 @@
    per series over a fixed 0..100 viewBox (preserveAspectRatio="none"), both coloured
    with var(--color-<key>) from the cascaded ChartConfig. Hovering a category drives
    the floating ZitsChartTooltip. *@
-<div class="flex h-full w-full flex-col gap-2" @onmouseleave="() => SetHover(null)">
+<div class="flex h-full w-full flex-col gap-2" data-chart-active="@(_hover is not null ? "" : null)"
+     @onmouseleave="() => SetHover(null)">
     <div class="relative min-h-0 flex-1">
         <svg class="block h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <ZitsChartPatterns Keys="_keys" />
             @if (ShowGrid)
             {
                 @foreach (var gy in GridLines())
@@ -18,12 +20,26 @@
             }
             @foreach (var key in _keys)
             {
-                <path d="@AreaPath(key)" fill="var(--color-@(key))" fill-opacity="0.2" stroke="none" />
+                <path @key="Chart?.AnimationKey(key)" class="chart-series chart-reveal-cartesian"
+                      d="@AreaPath(key)" fill="@Fill(key)" fill-opacity="@FillOpacity(key)" stroke="none"
+                      data-series-key="@key"
+                      style="--chart-series-color:var(--color-@(key))"
+                      @onclick="() => ToggleSeriesAsync(key)" />
             }
             @foreach (var key in _keys)
             {
-                <path d="@LinePath(key)" fill="none" stroke="var(--color-@(key))" stroke-width="2"
+                <path class="chart-series chart-reveal-cartesian" d="@LinePath(key)" fill="none"
+                      data-series-key="@key"
+                      stroke="var(--color-@(key))" stroke-opacity="@SeriesOpacity(key)" stroke-width="2"
                       stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" />
+            }
+            @for (var i = 0; i < _keys.Count; i++)
+            {
+                var key = _keys[i];
+                if (SparklePoint(key) is { } sparkle)
+                {
+                    <ZitsChartSparkle X="sparkle.X" Y="sparkle.Y" SeriesKey="key" Delay="@(i * 370)" />
+                }
             }
             @if (_hover is int hc)
             {
@@ -91,6 +107,17 @@
         if (_hover != i) _hover = i;
     }
 
+    private string Fill(string key) => Chart?.Fill(key) ?? $"var(--color-{key})";
+
+    private string FillOpacity(string key)
+        => SeriesOpacity(key, Chart?.FillVariant(key) == ChartFillVariant.Solid ? 0.2 : 1);
+
+    private string SeriesOpacity(string key, double normal = 1)
+        => Chart?.SeriesOpacity(key, normal) ?? ChartMath.N(normal);
+
+
+    private Task ToggleSeriesAsync(string key) => Chart?.ToggleSeriesAsync(key) ?? Task.CompletedTask;
+
     private List<(double X, double Y)> SeriesPoints(string key)
     {
         var pts = new List<(double X, double Y)>();
@@ -98,6 +125,12 @@
             if (_points[i].Values.TryGetValue(key, out var v))
                 pts.Add((ChartMath.SlotCenter(i, _count), ChartMath.Y(v, _yMax)));
         return pts;
+    }
+
+    private (double X, double Y)? SparklePoint(string key)
+    {
+        var points = SeriesPoints(key);
+        return points.Count == 0 ? null : points.MinBy(point => point.Y);
     }
 
     private string LinePath(string key)
