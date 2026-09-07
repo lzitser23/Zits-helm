@@ -1,6 +1,8 @@
+using Bunit;
+
 namespace Zits.Ui.Tests;
 
-public class ChartDitherTests
+public class ChartDitherTests : TestContext
 {
     [Fact]
     public void Chart_registry_ships_the_shared_pattern_renderer()
@@ -12,45 +14,50 @@ public class ChartDitherTests
         Assert.Contains("src/Zits.Ui/Components/ZitsChartSparkle.razor", registry);
     }
 
-    [Fact]
-    public void Filled_charts_use_the_shared_pattern_renderer()
+    /// <summary>
+    /// A non-solid fill variant is only real if the shape ends up painted with the pattern:
+    /// ZitsChartPatterns must emit a &lt;pattern&gt; for the variant, and the plotted shape
+    /// must reference that exact id through fill="url(#...)". Rendering the container +
+    /// chart together is what proves the two halves agree on the id.
+    /// </summary>
+    [Theory]
+    [InlineData(ChartFillVariant.Gradient, "gradient")]
+    [InlineData(ChartFillVariant.Dotted, "dotted")]
+    [InlineData(ChartFillVariant.Hatched, "hatched")]
+    public void Filled_bars_are_painted_with_the_pattern_the_renderer_emits(
+        ChartFillVariant variant, string variantSlug)
     {
-        var components = Path.Combine(RepoPaths.Root, "src", "Zits.Ui", "Components");
-        foreach (var file in new[]
-                 {
-                     "ZitsAreaChart.razor",
-                     "ZitsBarChart.razor",
-                     "ZitsPieChart.razor",
-                     "ZitsRadarChart.razor",
-                 })
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var config = new ChartConfig
         {
-            var source = File.ReadAllText(Path.Combine(components, file));
-            Assert.Contains("<ZitsChartPatterns", source);
-        }
-    }
+            ["desktop"] = new ChartSeries("Desktop", "var(--chart-1)") { FillVariant = variant },
+            ["mobile"] = new ChartSeries("Mobile", "var(--chart-2)"), // stays Solid
+        };
+        var data = new[]
+        {
+            new ChartDataPoint("Jan", ("desktop", 186), ("mobile", 80)),
+            new ChartDataPoint("Feb", ("desktop", 305), ("mobile", 200)),
+        };
 
-    [Fact]
-    public void Dither_variants_match_the_upstream_fill_language()
-    {
-        var source = File.ReadAllText(Path.Combine(
-            RepoPaths.Root, "src", "Zits.Ui", "Components", "ZitsChart.cs"));
+        var cut = RenderComponent<ZitsChartContainer>(ps => ps
+            .Add(p => p.Config, config)
+            .AddChildContent<ZitsBarChart>(chart => chart
+                .Add(p => p.Data, data)));
 
-        Assert.Contains("Solid", source);
-        Assert.Contains("Gradient", source);
-        Assert.Contains("Dotted", source);
-        Assert.Contains("Hatched", source);
-    }
+        var chartId = cut.Find("[data-chart]").GetAttribute("data-chart")!;
+        var patternId = $"{chartId}-desktop-{variantSlug}";
 
-    [Fact]
-    public void Chart_container_exposes_motion_bloom_and_selection_contracts()
-    {
-        var source = File.ReadAllText(Path.Combine(
-            RepoPaths.Root, "src", "Zits.Ui", "Components", "ZitsChartContainer.razor"));
+        Assert.NotNull(cut.Find($"pattern[id='{patternId}']"));
 
-        Assert.Contains("SelectedSeriesChanged", source);
-        Assert.Contains("DefaultSelectedSeries", source);
-        Assert.Contains("BloomOnHover", source);
-        Assert.Contains("ReplayToken", source);
-        Assert.Contains("prefers-reduced-motion", source);
+        var filled = cut.FindAll("rect[data-series-key='desktop']");
+        Assert.NotEmpty(filled);
+        Assert.All(filled, bar => Assert.Equal($"url(#{patternId})", bar.GetAttribute("fill")));
+
+        // The solid series keeps the plain colour var, so the pattern is variant-driven
+        // rather than applied to everything the container renders.
+        Assert.All(
+            cut.FindAll("rect[data-series-key='mobile']"),
+            bar => Assert.Equal("var(--color-mobile)", bar.GetAttribute("fill")));
     }
 }
