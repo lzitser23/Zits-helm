@@ -263,7 +263,11 @@ public sealed class ZitsThemeService : IAsyncDisposable
             }
         }
 
-        if (_module.IsValueCreated)
+        // Only a successfully completed import owns a module to dispose. Awaiting the
+        // cached task unconditionally replays a failed import's exception (the
+        // InvalidOperationException from ImportModuleAsync) out of DisposeAsync, and a
+        // still-pending import has no reference to release yet.
+        if (_module.IsValueCreated && _module.Value.IsCompletedSuccessfully)
         {
             try
             {
