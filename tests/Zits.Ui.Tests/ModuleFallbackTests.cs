@@ -6,74 +6,12 @@ using Zits.Ui.Theming;
 
 namespace Zits.Ui.Tests;
 
-/// <summary>
-/// Guards the dual-mode JS module resolution for the Navius (brain) sources, which live in
-/// a sibling repo and cannot be rendered from this suite: they support package mode (static
-/// web assets under <c>_content/&lt;PackageId&gt;/</c>) and vendored mode (the registry CLI
-/// copies the JS to the consumer's own wwwroot, served at the app root), and every importer
-/// must try the package path first and fall back to the root-relative vendored path, or
-/// vendored consumers silently lose all JS-driven behavior. The Zits.Ui importers are
-/// covered by behavior instead — see <see cref="ThemeModuleFallbackTests"/> and
-/// <see cref="ComponentModuleFallbackTests"/>.
-/// </summary>
-public class ModuleFallbackTests
-{
-    private const string BrainPackagePath = "./_content/Navius.Primitives/navius-interop.js";
-    private const string BrainVendoredPath = "./navius-interop.js";
-
-    /// <summary>
-    /// The primary service surfaces a loud error naming both paths and both modes when
-    /// both imports fail (the verified silent no-op defect must not return).
-    /// </summary>
-    [Theory]
-    [InlineData("navius/src/Navius.Primitives/Interop/NaviusJsInterop.cs", BrainPackagePath, BrainVendoredPath)]
-    public void Primary_services_resolve_package_then_vendored_and_surface_both_on_failure(
-        string relativePath, string packagePath, string vendoredPath)
-    {
-        var source = ReadSibling(relativePath);
-
-        AssertPackageThenVendored(source, packagePath, vendoredPath);
-        Assert.Contains("(package mode)", source);
-        Assert.Contains("(vendored mode)", source);
-        Assert.Contains("InvalidOperationException", source);
-    }
-
-    /// <summary>
-    /// The vendorable components that import the engine directly must carry the same
-    /// package-then-vendored fallback, so vendored mode keeps focus/scroll/drag/measure
-    /// behavior. These preserve their own graceful degradation, so no loud error is required.
-    /// </summary>
-    [Theory]
-    [InlineData("navius/src/Navius.Primitives/Components/Form/NaviusForm.razor")]
-    [InlineData("navius/src/Navius.Primitives/Components/Select/NaviusSelectViewport.razor")]
-    [InlineData("navius/src/Navius.Primitives/Components/ScrollArea/NaviusScrollAreaViewport.razor")]
-    [InlineData("navius/src/Navius.Primitives/Components/ScrollArea/NaviusScrollAreaThumb.razor")]
-    [InlineData("navius/src/Navius.Primitives/Components/PasswordToggleField/NaviusPasswordToggleFieldToggle.razor")]
-    [InlineData("navius/src/Navius.Primitives/Components/Slider/NaviusSlider.razor")]
-    public void Vendorable_components_resolve_package_then_vendored(string relativePath)
-    {
-        var source = ReadSibling(relativePath);
-        AssertPackageThenVendored(source, BrainPackagePath, BrainVendoredPath);
-    }
-
-    private static void AssertPackageThenVendored(string source, string packagePath, string vendoredPath)
-    {
-        var package = source.IndexOf(packagePath, StringComparison.Ordinal);
-        var vendored = source.IndexOf(vendoredPath, StringComparison.Ordinal);
-
-        Assert.True(package >= 0, $"missing package path '{packagePath}'");
-        Assert.True(vendored >= 0, $"missing vendored fallback path '{vendoredPath}'");
-        Assert.True(package < vendored, "the package path must be tried before the vendored fallback");
-    }
-
-    /// <summary>Read a file addressed relative to the parent of the zits-helm repo root (its siblings).</summary>
-    private static string ReadSibling(string relativePath)
-    {
-        var siblingsRoot = Path.GetFullPath(Path.Combine(RepoPaths.Root, ".."));
-        var full = Path.GetFullPath(Path.Combine(siblingsRoot, relativePath.Replace('/', Path.DirectorySeparatorChar)));
-        return File.ReadAllText(full);
-    }
-}
+// The JS engine resolves in two modes: package mode serves it as a static web asset under
+// _content/<PackageId>/, while vendored mode (the registry CLI) copies the JS into the
+// consumer's own wwwroot, served at the app root, with no package reference. Every importer
+// must try the package path first and fall back to the vendored path, or a vendored consumer
+// silently loses all JS-driven behavior. The Navius engine's own importers are covered
+// behaviourally in that repo (lzitser23/Navius#28); these are the Zits.Ui importers.
 
 /// <summary>
 /// The Zits.Ui theme engine's half of the dual-mode resolution, exercised through the
