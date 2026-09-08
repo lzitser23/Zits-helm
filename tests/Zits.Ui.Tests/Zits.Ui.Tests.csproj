@@ -14,6 +14,9 @@
 
   <ItemGroup>
     <PackageReference Include="bunit" Version="1.40.0" />
+    <!-- Executes wwwroot/zits-theme-init.js against an in-test DOM harness so the
+         pre-paint/enhanced-navigation contract is tested by behavior, not by source text. -->
+    <PackageReference Include="Jint" Version="4.16.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
