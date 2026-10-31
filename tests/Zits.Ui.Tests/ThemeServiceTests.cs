@@ -66,6 +66,20 @@ public class ThemeServiceTests
         Assert.DoesNotContain(js.Module.Calls, c => c.Id is "applyTheme" or "clearTheme" or "syncModeClass");
     }
 
+    [Fact]
+    public async Task Dispose_is_quiet_after_the_module_import_failed()
+    {
+        var js = new FakeThemeJs { ImportFails = true };
+        var service = new ZitsThemeService(js);
+
+        // Both the package and the vendored path fail, so the import surfaces the
+        // "reference the package or vendor zits-theme.js" error to the caller.
+        await Assert.ThrowsAsync<InvalidOperationException>(service.InitializeAsync);
+
+        // Disposal must not replay that cached failure.
+        await service.DisposeAsync();
+    }
+
     // --- fakes ---------------------------------------------------------------
 
     /// <summary>IJSRuntime whose module import yields a recording zits-theme.js fake.</summary>
@@ -79,9 +93,17 @@ public class ThemeServiceTests
             set => Module.StoredJson = value;
         }
 
+        /// <summary>Fail every import, the way a missing zits-theme.js does.</summary>
+        public bool ImportFails { get; set; }
+
         public ValueTask<TValue> InvokeAsync<TValue>(string identifier, object?[]? args)
         {
             Assert.Equal("import", identifier);
+            if (ImportFails)
+            {
+                throw new JSException($"Could not import {args?.Single()}.");
+            }
+
             return ValueTask.FromResult((TValue)(object)Module);
         }
 
